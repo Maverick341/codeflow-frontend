@@ -1,43 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Code, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { useAuthStore } from '../store/useAuthStore';
 
 const VerifyEmailPage = () => {
   const { token } = useParams();
   const navigate = useNavigate();
-  const [verificationStatus, setVerificationStatus] = useState('loading'); // 'loading', 'success', 'error', 'pending'
+  const { verificationStatus, verify } = useAuthStore();
+  const [hasVerified, setHasVerified] = useState(false);
 
   useEffect(() => {
-    if (token) {
-      // If there's a token, verify it
-      verifyEmail(token);
-    } else {
-      // If no token, show the "check your email" message
-      setVerificationStatus('pending');
+    if (token && !hasVerified) {
+      console.log('Starting verification with token:', token);
+      setHasVerified(true); 
+      verify(token);
     }
   }, [token]);
-
-  const verifyEmail = async (verificationToken) => {
-    try {
-      // TODO: Replace with your actual API call
-      // const response = await fetch(`/api/verify-email/${verificationToken}`);
-      // if (response.ok) {
-      //   setVerificationStatus('success');
-      //   setTimeout(() => navigate('/login'), 3000);
-      // } else {
-      //   setVerificationStatus('error');
-      // }
+  
+  useEffect(() => {
+    if (verificationStatus === 'success') {
+      const timer = setTimeout(() => {
+        navigate('/login');
+      }, 3000);
       
-      // Placeholder logic - remove when implementing actual API
-      setTimeout(() => {
-        setVerificationStatus('success');
-        setTimeout(() => navigate('/login'), 3000);
-      }, 2000);
-    } catch (error) {
-      console.error('Verification error:', error);
-      setVerificationStatus('error');
+      return () => clearTimeout(timer);
     }
-  };
+  }, [verificationStatus, navigate]);
 
   const renderContent = () => {
     switch (verificationStatus) {
@@ -62,13 +50,13 @@ const VerifyEmailPage = () => {
             </div>
             <h1 className="text-2xl font-bold mb-4 text-success">Email Verified!</h1>
             <p className="text-base-content/60 mb-6">
-              Your email has been successfully verified. You will be redirected to the login page shortly.
+              Your email has been successfully verified. You will be redirected to the login page in 3 seconds.
             </p>
             <button 
               onClick={() => navigate('/login')} 
               className="btn btn-primary"
             >
-              Go to Login
+              Go to Login Now
             </button>
           </>
         );

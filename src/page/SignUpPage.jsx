@@ -12,12 +12,13 @@ import {
   User,
 } from "lucide-react";
 import { SignUpSchema } from '../schemas/signupSchema';
+import { useAuthStore } from '../store/useAuthStore';
 import AuthImagePattern from '../components/AuthImagePattern';
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [isSigningUp, setIsSigningUp] = useState(false);
   const navigate = useNavigate();
+  const { signup, isSigningUp } = useAuthStore();
 
   const {
     register,
@@ -28,36 +29,9 @@ const SignUpPage = () => {
   });
 
   const onSubmit = async (data) => {
-    try {
-      setIsSigningUp(true);
-      
-      // TODO: Replace with your actual API call
-      // const response = await fetch('/api/signup', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(data)
-      // });
-      // 
-      // if (response.ok) {
-      //   navigate('/verify-email');
-      // } else {
-      //   // Handle error
-      //   console.error('Signup failed');
-      // }
-
-      // Placeholder - remove when implementing actual API
-      console.log('Signup data:', data);
-      
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Redirect to verification page
+    const success = await signup(data);
+    if (success) {
       navigate('/verify-email');
-      
-    } catch (error) {
-      console.error('Signup error:', error);
-    } finally {
-      setIsSigningUp(false);
     }
   }
   

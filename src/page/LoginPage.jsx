@@ -5,11 +5,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { Code, Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 import AuthImagePattern from "../components/AuthImagePattern";
 import { LogInSchema } from "../schemas/loginSchema";
+import { useAuthStore } from "../store/useAuthStore";
 
 const LogInPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [isLogginIn, setIsLogginIn] = useState(false);
   const navigate = useNavigate();
+  const { login, isLoggingIn } = useAuthStore();
 
   const {
     register,
@@ -20,36 +21,9 @@ const LogInPage = () => {
   });
 
   const onSubmit = async (data) => {
-    try {
-      setIsLogginIn(true);
-
-      // TODO: Replace with your actual API call
-      // const response = await fetch('/api/login', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(data)
-      // });
-      //
-      // if (response.ok) {
-      //   navigate('/');
-      // } else {
-      //   // Handle error
-      //   console.error('Login failed');
-      // }
-
-      // Placeholder - remove when implementing actual API
-      console.log("Login data:", data);
-
-      // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      
-      // Simulate successful login - redirect to profile
-      navigate('/profile');
-      
-    } catch (error) {
-      console.error("Login error:", error);
-    } finally {
-      setIsLogginIn(false);
+    const success = await login(data);
+    if (success) {
+      navigate('/');
     }
   };
 
@@ -135,9 +109,9 @@ const LogInPage = () => {
             <button
               type="submit"
               className="btn btn-primary w-full"
-              disabled={isLogginIn}
+              disabled={isLoggingIn}
             >
-              {isLogginIn ? (
+              {isLoggingIn ? (
                 <>
                   <Loader2 className="h-5 w-5 animate-spin" />
                   Loading...
