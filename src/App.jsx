@@ -32,6 +32,10 @@ const App = () => {
           path="/verify/:token"
           element={<VerifyEmailPage />}
         />
+        {/* <Route
+          path="/profile"
+          element={<ProfilePage />}
+        /> */}
       </Routes>
     </div>
   );
