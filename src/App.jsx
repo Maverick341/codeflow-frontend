@@ -17,14 +17,7 @@ const App = () => {
       <Toaster />
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <HomePage />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/" element={<HomePage />} />
         </Route>
         <Route
           path="/login"
@@ -34,17 +27,15 @@ const App = () => {
           path="/signup"
           element={!authUser ? <SignUpPage /> : <Navigate to="/" replace />}
         />
-        <Route
-          path="/verify-email"
-          element={<VerifyEmailPage />}
-        />
-        <Route
-          path="/verify-email/:token"
-          element={<VerifyEmailPage />}
-        />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
+        <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
         {/* <Route
           path="/profile"
-          element={<ProfilePage />}
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
         /> */}
       </Routes>
     </div>

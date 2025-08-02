@@ -4,14 +4,7 @@ import { Loader } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 
 const ProtectedRoute = ({ children }) => {
-  const { authUser, isEmailVerified, checkAuth, isCheckingAuth } = useAuthStore();
-
-  useEffect(() => {
-    // Only check auth if we don't already have user data
-    if (!authUser) {
-      checkAuth();
-    }
-  }, [authUser, checkAuth]);
+  const { authUser, isEmailVerified, isCheckingAuth } = useAuthStore();
 
   // Show loading while checking authentication
   if (isCheckingAuth) {
