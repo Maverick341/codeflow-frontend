@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react'
 import { useAuthStore } from '../store/useAuthStore'
 import { Loader } from 'lucide-react';
+import Dashboard from '../components/Dashboard';
+import HeroPage from '../components/HeroPage';
 
 const HomePage = () => {
   const { authUser, isCheckingAuth, checkAuth } = useAuthStore();
@@ -19,13 +21,7 @@ const HomePage = () => {
     );
   }
 
-  return (
-    <div>
-      <h1>Home Page</h1>
-    </div>
-  )
-
-  // return !authUser ? <LandingPage /> : <Dashboard />; // will add imports after making components
+  return !authUser ? <HeroPage /> : <Dashboard />; // will add imports after making components
 }
 
 export default HomePage

@@ -22,6 +22,12 @@ const Navbar = () => {
 
         {/* User Profile and Dropdown */}
         <div className="flex items-center gap-8">
+          <div>
+            <LogoutButton className="hover:bg-primary hover:text-white">
+              <LogOut className="w-4 h-4 mr-2" />
+              Logout
+            </LogoutButton>
+          </div>
           <div className="dropdown dropdown-end">
             <label
               tabIndex={0}
@@ -46,7 +52,7 @@ const Navbar = () => {
 
               {/* Common Options */}
               <li>
-                <p className="text-base font-semibold">{authUser?.name}</p>
+                <p className="text-base font-semibold">{authUser?.fullname}</p>
                 <hr className="border-gray-200/10" />
               </li>
               <li>
@@ -69,12 +75,6 @@ const Navbar = () => {
                   </Link>
                 </li>
               )}
-              <li>
-                <LogoutButton className="hover:bg-primary hover:text-white">
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Logout
-                </LogoutButton>
-              </li>
             </ul>
           </div>
         </div>
