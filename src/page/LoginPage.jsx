@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Code, Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 import AuthImagePattern from "../components/AuthImagePattern";
 import { LogInSchema } from "../schemas/loginSchema";
@@ -9,7 +9,6 @@ import { useAuthStore } from "../store/useAuthStore";
 
 const LogInPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
   const { login, isLoggingIn } = useAuthStore();
 
   const {
@@ -21,9 +20,10 @@ const LogInPage = () => {
   });
 
   const onSubmit = async (data) => {
-    const success = await login(data);
-    if (success) {
-      navigate('/');
+    try {
+      await login(data);
+    } catch (error) {
+      console.error("SignIn failed", error);
     }
   };
 

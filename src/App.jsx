@@ -11,6 +11,7 @@ import Layout from "./layout/Layout.jsx";
 
 const App = () => {
   const { authUser } = useAuthStore();
+  console.log(authUser);
 
   return (
     <div className="flex flex-col items-center justify-start">

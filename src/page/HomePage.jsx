@@ -19,7 +19,13 @@ const HomePage = () => {
     );
   }
 
-  return !authUser ? <LandingPage /> : <Dashboard />; // will add imports after making components
+  return (
+    <div>
+      <h1>Home Page</h1>
+    </div>
+  )
+
+  // return !authUser ? <LandingPage /> : <Dashboard />; // will add imports after making components
 }
 
 export default HomePage
