@@ -11,6 +11,7 @@ import Layout from './layout/Layout.jsx';
 import AdminRoute from './components/AdminRoute.jsx';
 import AddProblem from './page/AddProblem.jsx';
 import Dashboard from './components/Dashboard.jsx';
+import ProblemPage from './page/ProblemPage.jsx';
 
 const App = () => {
   const { authUser } = useAuthStore();
@@ -29,6 +30,11 @@ const App = () => {
               element={authUser ? <AddProblem /> : <Navigate to="/" />}
             />
           </Route>
+
+          <Route
+            path="/problem/:id"
+            element={authUser ? <ProblemPage /> : <Navigate to={'/login'} />}
+          />
 
           {/* <Route
             path="/profile"
