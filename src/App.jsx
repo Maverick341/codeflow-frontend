@@ -10,6 +10,7 @@ import { useAuthStore } from "./store/useAuthStore.js";
 import Layout from "./layout/Layout.jsx";
 import AdminRoute from "./components/AdminRoute.jsx";
 import AddProblem from "./page/AddProblem.jsx";
+import Dashboard from "./components/Dashboard.jsx";
 
 const App = () => {
   const { authUser } = useAuthStore();
@@ -20,7 +21,7 @@ const App = () => {
       <Toaster />
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={!authUser ? <HomePage /> : <Dashboard />} />
 
           <Route element={<AdminRoute />}>
             <Route
