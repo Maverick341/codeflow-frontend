@@ -8,6 +8,8 @@ import VerifyEmailPage from "./page/VerifyEmailPage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { useAuthStore } from "./store/useAuthStore.js";
 import Layout from "./layout/Layout.jsx";
+import AdminRoute from "./components/AdminRoute.jsx";
+import AddProblem from "./page/AddProblem.jsx";
 
 const App = () => {
   const { authUser } = useAuthStore();
@@ -20,16 +22,27 @@ const App = () => {
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<HomePage />} />
         </Route>
+
         <Route
           path="/login"
           element={!authUser ? <LoginPage /> : <Navigate to="/" replace />}
         />
+
         <Route
           path="/signup"
           element={!authUser ? <SignUpPage /> : <Navigate to="/" replace />}
         />
         <Route path="/verify-email" element={<VerifyEmailPage />} />
         <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
+
+        <Route element={<AdminRoute />}>
+          <Route
+            path="/add-problem"
+            element={authUser ? <AddProblem /> : <Navigate to="/" />}
+          />
+        </Route>
+
+
         {/* <Route
           path="/profile"
           element={
