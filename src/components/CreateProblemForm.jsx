@@ -466,14 +466,14 @@ public class Main {
 
 const CreateProblemForm = () => {
   const [sampleType, setSampleType] = useState("DP");
-  const navigation = useNavigate();
+  const navigate = useNavigate();
 
   const {
     register,
     control,
     handleSubmit,
     reset,
-    formState:{errors}
+    formState: { errors },
   } = useForm({
     resolver: zodResolver(problemSchema),
     defaultValues: {
@@ -517,10 +517,18 @@ const CreateProblemForm = () => {
     name: "tags",
   });
 
-  const [isLoading, setIsLoading] = useState(false);
+  const { createProblem, isCreatingProblem } = useProblemStore();
 
   const onSubmit = async (value) => {
-    console.log(value);
+    try {
+      const result = await createProblem(value);
+      if (result.success) {
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error creating problem", error);
+      toast.error("Error creating problem");
+    }
   };
 
   const loadSampleData = () => {
@@ -982,7 +990,7 @@ const CreateProblemForm = () => {
 
             <div className="card-actions justify-end pt-4 border-t">
               <button type="submit" className="btn btn-primary btn-lg gap-2">
-                {isLoading ? (
+                {isCreatingProblem ? (
                   <span className="loading loading-spinner text-white"></span>
                 ) : (
                   <>
