@@ -1,6 +1,4 @@
-import React, { useEffect } from "react";
-import Dashboard from "../components/Dashboard";
-import { useAuthStore } from "../store/useAuthStore";
+import React from "react";
 
 const HomePage = () => {
   return (
