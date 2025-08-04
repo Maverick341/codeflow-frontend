@@ -37,7 +37,7 @@ const Navbar = () => {
               <div className="w-10 rounded-full ">
                 <img
                   src={
-                    authUser?.image ||
+                    authUser?.avatarUrl ||
                     "https://avatar.iran.liara.run/public/boy"
                   }
                   alt="User Avatar"
