@@ -51,10 +51,14 @@ const Navbar = () => {
               {/* Admin Option */}
 
               {/* Common Options */}
-              <li>
-                <p className="text-base font-semibold">{authUser?.fullname}</p>
-                <hr className="border-gray-200/10" />
-              </li>
+              {authUser?.fullname && (
+                <li>
+                  <p className="text-base font-semibold">
+                    {authUser?.fullname}
+                  </p>
+                  <hr className="border-gray-200/10" />
+                </li>
+              )}
               <li>
                 <Link
                   to="/profile"
