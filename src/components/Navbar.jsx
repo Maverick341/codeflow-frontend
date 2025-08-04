@@ -28,7 +28,8 @@ const Navbar = () => {
               Logout
             </LogoutButton>
           </div>
-          <div className="dropdown dropdown-end">
+          {authUser? (
+            <div className="dropdown dropdown-end">
             <label
               tabIndex={0}
               className="btn btn-ghost btn-circle avatar flex flex-row "
@@ -81,6 +82,17 @@ const Navbar = () => {
               )}
             </ul>
           </div>
+          ) : (
+            <div className="flex items-center gap-4">
+            <Link to="/login" className="btn btn-soft">
+              Login
+            </Link>
+            <Link to="/signup" className="btn btn-primary">
+              Sign Up
+            </Link>
+          </div>
+          )}
+          
         </div>
       </div>
     </nav>
