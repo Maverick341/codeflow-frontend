@@ -1,16 +1,16 @@
-import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
-import HomePage from "./page/HomePage.jsx";
-import LoginPage from "./page/LoginPage.jsx";
-import SignUpPage from "./page/SignUpPage.jsx";
-import VerifyEmailPage from "./page/VerifyEmailPage.jsx";
-import ProtectedRoute from "./components/ProtectedRoute.jsx";
-import { useAuthStore } from "./store/useAuthStore.js";
-import Layout from "./layout/Layout.jsx";
-import AdminRoute from "./components/AdminRoute.jsx";
-import AddProblem from "./page/AddProblem.jsx";
-import Dashboard from "./components/Dashboard.jsx";
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
+import HomePage from './page/HomePage.jsx';
+import LoginPage from './page/LoginPage.jsx';
+import SignUpPage from './page/SignUpPage.jsx';
+import VerifyEmailPage from './page/VerifyEmailPage.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+import { useAuthStore } from './store/useAuthStore.js';
+import Layout from './layout/Layout.jsx';
+import AdminRoute from './components/AdminRoute.jsx';
+import AddProblem from './page/AddProblem.jsx';
+import Dashboard from './components/Dashboard.jsx';
 
 const App = () => {
   const { authUser } = useAuthStore();

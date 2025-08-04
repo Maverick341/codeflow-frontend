@@ -2,15 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  Code,
-  Eye,
-  EyeOff,
-  Loader2,
-  Lock,
-  Mail,
-  User,
-} from "lucide-react";
+import { Code, Eye, EyeOff, Loader2, Lock, Mail, User } from 'lucide-react';
 import { SignUpSchema } from '../schemas/signupSchema';
 import { useAuthStore } from '../store/useAuthStore';
 import AuthImagePattern from '../components/AuthImagePattern';
@@ -23,9 +15,9 @@ const SignUpPage = () => {
   const {
     register,
     handleSubmit,
-    formState:{errors},
+    formState: { errors },
   } = useForm({
-    resolver: zodResolver(SignUpSchema)
+    resolver: zodResolver(SignUpSchema),
   });
 
   const onSubmit = async (data) => {
@@ -33,11 +25,11 @@ const SignUpPage = () => {
     if (success) {
       navigate('/verify-email');
     }
-  }
-  
-   return (
-    <div className='h-screen grid lg:grid-cols-2'>
-        <div className="flex flex-col justify-center items-center p-6 sm:p-12">
+  };
+
+  return (
+    <div className="h-screen grid lg:grid-cols-2">
+      <div className="flex flex-col justify-center items-center p-6 sm:p-12">
         <div className="w-full max-w-md space-y-8">
           {/* Logo */}
           <div className="text-center mb-8">
@@ -52,7 +44,6 @@ const SignUpPage = () => {
 
           {/* Form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            
             {/* fullname */}
             <div className="form-control">
               <label className="label">
@@ -64,16 +55,18 @@ const SignUpPage = () => {
                 </div>
                 <input
                   type="text"
-                  {...register("fullname")}
+                  {...register('fullname')}
                   className={`input input-bordered w-full pl-10 ${
-                    errors.fullname ? "input-error" : ""
+                    errors.fullname ? 'input-error' : ''
                   }`}
                   placeholder="John Doe"
                 />
               </div>
               {errors.fullname && (
-                <p className="text-red-500 text-sm mt-1">{errors.fullname.message}</p>
-              )}              
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.fullname.message}
+                </p>
+              )}
             </div>
 
             {/* username */}
@@ -87,16 +80,18 @@ const SignUpPage = () => {
                 </div>
                 <input
                   type="text"
-                  {...register("username")}
+                  {...register('username')}
                   className={`input input-bordered w-full pl-10 ${
-                    errors.username ? "input-error" : ""
+                    errors.username ? 'input-error' : ''
                   }`}
                   placeholder="johndoe123"
                 />
               </div>
               {errors.username && (
-                <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>
-              )}              
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.username.message}
+                </p>
+              )}
             </div>
 
             {/* Email */}
@@ -110,15 +105,17 @@ const SignUpPage = () => {
                 </div>
                 <input
                   type="email"
-                  {...register("email")}
+                  {...register('email')}
                   className={`input input-bordered w-full pl-10 ${
-                    errors.email ? "input-error" : ""
+                    errors.email ? 'input-error' : ''
                   }`}
                   placeholder="you@example.com"
                 />
               </div>
               {errors.email && (
-                <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.email.message}
+                </p>
               )}
             </div>
 
@@ -132,10 +129,10 @@ const SignUpPage = () => {
                   <Lock className="h-5 w-5 text-base-content/40" />
                 </div>
                 <input
-                  type={showPassword ? "text" : "password"}
-                  {...register("password")}
+                  type={showPassword ? 'text' : 'password'}
+                  {...register('password')}
                   className={`input input-bordered w-full pl-10 ${
-                    errors.password ? "input-error" : ""
+                    errors.password ? 'input-error' : ''
                   }`}
                   placeholder="••••••••"
                 />
@@ -152,7 +149,9 @@ const SignUpPage = () => {
                 </button>
               </div>
               {errors.password && (
-                <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.password.message}
+                </p>
               )}
             </div>
 
@@ -168,7 +167,7 @@ const SignUpPage = () => {
                   Signing Up...
                 </>
               ) : (
-                "Sign Up"
+                'Sign Up'
               )}
             </button>
           </form>
@@ -176,7 +175,7 @@ const SignUpPage = () => {
           {/* Footer */}
           <div className="text-center">
             <p className="text-base-content/60">
-              Already have an account?{" "}
+              Already have an account?{' '}
               <Link to="/login" className="link link-primary">
                 Sign in
               </Link>
@@ -185,15 +184,15 @@ const SignUpPage = () => {
         </div>
       </div>
 
-       {/* Right Side - Image/Pattern */}
+      {/* Right Side - Image/Pattern */}
       <AuthImagePattern
-        title={"Welcome to CodeFlow!"}
+        title={'Welcome to CodeFlow!'}
         subtitle={
-          "Sign up to access our platform and start using our services."
+          'Sign up to access our platform and start using our services.'
         }
       />
     </div>
-  )
-}
+  );
+};
 
 export default SignUpPage;

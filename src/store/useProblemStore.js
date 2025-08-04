@@ -1,6 +1,6 @@
-import { create } from "zustand";
-import { axiosInstance } from "../lib/axios";
-import toast from "react-hot-toast";
+import { create } from 'zustand';
+import { axiosInstance } from '../lib/axios';
+import toast from 'react-hot-toast';
 
 export const useProblemStore = create((set, get) => ({
   problems: [],
@@ -15,14 +15,14 @@ export const useProblemStore = create((set, get) => ({
     set({ isCreatingProblem: true });
     try {
       const res = await axiosInstance.post(
-        "/problems/createProblem",
+        '/problems/createProblem',
         problemData
       );
-      toast.success(res.data.message || "Problem Created successfully⚡");
+      toast.success(res.data.message || 'Problem Created successfully⚡');
       return { success: true, data: res.data.data };
     } catch (error) {
-      console.log("Error creating problem:", error);
-      toast.error(error.response?.data?.message || "Error creating problem");
+      console.log('Error creating problem:', error);
+      toast.error(error.response?.data?.message || 'Error creating problem');
       return { success: false, error };
     } finally {
       set({ isCreatingProblem: false });
@@ -33,13 +33,13 @@ export const useProblemStore = create((set, get) => ({
     try {
       set({ isProblemsLoading: true });
 
-      const res = await axiosInstance.get("/problems/getAllProblems");
+      const res = await axiosInstance.get('/problems/getAllProblems');
 
       set({ problems: res.data.data });
     } catch (error) {
-      console.log("Error getting all problems:", error);
+      console.log('Error getting all problems:', error);
       toast.error(
-        error.response?.data?.message || "Error getting all problems"
+        error.response?.data?.message || 'Error getting all problems'
       );
     } finally {
       set({ isProblemsLoading: false });
@@ -55,8 +55,8 @@ export const useProblemStore = create((set, get) => ({
       set({ problem: res.data.data });
       toast.success(res.data.message);
     } catch (error) {
-      console.log("Error getting problem:", error);
-      toast.error(error.response?.data?.message || "Error getting problem");
+      console.log('Error getting problem:', error);
+      toast.error(error.response?.data?.message || 'Error getting problem');
     } finally {
       set({ isProblemLoading: false });
     }
@@ -66,12 +66,12 @@ export const useProblemStore = create((set, get) => ({
     try {
       set({ isProblemByUserLoading: true });
 
-      const res = await axiosInstance.get("/problems/getSolvedProblems");
+      const res = await axiosInstance.get('/problems/getSolvedProblems');
 
       set({ solvedProblems: res.data.data });
     } catch (error) {
-      console.log("Error getting problem:", error);
-      toast.error(error.response?.data?.message || "Error getting problem");
+      console.log('Error getting problem:', error);
+      toast.error(error.response?.data?.message || 'Error getting problem');
     } finally {
       set({ isProblemByUserLoading: false });
     }

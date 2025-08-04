@@ -1,8 +1,8 @@
-import React from "react";
-import { User, Code, LogOut } from "lucide-react";
-import { useAuthStore } from "../store/useAuthStore";
-import { Link } from "react-router-dom";
-import LogoutButton from "./LogoutButton";
+import React from 'react';
+import { User, Code, LogOut } from 'lucide-react';
+import { useAuthStore } from '../store/useAuthStore';
+import { Link } from 'react-router-dom';
+import LogoutButton from './LogoutButton';
 
 const Navbar = () => {
   const { authUser } = useAuthStore();
@@ -28,71 +28,70 @@ const Navbar = () => {
               Logout
             </LogoutButton>
           </div>
-          {authUser? (
+          {authUser ? (
             <div className="dropdown dropdown-end">
-            <label
-              tabIndex={0}
-              className="btn btn-ghost btn-circle avatar flex flex-row "
-            >
-              <div className="w-10 rounded-full ">
-                <img
-                  src={
-                    authUser?.avatarUrl ||
-                    "https://avatar.iran.liara.run/public/boy"
-                  }
-                  alt="User Avatar"
-                  className="object-cover"
-                />
-              </div>
-            </label>
-            <ul
-              tabIndex={0}
-              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 space-y-3"
-            >
-              {/* Admin Option */}
+              <label
+                tabIndex={0}
+                className="btn btn-ghost btn-circle avatar flex flex-row "
+              >
+                <div className="w-10 rounded-full ">
+                  <img
+                    src={
+                      authUser?.avatarUrl ||
+                      'https://avatar.iran.liara.run/public/boy'
+                    }
+                    alt="User Avatar"
+                    className="object-cover"
+                  />
+                </div>
+              </label>
+              <ul
+                tabIndex={0}
+                className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 space-y-3"
+              >
+                {/* Admin Option */}
 
-              {/* Common Options */}
-              {authUser?.fullname && (
-                <li>
-                  <p className="text-base font-semibold">
-                    {authUser?.fullname}
-                  </p>
-                  <hr className="border-gray-200/10" />
-                </li>
-              )}
-              <li>
-                <Link
-                  to="/profile"
-                  className="hover:bg-primary hover:text-white text-base font-semibold"
-                >
-                  <User className="w-4 h-4 mr-2" />
-                  My Profile
-                </Link>
-              </li>
-              {authUser?.role === "ADMIN" && (
+                {/* Common Options */}
+                {authUser?.fullname && (
+                  <li>
+                    <p className="text-base font-semibold">
+                      {authUser?.fullname}
+                    </p>
+                    <hr className="border-gray-200/10" />
+                  </li>
+                )}
                 <li>
                   <Link
-                    to="/add-problem"
+                    to="/profile"
                     className="hover:bg-primary hover:text-white text-base font-semibold"
                   >
-                    <Code className="w-4 h-4 mr-1" />
-                    Add Problem
+                    <User className="w-4 h-4 mr-2" />
+                    My Profile
                   </Link>
                 </li>
-              )}
-            </ul>
-          </div>
+                {authUser?.role === 'ADMIN' && (
+                  <li>
+                    <Link
+                      to="/add-problem"
+                      className="hover:bg-primary hover:text-white text-base font-semibold"
+                    >
+                      <Code className="w-4 h-4 mr-1" />
+                      Add Problem
+                    </Link>
+                  </li>
+                )}
+              </ul>
+            </div>
           ) : (
             <div className="flex items-center gap-4">
-            <Link to="/login" className="btn btn-soft">
-              Login
-            </Link>
-            <Link to="/signup" className="btn btn-primary">
-              Sign Up
-            </Link>
-          </div>
+              <Link to="/login" className="btn btn-soft">
+                Login
+              </Link>
+              <Link to="/signup" className="btn btn-primary">
+                Sign Up
+              </Link>
+            </div>
           )}
-          
         </div>
       </div>
     </nav>

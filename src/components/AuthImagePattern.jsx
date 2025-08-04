@@ -1,5 +1,5 @@
-import { Code, Terminal, FileCode, Braces } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Code, Terminal, FileCode, Braces } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 const CodeBackground = ({ title, subtitle }) => {
   const [activeIndex, setActiveIndex] = useState(0);

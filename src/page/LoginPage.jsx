@@ -1,11 +1,11 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
-import { Code, Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
-import AuthImagePattern from "../components/AuthImagePattern";
-import { LogInSchema } from "../schemas/loginSchema";
-import { useAuthStore } from "../store/useAuthStore";
+import { zodResolver } from '@hookform/resolvers/zod';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
+import { Code, Eye, EyeOff, Loader2, Lock, Mail } from 'lucide-react';
+import AuthImagePattern from '../components/AuthImagePattern';
+import { LogInSchema } from '../schemas/loginSchema';
+import { useAuthStore } from '../store/useAuthStore';
 
 const LogInPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,7 +23,7 @@ const LogInPage = () => {
     try {
       await login(data);
     } catch (error) {
-      console.error("SignIn failed", error);
+      console.error('SignIn failed', error);
     }
   };
 
@@ -55,9 +55,9 @@ const LogInPage = () => {
                 </div>
                 <input
                   type="email"
-                  {...register("email")}
+                  {...register('email')}
                   className={`input input-bordered w-full pl-10 ${
-                    errors.email ? "input-error" : ""
+                    errors.email ? 'input-error' : ''
                   }`}
                   placeholder="you@example.com"
                 />
@@ -79,10 +79,10 @@ const LogInPage = () => {
                   <Lock className="h-5 w-5 text-base-content/40" />
                 </div>
                 <input
-                  type={showPassword ? "text" : "password"}
-                  {...register("password")}
+                  type={showPassword ? 'text' : 'password'}
+                  {...register('password')}
                   className={`input input-bordered w-full pl-10 ${
-                    errors.password ? "input-error" : ""
+                    errors.password ? 'input-error' : ''
                   }`}
                   placeholder="••••••••"
                 />
@@ -117,7 +117,7 @@ const LogInPage = () => {
                   Loading...
                 </>
               ) : (
-                "Sign in"
+                'Sign in'
               )}
             </button>
           </form>
@@ -125,7 +125,7 @@ const LogInPage = () => {
           {/* Footer */}
           <div className="text-center">
             <p className="text-base-content/60">
-              Don't have an account?{" "}
+              Don't have an account?{' '}
               <Link to="/signup" className="link link-primary">
                 Sign up
               </Link>
@@ -136,7 +136,7 @@ const LogInPage = () => {
 
       {/* Right Side - Image/Pattern */}
       <AuthImagePattern
-        title={"Welcome to Back!"}
+        title={'Welcome to Back!'}
         subtitle={
           "Sign in to continue your journey with us. Don't have an account? Create one now."
         }

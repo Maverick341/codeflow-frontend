@@ -1,7 +1,7 @@
-import React from "react";
-import { useAuthStore } from "../store/useAuthStore";
-import { Navigate, Outlet } from "react-router-dom";
-import { Loader } from "lucide-react";
+import React from 'react';
+import { useAuthStore } from '../store/useAuthStore';
+import { Navigate, Outlet } from 'react-router-dom';
+import { Loader } from 'lucide-react';
 
 const AdminRoute = () => {
   const { authUser, isCheckingAuth } = useAuthStore();
@@ -14,11 +14,11 @@ const AdminRoute = () => {
     );
   }
 
-  if (!authUser || authUser.role !== "ADMIN") {
+  if (!authUser || authUser.role !== 'ADMIN') {
     return <Navigate to="/" />;
   }
 
-  return <Outlet />
+  return <Outlet />;
 };
 
 export default AdminRoute;

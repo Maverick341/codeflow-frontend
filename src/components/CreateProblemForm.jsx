@@ -1,5 +1,5 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Editor } from "@monaco-editor/react";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Editor } from '@monaco-editor/react';
 import {
   BookOpen,
   CheckCircle2,
@@ -9,59 +9,59 @@ import {
   Lightbulb,
   Plus,
   Trash2,
-} from "lucide-react";
-import React, { useState } from "react";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { axiosInstance } from "../lib/axios";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import { problemSchema } from "../schemas/problemSchema";
-import { useProblemStore } from "../store/useProblemStore";
+} from 'lucide-react';
+import React, { useState } from 'react';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { axiosInstance } from '../lib/axios';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import { problemSchema } from '../schemas/problemSchema';
+import { useProblemStore } from '../store/useProblemStore';
 
 const sampledpData = {
-  title: "Climbing Stairs",
-  category: "dp", // Dynamic Programming
+  title: 'Climbing Stairs',
+  category: 'dp', // Dynamic Programming
   description:
-    "You are climbing a staircase. It takes n steps to reach the top. Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?",
-  difficulty: "EASY",
-  tags: ["Dynamic Programming", "Math", "Memoization"],
-  constraints: "1 <= n <= 45",
+    'You are climbing a staircase. It takes n steps to reach the top. Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?',
+  difficulty: 'EASY',
+  tags: ['Dynamic Programming', 'Math', 'Memoization'],
+  constraints: '1 <= n <= 45',
   hints:
-    "To reach the nth step, you can either come from the (n-1)th step or the (n-2)th step.",
+    'To reach the nth step, you can either come from the (n-1)th step or the (n-2)th step.',
   editorial:
-    "This is a classic dynamic programming problem. The number of ways to reach the nth step is the sum of the number of ways to reach the (n-1)th step and the (n-2)th step, forming a Fibonacci-like sequence.",
+    'This is a classic dynamic programming problem. The number of ways to reach the nth step is the sum of the number of ways to reach the (n-1)th step and the (n-2)th step, forming a Fibonacci-like sequence.',
   testcases: [
     {
-      input: "2",
-      output: "2",
+      input: '2',
+      output: '2',
     },
     {
-      input: "3",
-      output: "3",
+      input: '3',
+      output: '3',
     },
     {
-      input: "4",
-      output: "5",
+      input: '4',
+      output: '5',
     },
   ],
   examples: {
     JAVASCRIPT: {
-      input: "n = 2",
-      output: "2",
+      input: 'n = 2',
+      output: '2',
       explanation:
-        "There are two ways to climb to the top:\n1. 1 step + 1 step\n2. 2 steps",
+        'There are two ways to climb to the top:\n1. 1 step + 1 step\n2. 2 steps',
     },
     PYTHON: {
-      input: "n = 3",
-      output: "3",
+      input: 'n = 3',
+      output: '3',
       explanation:
-        "There are three ways to climb to the top:\n1. 1 step + 1 step + 1 step\n2. 1 step + 2 steps\n3. 2 steps + 1 step",
+        'There are three ways to climb to the top:\n1. 1 step + 1 step + 1 step\n2. 1 step + 2 steps\n3. 2 steps + 1 step',
     },
     JAVA: {
-      input: "n = 4",
-      output: "5",
+      input: 'n = 4',
+      output: '5',
       explanation:
-        "There are five ways to climb to the top:\n1. 1 step + 1 step + 1 step + 1 step\n2. 1 step + 1 step + 2 steps\n3. 1 step + 2 steps + 1 step\n4. 2 steps + 1 step + 1 step\n5. 2 steps + 2 steps",
+        'There are five ways to climb to the top:\n1. 1 step + 1 step + 1 step + 1 step\n2. 1 step + 1 step + 2 steps\n3. 1 step + 2 steps + 1 step\n4. 2 steps + 1 step + 1 step\n5. 2 steps + 2 steps',
     },
   },
   codeSnippets: {
@@ -266,45 +266,45 @@ class Main {
 
 // Sample problem data for another type of question
 const sampleStringProblem = {
-  title: "Valid Palindrome",
+  title: 'Valid Palindrome',
   description:
-    "A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers. Given a string s, return true if it is a palindrome, or false otherwise.",
-  difficulty: "EASY",
-  tags: ["String", "Two Pointers"],
+    'A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers. Given a string s, return true if it is a palindrome, or false otherwise.',
+  difficulty: 'EASY',
+  tags: ['String', 'Two Pointers'],
   constraints:
-    "1 <= s.length <= 2 * 10^5\ns consists only of printable ASCII characters.",
+    '1 <= s.length <= 2 * 10^5\ns consists only of printable ASCII characters.',
   hints:
-    "Consider using two pointers, one from the start and one from the end, moving towards the center.",
+    'Consider using two pointers, one from the start and one from the end, moving towards the center.',
   editorial:
-    "We can use two pointers approach to check if the string is a palindrome. One pointer starts from the beginning and the other from the end, moving towards each other.",
+    'We can use two pointers approach to check if the string is a palindrome. One pointer starts from the beginning and the other from the end, moving towards each other.',
   testcases: [
     {
-      input: "A man, a plan, a canal: Panama",
-      output: "true",
+      input: 'A man, a plan, a canal: Panama',
+      output: 'true',
     },
     {
-      input: "race a car",
-      output: "false",
+      input: 'race a car',
+      output: 'false',
     },
     {
-      input: " ",
-      output: "true",
+      input: ' ',
+      output: 'true',
     },
   ],
   examples: {
     JAVASCRIPT: {
       input: 's = "A man, a plan, a canal: Panama"',
-      output: "true",
+      output: 'true',
       explanation: '"amanaplanacanalpanama" is a palindrome.',
     },
     PYTHON: {
       input: 's = "A man, a plan, a canal: Panama"',
-      output: "true",
+      output: 'true',
       explanation: '"amanaplanacanalpanama" is a palindrome.',
     },
     JAVA: {
       input: 's = "A man, a plan, a canal: Panama"',
-      output: "true",
+      output: 'true',
       explanation: '"amanaplanacanalpanama" is a palindrome.',
     },
   },
@@ -466,7 +466,7 @@ public class Main {
 };
 
 const CreateProblemForm = () => {
-  const [sampleType, setSampleType] = useState("DP");
+  const [sampleType, setSampleType] = useState('DP');
   const navigate = useNavigate();
 
   const {
@@ -478,22 +478,22 @@ const CreateProblemForm = () => {
   } = useForm({
     resolver: zodResolver(problemSchema),
     defaultValues: {
-      testcases: [{ input: "", output: "" }],
-      tags: [""],
+      testcases: [{ input: '', output: '' }],
+      tags: [''],
       examples: {
-        JAVASCRIPT: { input: "", output: "", explanation: "" },
-        PYTHON: { input: "", output: "", explanation: "" },
-        JAVA: { input: "", output: "", explanation: "" },
+        JAVASCRIPT: { input: '', output: '', explanation: '' },
+        PYTHON: { input: '', output: '', explanation: '' },
+        JAVA: { input: '', output: '', explanation: '' },
       },
       codeSnippets: {
-        JAVASCRIPT: "function solution() {\n  // Write your code here\n}",
-        PYTHON: "def solution():\n    # Write your code here\n    pass",
-        JAVA: "public class Solution {\n    public static void main(String[] args) {\n        // Write your code here\n    }\n}",
+        JAVASCRIPT: 'function solution() {\n  // Write your code here\n}',
+        PYTHON: 'def solution():\n    # Write your code here\n    pass',
+        JAVA: 'public class Solution {\n    public static void main(String[] args) {\n        // Write your code here\n    }\n}',
       },
       referenceSolutions: {
-        JAVASCRIPT: "// Add your reference solution here",
-        PYTHON: "# Add your reference solution here",
-        JAVA: "// Add your reference solution here",
+        JAVASCRIPT: '// Add your reference solution here',
+        PYTHON: '# Add your reference solution here',
+        JAVA: '// Add your reference solution here',
       },
     },
   });
@@ -505,7 +505,7 @@ const CreateProblemForm = () => {
     replace: replaceTestCases,
   } = useFieldArray({
     control,
-    name: "testCases",
+    name: 'testCases',
   });
 
   const {
@@ -515,7 +515,7 @@ const CreateProblemForm = () => {
     replace: replaceTags,
   } = useFieldArray({
     control,
-    name: "tags",
+    name: 'tags',
   });
 
   const { createProblem, isCreatingProblem } = useProblemStore();
@@ -524,16 +524,16 @@ const CreateProblemForm = () => {
     try {
       const result = await createProblem(value);
       if (result.success) {
-        navigate("/");
+        navigate('/');
       }
     } catch (error) {
-      console.error("Error creating problem", error);
-      toast.error("Error creating problem");
+      console.error('Error creating problem', error);
+      toast.error('Error creating problem');
     }
   };
 
   const loadSampleData = () => {
-    const sampleData = sampleType === "DP" ? sampledpData : sampleStringProblem;
+    const sampleData = sampleType === 'DP' ? sampledpData : sampleStringProblem;
 
     replaceTags(sampleData.tags.map((tag) => tag));
     replaceTestCases(sampleData.testcases.map((tc) => tc));
@@ -557,18 +557,18 @@ const CreateProblemForm = () => {
                 <button
                   type="button"
                   className={`btn join-item ${
-                    sampleType === "DP" ? "btn-active" : ""
+                    sampleType === 'DP' ? 'btn-active' : ''
                   }`}
-                  onClick={() => setSampleType("DP")}
+                  onClick={() => setSampleType('DP')}
                 >
                   DP Problem
                 </button>
                 <button
                   type="button"
                   className={`btn join-item ${
-                    sampleType === "string" ? "btn-active" : ""
+                    sampleType === 'string' ? 'btn-active' : ''
                   }`}
-                  onClick={() => setSampleType("string")}
+                  onClick={() => setSampleType('string')}
                 >
                   String Problem
                 </button>
@@ -596,7 +596,7 @@ const CreateProblemForm = () => {
                 <input
                   type="text"
                   className="input input-bordered w-full text-base md:text-lg"
-                  {...register("title")}
+                  {...register('title')}
                   placeholder="Enter problem title"
                 />
                 {errors.title && (
@@ -616,7 +616,7 @@ const CreateProblemForm = () => {
                 </label>
                 <textarea
                   className="textarea textarea-bordered min-h-32 w-full text-base md:text-lg p-4 resize-y"
-                  {...register("description")}
+                  {...register('description')}
                   placeholder="Enter problem description"
                 />
                 {errors.description && (
@@ -636,7 +636,7 @@ const CreateProblemForm = () => {
                 </label>
                 <select
                   className="select select-bordered w-full text-base md:text-lg"
-                  {...register("difficulty")}
+                  {...register('difficulty')}
                 >
                   <option value="EASY">Easy</option>
                   <option value="MEDIUM">Medium</option>
@@ -662,7 +662,7 @@ const CreateProblemForm = () => {
                 <button
                   type="button"
                   className="btn btn-primary btn-sm"
-                  onClick={() => appendTag("")}
+                  onClick={() => appendTag('')}
                 >
                   <Plus className="w-4 h-4 mr-1" /> Add Tag
                 </button>
@@ -706,7 +706,7 @@ const CreateProblemForm = () => {
                 <button
                   type="button"
                   className="btn btn-primary btn-sm"
-                  onClick={() => appendTestCase({ input: "", output: "" })}
+                  onClick={() => appendTestCase({ input: '', output: '' })}
                 >
                   <Plus className="w-4 h-4 mr-1" /> Add Test Case
                 </button>
@@ -783,7 +783,7 @@ const CreateProblemForm = () => {
 
             {/* Code Editor Sections */}
             <div className="space-y-8">
-              {["JAVASCRIPT", "PYTHON", "JAVA"].map((language) => (
+              {['JAVASCRIPT', 'PYTHON', 'JAVA'].map((language) => (
                 <div
                   key={language}
                   className="card bg-base-200 p-4 md:p-6 shadow-md"
@@ -814,7 +814,7 @@ const CreateProblemForm = () => {
                                 options={{
                                   minimap: { enabled: false },
                                   fontSize: 14,
-                                  lineNumbers: "on",
+                                  lineNumbers: 'on',
                                   roundedSelection: false,
                                   scrollBeyondLastLine: false,
                                   automaticLayout: true,
@@ -854,7 +854,7 @@ const CreateProblemForm = () => {
                                 options={{
                                   minimap: { enabled: false },
                                   fontSize: 14,
-                                  lineNumbers: "on",
+                                  lineNumbers: 'on',
                                   roundedSelection: false,
                                   scrollBeyondLastLine: false,
                                   automaticLayout: true,
@@ -951,7 +951,7 @@ const CreateProblemForm = () => {
                   </label>
                   <textarea
                     className="textarea textarea-bordered min-h-24 w-full p-3 resize-y"
-                    {...register("constraints")}
+                    {...register('constraints')}
                     placeholder="Enter problem constraints"
                   />
                   {errors.constraints && (
@@ -970,7 +970,7 @@ const CreateProblemForm = () => {
                   </label>
                   <textarea
                     className="textarea textarea-bordered min-h-24 w-full p-3 resize-y"
-                    {...register("hints")}
+                    {...register('hints')}
                     placeholder="Enter hints for solving the problem"
                   />
                 </div>
@@ -982,7 +982,7 @@ const CreateProblemForm = () => {
                   </label>
                   <textarea
                     className="textarea textarea-bordered min-h-32 w-full p-3 resize-y"
-                    {...register("editorial")}
+                    {...register('editorial')}
                     placeholder="Enter problem editorial/solution explanation"
                   />
                 </div>

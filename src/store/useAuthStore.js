@@ -1,6 +1,6 @@
-import { create } from "zustand";
-import { axiosInstance } from "../lib/axios";
-import toast from "react-hot-toast";
+import { create } from 'zustand';
+import { axiosInstance } from '../lib/axios';
+import toast from 'react-hot-toast';
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
@@ -9,32 +9,32 @@ export const useAuthStore = create((set, get) => ({
   isCheckingAuth: false,
   isEmailVerified: false,
   verificationStatus: 'pending', // 'pending', 'loading', 'success', 'error'
-  isVerifying: false, 
+  isVerifying: false,
 
   checkAuth: async () => {
     set({ isCheckingAuth: true });
     try {
-      const res = await axiosInstance.get("/auth/profile");
-      console.log("Checkauth response: ", res.data);
+      const res = await axiosInstance.get('/auth/profile');
+      console.log('Checkauth response: ', res.data);
 
       const userData = res.data.data;
-      
-      set({ 
+
+      set({
         authUser: userData,
-        isEmailVerified: userData?.isEmailVerified || false
+        isEmailVerified: userData?.isEmailVerified || false,
       });
       return true;
     } catch (error) {
       // Handle all errors gracefully
       if (error.response?.status === 401) {
-        console.log("User not authenticated (expected)");
+        console.log('User not authenticated (expected)');
       } else {
-        console.log("❌ Error checking auth:", error.message);
+        console.log('❌ Error checking auth:', error.message);
       }
-      
-      set({ 
+
+      set({
         authUser: null,
-        isEmailVerified: false
+        isEmailVerified: false,
       });
       return false;
     } finally {
@@ -45,14 +45,16 @@ export const useAuthStore = create((set, get) => ({
   signup: async (data) => {
     set({ isSigningUp: true });
     try {
-      const res = await axiosInstance.post("/auth/register", data);
+      const res = await axiosInstance.post('/auth/register', data);
 
-      toast.success(res.data.message || "Account created! Please verify your email.");
-      return true; 
+      toast.success(
+        res.data.message || 'Account created! Please verify your email.'
+      );
+      return true;
     } catch (error) {
-      console.log("Error signing up", error);
-      toast.error(error.response?.data?.message || "Error signing up");
-      return false; 
+      console.log('Error signing up', error);
+      toast.error(error.response?.data?.message || 'Error signing up');
+      return false;
     } finally {
       set({ isSigningUp: false });
     }
@@ -60,7 +62,7 @@ export const useAuthStore = create((set, get) => ({
 
   verify: async (verificationToken) => {
     const state = get();
-  
+
     if (state.isVerifying || state.verificationStatus === 'success') {
       console.log('🚫 Verification already in progress or completed');
       return;
@@ -68,40 +70,44 @@ export const useAuthStore = create((set, get) => ({
 
     console.log('🔄 Starting verification for token:', verificationToken);
     set({ verificationStatus: 'loading', isVerifying: true });
-    
+
     try {
-      const res = await axiosInstance.get(`/auth/verifyEmail/${verificationToken}`);
+      const res = await axiosInstance.get(
+        `/auth/verifyEmail/${verificationToken}`
+      );
       console.log('✅ Verification successful:', res.data);
       const userData = res.data.data;
-      
-      set({ 
+
+      set({
         authUser: userData,
         isEmailVerified: true,
         verificationStatus: 'success',
-        isVerifying: false
+        isVerifying: false,
       });
 
-      toast.success(res.data.message || "Email verified successfully!");
+      toast.success(res.data.message || 'Email verified successfully!');
     } catch (error) {
-      console.log("❌ Error Verifying User", error);
-      console.log("❌ Error response:", error.response?.data);
-      
-      if (error.response?.data?.message?.includes('already verified') || 
-          error.response?.status === 400) {
+      console.log('❌ Error Verifying User', error);
+      console.log('❌ Error response:', error.response?.data);
+
+      if (
+        error.response?.data?.message?.includes('already verified') ||
+        error.response?.status === 400
+      ) {
         console.log('📧 Email might already be verified');
-        set({ 
+        set({
           isEmailVerified: true,
           verificationStatus: 'success',
-          isVerifying: false
+          isVerifying: false,
         });
-        toast.success("Email is already verified!");
+        toast.success('Email is already verified!');
       } else {
-        set({ 
+        set({
           isEmailVerified: false,
           verificationStatus: 'error',
-          isVerifying: false
+          isVerifying: false,
         });
-        toast.error(error.response?.data?.message || "Error verifying email");
+        toast.error(error.response?.data?.message || 'Error verifying email');
       }
     }
   },
@@ -109,20 +115,20 @@ export const useAuthStore = create((set, get) => ({
   login: async (data) => {
     set({ isLoggingIn: true });
     try {
-      const res = await axiosInstance.post("/auth/login", data);
+      const res = await axiosInstance.post('/auth/login', data);
 
       const userData = res.data.data;
-      
-      set({ 
+
+      set({
         authUser: userData,
-        isEmailVerified: userData?.isEmailVerified || false
+        isEmailVerified: userData?.isEmailVerified || false,
       });
 
-      toast.success(res.data.message || "Login successful!");
+      toast.success(res.data.message || 'Login successful!');
       return true;
     } catch (error) {
-      console.log("Error logging in", error);
-      toast.error(error.response?.data?.message || "Error logging in");
+      console.log('Error logging in', error);
+      toast.error(error.response?.data?.message || 'Error logging in');
       return false;
     } finally {
       set({ isLoggingIn: false });
@@ -131,16 +137,16 @@ export const useAuthStore = create((set, get) => ({
 
   logout: async () => {
     try {
-      await axiosInstance.get("/auth/logout");
-      set({ 
+      await axiosInstance.get('/auth/logout');
+      set({
         authUser: null,
-        isEmailVerified: false 
+        isEmailVerified: false,
       });
 
-      toast.success("Logout successful");
+      toast.success('Logout successful');
     } catch (error) {
-      console.log("Error logging out", error);
-      toast.error("Error logging out");
+      console.log('Error logging out', error);
+      toast.error('Error logging out');
     }
   },
 }));
