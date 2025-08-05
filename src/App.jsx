@@ -31,11 +31,6 @@ const App = () => {
             />
           </Route>
 
-          <Route
-            path="/problem/:id"
-            element={authUser ? <ProblemPage /> : <Navigate to={'/login'} />}
-          />
-
           {/* <Route
             path="/profile"
             element={
@@ -45,6 +40,11 @@ const App = () => {
             }
           /> */}
         </Route>
+
+        <Route
+          path="/problem/:id"
+          element={authUser ? <ProblemPage /> : <Navigate to={'/login'} />}
+        />
 
         <Route
           path="/login"
