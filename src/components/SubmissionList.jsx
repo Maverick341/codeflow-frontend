@@ -79,7 +79,7 @@ const SubmissionsList = ({ submissions, isLoading }) => {
                   ) : (
                     <div className="flex items-center gap-2 text-error">
                       <XCircle className="w-6 h-6" />
-                      <span className="font-semibold">{submission.status}</span>
+                      <span className="font-semibold">Wrong Answer{/*submission.status*/}</span>
                     </div>
                   )}
                   <div className="badge badge-neutral">
