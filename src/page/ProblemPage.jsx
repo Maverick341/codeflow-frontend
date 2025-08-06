@@ -23,6 +23,7 @@ import { useExecutionStore } from '../store/useExecutionStore';
 import { useSubmissionStore } from '../store/useSubmissionStore';
 import Submission from '../components/Submission';
 import SubmissionsList from '../components/SubmissionList';
+import ExecutionResults from '../components/ExecutionResults';
 
 const ProblemPage = () => {
   const { id } = useParams();
@@ -42,7 +43,14 @@ const ProblemPage = () => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [testcases, setTestCases] = useState([]);
 
-  const { executeCode, submission, isExecuting } = useExecutionStore();
+  const {
+    executeCode,
+    runCode,
+    submission,
+    execution,
+    isExecuting,
+    isRunning,
+  } = useExecutionStore();
 
   useEffect(() => {
     getProblemById(id);
@@ -52,7 +60,7 @@ const ProblemPage = () => {
   useEffect(() => {
     if (problem) {
       setCode(
-        problem.codeSnippets?.[selectedLanguage] || submission?.sourceCode || ""
+        problem.codeSnippets?.[selectedLanguage] || submission?.sourceCode || ''
       );
       setTestCases(
         problem.testcases?.map((tc) => ({
@@ -77,13 +85,25 @@ const ProblemPage = () => {
     setCode(problem.codeSnippets?.[lang] || '');
   };
 
-  const handleRunCode = (e) => {
+  const handleSubmitCode = (e) => {
     e.preventDefault();
     try {
       const language_id = getLanguageId(selectedLanguage);
       const stdin = problem.testcases.map((tc) => tc.input);
       const expected_outputs = problem.testcases.map((tc) => tc.output);
       executeCode(code, language_id, stdin, expected_outputs, id);
+    } catch (error) {
+      console.log('Error submitting code', error);
+    }
+  };
+
+  const handleRunCodeOnly = (e) => {
+    e.preventDefault();
+    try {
+      const language_id = getLanguageId(selectedLanguage);
+      const stdin = problem.testcases.map((tc) => tc.input);
+      const expected_outputs = problem.testcases.map((tc) => tc.output);
+      runCode(code, language_id, stdin, expected_outputs, id);
     } catch (error) {
       console.log('Error executing code', error);
     }
@@ -315,7 +335,7 @@ const ProblemPage = () => {
                   onChange={(value) => setCode(value || '')}
                   options={{
                     minimap: { enabled: false },
-                    fontSize: 20,
+                    fontSize: 15,
                     lineNumbers: 'on',
                     roundedSelection: false,
                     scrollBeyondLastLine: false,
@@ -328,21 +348,21 @@ const ProblemPage = () => {
               <div className="p-4 border-t border-base-300 bg-base-200">
                 <div className="flex justify-between items-center">
                   <button
-                    className="btn btn-primary gap-2"
-                    // className={`btn btn-primary gap-2 ${
-                    //   isExecuting ? 'loading' : ''
-                    // }`}
-                    // onClick={handleRunCode}
-                    // disabled={isExecuting}
+                    // className="btn btn-primary gap-2"
+                    className={`btn btn-primary gap-2 ${
+                      isRunning ? 'loading' : ''
+                    }`}
+                    onClick={handleRunCodeOnly}
+                    disabled={isRunning}
                   >
-                    {!isExecuting && <Play className="w-4 h-4" />}
+                    {!isRunning && <Play className="w-4 h-4" />}
                     Run Code
                   </button>
                   <button
                     className={`btn btn-success gap-2 ${
                       isExecuting ? 'loading' : ''
                     }`}
-                    onClick={handleRunCode}
+                    onClick={handleSubmitCode}
                     disabled={isExecuting}
                   >
                     Submit Solution
@@ -357,6 +377,8 @@ const ProblemPage = () => {
           <div className="card-body">
             {submission ? (
               <Submission submission={submission} />
+            ) : execution ? (
+              <ExecutionResults execution={execution} /> // New component
             ) : (
               <>
                 <div className="flex items-center justify-between mb-6">
