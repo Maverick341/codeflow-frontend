@@ -13,8 +13,8 @@ import AddProblem from './page/AddProblem.jsx';
 import Dashboard from './components/Dashboard.jsx';
 import ProblemPage from './page/ProblemPage.jsx';
 
-import Index from './page/Index.jsx';
-import Layout2 from './layout/Layout2.jsx';
+import Index from './page/temp-landing/Index.jsx';
+import Layout2 from './layout/temp-landing/Layout2.jsx'
 
 const App = () => {
   const { authUser } = useAuthStore();
@@ -44,7 +44,7 @@ const App = () => {
           /> */}
         </Route>
 
-        <Route path='/temp-landing' element={<Layout2> <Index /> </Layout2>}/>
+        <Route path='/temp-landing' element={<Layout2> <Index /> </Layout2>}/> //temp landing page
 
         <Route
           path="/problem/:id"

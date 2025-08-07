@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Code, PlayCircle, Target, TrendingUp } from 'lucide-react';
-import AnimatedBackground from '@/components/landing/AnimatedBackground';
-import CodeSnippet from '@/components/landing/CodeSnippet';
-import FeatureCard from '@/components/landing/FeatureCard';
+import AnimatedBackground from '@/components/temp-landing/AnimatedBackground';
+import CodeSnippet from '@/components/temp-landing/CodeSnippet';
+import FeatureCard from '@/components/temp-landing/FeatureCard';
 
 const containerVariants = {
   hidden: { opacity: 0 },
