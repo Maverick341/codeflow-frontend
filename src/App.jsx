@@ -13,6 +13,9 @@ import AddProblem from './page/AddProblem.jsx';
 import Dashboard from './components/Dashboard.jsx';
 import ProblemPage from './page/ProblemPage.jsx';
 
+import Index from './page/Index.jsx';
+import Layout2 from './layout/Layout2.jsx';
+
 const App = () => {
   const { authUser } = useAuthStore();
   console.log(authUser);
@@ -40,6 +43,8 @@ const App = () => {
             }
           /> */}
         </Route>
+
+        <Route path='/temp-landing' element={<Layout2> <Index /> </Layout2>}/>
 
         <Route
           path="/problem/:id"
