@@ -12,7 +12,7 @@ import AdminRoute from './components/AdminRoute.jsx';
 import AddProblem from './page/AddProblem.jsx';
 import Dashboard from './components/Dashboard.jsx';
 import ProblemPage from './page/ProblemPage.jsx';
-
+import ProfilePage from './page/ProfilePage.jsx';
 
 const App = () => {
   const { authUser } = useAuthStore();
@@ -32,14 +32,14 @@ const App = () => {
             />
           </Route>
 
-          {/* <Route
+          <Route
             path="/profile"
             element={
               <ProtectedRoute>
                 <ProfilePage />
               </ProtectedRoute>
             }
-          /> */}
+          />
         </Route>
 
 
