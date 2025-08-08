@@ -31,9 +31,9 @@ Frontend for **CodeFlow**, a LeetCode-style online coding platform. This React +
 
 ---
 
-## 📸 Demo
+## 📸 UI
 
-Here’s a preview of the CodeFlow frontend in action(not yet add):
+Here’s a preview of the CodeFlow frontend:
 
 ![CodeFlow UI](./public/code-flow-editor.png)
 <!-- Or use an external link: ![CodeFlow UI](https://yourhost.com/codeflow-ui.png) -->
