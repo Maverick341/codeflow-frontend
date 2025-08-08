@@ -30,7 +30,7 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   const handleStartPracticing = () => {
-    navigate('/login');
+    navigate('/signup');
   };
 
   return (
