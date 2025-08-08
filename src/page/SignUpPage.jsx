@@ -172,6 +172,16 @@ const SignUpPage = () => {
             </button>
           </form>
 
+          {/* Alpha Notice (conditionally rendered) */}
+          {import.meta.env.VITE_SHOW_ALPHA_NOTICE === 'true' && (
+            <div className="mb-4 p-3 rounded-lg bg-yellow-100/10 border border-yellow-300/20 text-yellow-300 text-sm text-center">
+              <strong>Alpha Notice:</strong> CodeFlow is currently in alpha. User
+              verification is manual and may take some time. You will be contacted
+              once your account is approved; email notifications are not sent
+              automatically.
+            </div>
+          )}
+
           {/* Footer */}
           <div className="text-center">
             <p className="text-base-content/60">
