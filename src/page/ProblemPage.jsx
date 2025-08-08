@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Editor from '@monaco-editor/react';
 import {
@@ -22,6 +22,7 @@ import {
   Award,
   Timer,
   Zap,
+  AlignLeft,
 } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { useProblemStore } from '../store/useProblemStore';
@@ -50,6 +51,8 @@ const ProblemPage = () => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [testcases, setTestCases] = useState([]);
 
+  const editorRef = useRef(null);
+
   const {
     executeCode,
     runCode,
@@ -58,6 +61,12 @@ const ProblemPage = () => {
     isExecuting,
     isRunning,
   } = useExecutionStore();
+
+  const handleFormatCode = () => {
+    if (editorRef.current) {
+      editorRef.current.getAction('editor.action.formatDocument').run();
+    }
+  };
 
   useEffect(() => {
     getProblemById(id);
@@ -416,9 +425,21 @@ const ProblemPage = () => {
                   <Terminal className="w-5 h-5 text-codeflow-purple" />
                   <span className="font-semibold text-base-content">Code Editor</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-base-content/60">
-                  <Zap className="w-4 h-4" />
-                  <span>Auto-save enabled</span>
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2 text-sm text-base-content/60">
+                    <Zap className="w-4 h-4" />
+                    <span>Auto-save enabled</span>
+                  </div>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleFormatCode}
+                    className="btn btn-sm bg-codeflow-purple/20 hover:bg-codeflow-purple/30 border-codeflow-purple/40 text-codeflow-purple gap-1.5 transition-all duration-200"
+                    title="Format Code (Ctrl+Shift+F)"
+                  >
+                    <AlignLeft className="w-3.5 h-3.5" />
+                    Format
+                  </motion.button>
                 </div>
               </div>
 
@@ -429,6 +450,28 @@ const ProblemPage = () => {
                   theme="vs-dark"
                   value={code}
                   onChange={(value) => setCode(value || '')}
+                  onMount={(editor, monaco) => {
+                    // Store editor reference
+                    editorRef.current = editor;
+
+                    // Disable copy/paste/cut/select all commands by overriding them
+                    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyC, () => {
+                      // Copy disabled
+                      return null;
+                    });
+                    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyV, () => {
+                      // Paste disabled
+                      return null;
+                    });
+                    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyX, () => {
+                      // Cut disabled
+                      return null;
+                    });
+                    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyA, () => {
+                      // Select All disabled
+                      return null;
+                    });
+                  }}
                   options={{
                     minimap: { enabled: false },
                     fontSize: 14,
@@ -440,6 +483,10 @@ const ProblemPage = () => {
                     tabSize: 2,
                     wordWrap: 'on',
                     lineHeight: 20,
+                    contextmenu: false,
+                    selectOnLineNumbers: false,
+                    selectionHighlight: false,
+                    occurrencesHighlight: false,
                   }}
                 />
               </div>

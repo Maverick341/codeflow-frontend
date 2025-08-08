@@ -30,7 +30,6 @@ const UserDetails = () => {
     streak: 15,
     rank: 'Expert',
     points: 1247,
-    joinDate: 'March 2024'
   };
 
   const achievements = [
@@ -70,9 +69,9 @@ const UserDetails = () => {
                   Admin
                 </span>
               )}
-              <span className="px-3 py-1 bg-codeflow-purple/20 text-codeflow-purple text-xs rounded-full">
+              {/* <span className="px-3 py-1 bg-codeflow-purple/20 text-codeflow-purple text-xs rounded-full">
                 {userStats.rank}
-              </span>
+              </span> */}
             </div>
 
             <motion.button
@@ -96,18 +95,20 @@ const UserDetails = () => {
           
           <div className="flex items-center gap-3 text-base-content/80">
             <Calendar className="w-4 h-4 text-codeflow-blue" />
-            <span className="text-sm">Joined {userStats.joinDate}</span>
+            <span className="text-sm">
+              Joined {authUser?.createdAt ? new Date(authUser.createdAt).toLocaleDateString() : 'Unknown'}
+            </span>
           </div>
           
-          <div className="flex items-center gap-3 text-base-content/80">
+          {/* <div className="flex items-center gap-3 text-base-content/80">
             <MapPin className="w-4 h-4 text-codeflow-blue" />
             <span className="text-sm">San Francisco, CA</span>
-          </div>
+          </div> */}
 
-          <div className="flex items-center gap-3 text-base-content/80">
+          {/* <div className="flex items-center gap-3 text-base-content/80">
             <Clock className="w-4 h-4 text-codeflow-blue" />
             <span className="text-sm">{userStats.streak} day streak</span>
-          </div>
+          </div> */}
         </div>
 
         {/* Stats Grid */}
@@ -134,7 +135,7 @@ const UserDetails = () => {
         </div>
 
         {/* Recent Achievements */}
-        <div className="p-6 border-t border-white/10">
+        {/* <div className="p-6 border-t border-white/10">
           <h3 className="text-lg font-semibold text-base-content mb-4">Recent Achievements</h3>
           <div className="space-y-3">
             {achievements.map((achievement, index) => (
@@ -155,7 +156,7 @@ const UserDetails = () => {
               </motion.div>
             ))}
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Edit Profile Modal */}

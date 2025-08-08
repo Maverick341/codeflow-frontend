@@ -1,57 +1,69 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { X, Upload, User, Mail, Camera, Save, Loader2 } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
+import { EditProfileSchema } from '../schemas/profileSchema';
 
 const EditProfileModal = ({ isOpen, onClose }) => {
-  const { authUser } = useAuthStore();
+  const { authUser, updateDetails, updateAvatar } = useAuthStore();
   const fileInputRef = useRef(null);
   
-  const [formData, setFormData] = useState({
-    fullname: authUser?.fullname || '',
-    username: authUser?.username || authUser?.email?.split('@')[0] || '',
-    email: authUser?.email || '',
-    avatarUrl: authUser?.avatarUrl || 'https://avatar.iran.liara.run/public/boy'
-  });
-  
-  const [previewImage, setPreviewImage] = useState(formData.avatarUrl);
-  const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState({});
+  const [previewImage, setPreviewImage] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
+  const [isUpdatingAvatar, setIsUpdatingAvatar] = useState(false);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+  } = useForm({
+    resolver: zodResolver(EditProfileSchema),
+    defaultValues: {
+      fullname: '',
+      username: '',
+    },
+  });
+
+  // Initialize form with current user data when modal opens or authUser updates
+  useEffect(() => {
+    if (isOpen && authUser) {
+      console.log('Initializing form with authUser:', authUser);
+      reset({
+        fullname: authUser.fullname || '',
+        username: authUser.username || '',
+      });
+      setPreviewImage(authUser.avatarUrl);
+      setSelectedFile(null);
     }
-  };
+  }, [isOpen, authUser?.fullname, authUser?.username, authUser?.avatarUrl, reset]);
+
+  // Separate effect to handle authUser updates when modal is already open
+  useEffect(() => {
+    if (isOpen && authUser) {
+      console.log('AuthUser updated while modal is open:', authUser);
+      reset({
+        fullname: authUser.fullname || '',
+        username: authUser.username || '',
+      });
+      setPreviewImage(authUser.avatarUrl);
+    }
+  }, [authUser?.fullname, authUser?.username, authUser?.avatarUrl, isOpen, reset]);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       // Validate file type
       if (!file.type.startsWith('image/')) {
-        setErrors(prev => ({
-          ...prev,
-          avatar: 'Please select a valid image file'
-        }));
         return;
       }
 
       // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        setErrors(prev => ({
-          ...prev,
-          avatar: 'Image size must be less than 5MB'
-        }));
         return;
       }
 
@@ -59,81 +71,79 @@ const EditProfileModal = ({ isOpen, onClose }) => {
       const reader = new FileReader();
       reader.onload = (e) => {
         setPreviewImage(e.target.result);
-        setFormData(prev => ({
-          ...prev,
-          avatarFile: file,
-          avatarUrl: e.target.result
-        }));
+        setSelectedFile(file);
       };
       reader.readAsDataURL(file);
-      
-      // Clear any previous errors
-      setErrors(prev => ({
-        ...prev,
-        avatar: ''
-      }));
     }
   };
 
-  const validateForm = () => {
-    const newErrors = {};
+  const onSubmit = async (data) => {
+    // Check if any profile data has changed
+    const profileData = {};
 
-    if (!formData.fullname.trim()) {
-      newErrors.fullname = 'Full name is required';
+    if (data.fullname && data.fullname.trim() && data.fullname !== authUser?.fullname) {
+      profileData.fullname = data.fullname.trim();
     }
 
-    if (!formData.username.trim()) {
-      newErrors.username = 'Username is required';
-    } else if (formData.username.length < 3) {
-      newErrors.username = 'Username must be at least 3 characters';
-    } else if (!/^[a-zA-Z0-9_]+$/.test(formData.username)) {
-      newErrors.username = 'Username can only contain letters, numbers, and underscores';
+    if (data.username && data.username.trim() && data.username !== authUser?.username) {
+      profileData.username = data.username.trim();
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+    let profileUpdateSuccess = true;
+    let avatarUpdateSuccess = true;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
+    // Update profile details if any have changed
+    if (Object.keys(profileData).length > 0) {
+      setIsUpdatingProfile(true);
+      try {
+        profileUpdateSuccess = await updateDetails(profileData);
+      } catch (error) {
+        console.error('Error updating profile:', error);
+        profileUpdateSuccess = false;
+      } finally {
+        setIsUpdatingProfile(false);
+      }
     }
 
-    setIsLoading(true);
-    
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Here you would make the actual API call to update the profile
-      console.log('Profile update data:', formData);
-      
-      // Success feedback
+    // Update avatar if a new file is selected
+    if (selectedFile) {
+      setIsUpdatingAvatar(true);
+      try {
+        avatarUpdateSuccess = await updateAvatar(selectedFile);
+      } catch (error) {
+        console.error('Error updating avatar:', error);
+        avatarUpdateSuccess = false;
+      } finally {
+        setIsUpdatingAvatar(false);
+      }
+    }
+
+    // Close modal only if all updates were successful
+    if (profileUpdateSuccess && avatarUpdateSuccess) {
+      // Reset form state before closing
+      setSelectedFile(null);
       onClose();
-      // You could add a toast notification here
-      
-    } catch (error) {
-      console.error('Error updating profile:', error);
-      setErrors({
-        submit: 'Failed to update profile. Please try again.'
-      });
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const handleReset = () => {
-    setFormData({
-      fullname: authUser?.fullname || '',
-      username: authUser?.username || authUser?.email?.split('@')[0] || '',
-      email: authUser?.email || '',
-      avatarUrl: authUser?.avatarUrl || 'https://avatar.iran.liara.run/public/boy'
-    });
-    setPreviewImage(authUser?.avatarUrl || 'https://avatar.iran.liara.run/public/boy');
-    setErrors({});
+    if (authUser) {
+      // Force reset with current authUser data
+      reset({
+        fullname: authUser.fullname || '',
+        username: authUser.username || '',
+      });
+      setPreviewImage(authUser.avatarUrl || 'https://avatar.iran.liara.run/public/boy');
+      setSelectedFile(null);
+    }
   };
+
+  const handleClose = () => {
+    handleReset();
+    onClose();
+  };
+
+  const isLoading = isUpdatingProfile || isUpdatingAvatar;
 
   if (!isOpen) return null;
 
@@ -150,7 +160,7 @@ const EditProfileModal = ({ isOpen, onClose }) => {
           <div className="flex items-center justify-between p-6 border-b border-white/10">
             <h3 className="text-xl font-bold text-base-content">Edit Profile</h3>
             <button
-              onClick={onClose}
+              onClick={handleClose}
               className="btn btn-ghost btn-sm btn-circle"
               disabled={isLoading}
             >
@@ -159,25 +169,34 @@ const EditProfileModal = ({ isOpen, onClose }) => {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          <form
+            key={authUser?.fullname + authUser?.username}
+            onSubmit={handleSubmit(onSubmit)}
+            className="p-6 space-y-6"
+          >
             {/* Avatar Upload */}
-            <div className="flex flex-col items-center">
-              <div className="relative group">
+            <div className="flex flex-col items-center mb-2">
+              <div className="relative group cursor-pointer">
                 <img
-                  src={previewImage}
+                  src={previewImage || authUser?.avatarUrl || 'https://avatar.iran.liara.run/public/boy'}
                   alt="Profile preview"
-                  className="w-24 h-24 rounded-full object-cover ring-4 ring-codeflow-purple/30 group-hover:ring-codeflow-purple/50 transition-all duration-300"
+                  className="w-28 h-28 rounded-full object-cover ring-4 ring-codeflow-purple/30 group-hover:ring-codeflow-purple/60 transition-all duration-300 shadow-lg"
                 />
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+                  className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center backdrop-blur-sm"
                   disabled={isLoading}
                 >
-                  <Camera className="w-6 h-6 text-white" />
+                  <Camera className="w-6 h-6 text-white drop-shadow-lg" />
                 </button>
+                {selectedFile && (
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                  </div>
+                )}
               </div>
-              
+
               <input
                 ref={fileInputRef}
                 type="file"
@@ -185,71 +204,71 @@ const EditProfileModal = ({ isOpen, onClose }) => {
                 onChange={handleImageUpload}
                 className="hidden"
               />
-              
+
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="btn btn-ghost btn-sm mt-2 gap-2"
+                className="btn btn-ghost btn-sm mt-3 gap-2 hover:bg-codeflow-purple/10 transition-colors duration-200"
                 disabled={isLoading}
               >
                 <Upload className="w-4 h-4" />
                 Change Avatar
               </button>
-              
-              {errors.avatar && (
-                <p className="text-red-400 text-xs mt-1">{errors.avatar}</p>
-              )}
             </div>
 
             {/* Full Name */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium flex items-center gap-2">
-                  <User className="w-4 h-4 text-codeflow-purple" />
-                  Full Name
-                </span>
+                <span className="label-text font-medium">Full Name</span>
               </label>
-              <input
-                type="text"
-                name="fullname"
-                placeholder="Enter your full name"
-                value={formData.fullname}
-                onChange={handleInputChange}
-                className={`input input-bordered bg-base-200/50 border-white/20 focus:border-codeflow-purple/50 ${
-                  errors.fullname ? 'border-red-400' : ''
-                }`}
-                disabled={isLoading}
-              />
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
+                  <User className="h-5 w-5 text-base-content/40" />
+                </div>
+                <input
+                  type="text"
+                  {...register('fullname')}
+                  className={`input input-bordered w-full pl-10 ${
+                    errors.fullname ? 'input-error' : ''
+                  }`}
+                  placeholder={authUser?.fullname || "Enter your full name"}
+                  disabled={isLoading}
+                />
+              </div>
               {errors.fullname && (
-                <p className="text-red-400 text-xs mt-1">{errors.fullname}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.fullname.message}
+                </p>
               )}
             </div>
 
             {/* Username */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium flex items-center gap-2">
-                  <User className="w-4 h-4 text-codeflow-blue" />
-                  Username
-                </span>
+                <span className="label-text font-medium">Username</span>
               </label>
-              <input
-                type="text"
-                name="username"
-                placeholder="Enter your username"
-                value={formData.username}
-                onChange={handleInputChange}
-                className={`input input-bordered bg-base-200/50 border-white/20 focus:border-codeflow-purple/50 ${
-                  errors.username ? 'border-red-400' : ''
-                }`}
-                disabled={isLoading}
-              />
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
+                  <User className="h-5 w-5 text-base-content/40" />
+                </div>
+                <input
+                  type="text"
+                  {...register('username')}
+                  className={`input input-bordered w-full pl-10 ${
+                    errors.username ? 'input-error' : ''
+                  }`}
+                  placeholder={authUser?.username || "Enter your username"}
+                  disabled={isLoading}
+                />
+              </div>
               {errors.username && (
-                <p className="text-red-400 text-xs mt-1">{errors.username}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.username.message}
+                </p>
               )}
               <label className="label">
                 <span className="label-text-alt text-base-content/60">
-                  Username can only contain letters, numbers, and underscores
+                  Leave fields empty to keep current values
                 </span>
               </label>
             </div>
@@ -257,18 +276,20 @@ const EditProfileModal = ({ isOpen, onClose }) => {
             {/* Email (Read-only) */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-gray-400" />
-                  Email
-                </span>
+                <span className="label-text font-medium">Email</span>
               </label>
-              <input
-                type="email"
-                value={formData.email}
-                className="input input-bordered bg-base-300/50 border-white/10 text-base-content/60"
-                disabled
-                readOnly
-              />
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
+                  <Mail className="h-5 w-5 text-base-content/40" />
+                </div>
+                <input
+                  type="email"
+                  value={authUser?.email || ''}
+                  className="input input-bordered w-full pl-10 bg-base-300/50 text-base-content/60"
+                  disabled
+                  readOnly
+                />
+              </div>
               <label className="label">
                 <span className="label-text-alt text-base-content/60">
                   Email cannot be changed
@@ -276,47 +297,43 @@ const EditProfileModal = ({ isOpen, onClose }) => {
               </label>
             </div>
 
-            {/* Error Message */}
-            {errors.submit && (
-              <div className="alert alert-error">
-                <span className="text-sm">{errors.submit}</span>
-              </div>
-            )}
-
             {/* Actions */}
-            <div className="flex gap-3 pt-4">
+            <div className="flex gap-3 pt-6">
               <button
                 type="button"
                 onClick={handleReset}
-                className="btn btn-ghost flex-1"
+                className="btn btn-ghost flex-1 hover:bg-base-300/30 transition-colors duration-200"
                 disabled={isLoading}
               >
                 Reset
               </button>
               <button
                 type="button"
-                onClick={onClose}
-                className="btn bg-base-200/50 border-white/20 flex-1"
+                onClick={handleClose}
+                className="btn bg-base-200/50 border-white/10 hover:bg-base-200/70 flex-1 transition-colors duration-200"
                 disabled={isLoading}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="btn bg-gradient-to-r from-codeflow-purple to-codeflow-blue hover:from-codeflow-purple/90 hover:to-codeflow-blue/90 text-white border-0 flex-1 gap-2"
+                className="btn flex-1 gap-2 bg-gradient-to-r from-codeflow-purple to-codeflow-blue hover:from-codeflow-purple/90 hover:to-codeflow-blue/90 text-white border-0 font-medium shadow-lg relative overflow-hidden group transition-all duration-300"
                 disabled={isLoading}
               >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-4 h-4" />
-                    Save Changes
-                  </>
-                )}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+                <div className="relative z-10 flex items-center gap-2">
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      {isUpdatingAvatar ? 'Updating Avatar...' : 'Saving...'}
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4" />
+                      Save Changes
+                    </>
+                  )}
+                </div>
               </button>
             </div>
           </form>

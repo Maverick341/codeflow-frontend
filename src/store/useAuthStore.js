@@ -170,7 +170,7 @@ export const useAuthStore = create((set, get) => ({
     const formData = new FormData();
     formData.append('avatar', imageFile);
     try {
-      const res = await axiosInstance.post('/auth/updateAvatar', formData, {
+      const res = await axiosInstance.patch('/auth/updateAvatar', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       const userData = res.data.data;
