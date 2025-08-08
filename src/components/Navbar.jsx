@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Code, LogOut } from 'lucide-react';
+import { User, Code, LogOut, Settings, Trophy, BookOpen, Star, Shield, Crown } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import { Link } from 'react-router-dom';
 import LogoutButton from './LogoutButton';
@@ -67,33 +67,172 @@ const Navbar = () => {
                   Logout
                 </LogoutButton>
                 <div className="dropdown dropdown-end">
-                  <label tabIndex={0} className="btn btn-ghost btn-circle avatar flex flex-row ">
-                    <div className="w-10 rounded-full ">
-                      <img src={authUser?.avatarUrl || 'https://avatar.iran.liara.run/public/boy'} alt="User Avatar" className="object-cover" />
+                  <motion.label
+                    tabIndex={0}
+                    className="btn btn-ghost btn-circle avatar relative group"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <div className="w-10 h-10 rounded-full ring-2 ring-offset-2 ring-offset-background ring-transparent group-hover:ring-codeflow-purple/50 transition-all duration-300">
+                      <img
+                        src={authUser?.avatarUrl || 'https://avatar.iran.liara.run/public/boy'}
+                        alt="User Avatar"
+                        className="w-full h-full object-cover rounded-full"
+                      />
                     </div>
-                  </label>
-                  <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 space-y-3">
-                    {authUser?.fullname && (
-                      <li>
-                        <p className="text-base font-semibold">{authUser?.fullname}</p>
-                        <hr className="border-gray-200/10" />
-                      </li>
-                    )}
-                    <li>
-                      <Link to="/profile" className="hover:bg-primary hover:text-white text-base font-semibold">
-                        <User className="w-4 h-4 mr-2" />
-                        My Profile
-                      </Link>
-                    </li>
-                    {authUser?.role === 'ADMIN' && (
-                      <li>
-                        <Link to="/add-problem" className="hover:bg-primary hover:text-white text-base font-semibold">
-                          <Code className="w-4 h-4 mr-1" />
-                          Add Problem
+                    {/* Online indicator */}
+                    <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-background"></div>
+                  </motion.label>
+
+                  <motion.ul
+                    tabIndex={0}
+                    className="menu dropdown-content mt-3 z-[1] p-0 shadow-2xl bg-base-100/95 backdrop-blur-sm rounded-2xl w-72 border border-white/10"
+                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {/* User Info Header */}
+                    <div className="p-4 bg-gradient-to-r from-codeflow-purple/20 to-codeflow-blue/20 rounded-t-2xl border-b border-white/10">
+                      <div className="flex items-center gap-3">
+                        <div className="relative">
+                          <img
+                            src={authUser?.avatarUrl || 'https://avatar.iran.liara.run/public/boy'}
+                            alt="User Avatar"
+                            className="w-12 h-12 object-cover rounded-full ring-2 ring-codeflow-purple/50"
+                          />
+                          {authUser?.role === 'ADMIN' && (
+                            <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center">
+                              <Crown className="w-3 h-3 text-white" />
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-base font-semibold text-base-content truncate">
+                            {authUser?.fullname || 'User'}
+                          </p>
+                          <p className="text-sm text-base-content/60 truncate">
+                            {authUser?.email || 'user@example.com'}
+                          </p>
+                          <div className="flex items-center gap-1 mt-1">
+                            {authUser?.role === 'ADMIN' && (
+                              <span className="px-2 py-0.5 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 text-yellow-400 text-xs rounded-full flex items-center gap-1">
+                                <Shield className="w-3 h-3" />
+                                Admin
+                              </span>
+                            )}
+                            <span className="px-2 py-0.5 bg-green-400/20 text-green-400 text-xs rounded-full">
+                              Online
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Stats Section */}
+                    <div className="p-4 border-b border-white/10">
+                      <div className="grid grid-cols-3 gap-4 text-center">
+                        <div className="flex flex-col items-center">
+                          <div className="text-lg font-bold text-codeflow-purple">127</div>
+                          <div className="text-xs text-base-content/60">Problems</div>
+                        </div>
+                        <div className="flex flex-col items-center">
+                          <div className="text-lg font-bold text-codeflow-blue">89%</div>
+                          <div className="text-xs text-base-content/60">Success</div>
+                        </div>
+                        <div className="flex flex-col items-center">
+                          <div className="text-lg font-bold text-green-400">1,247</div>
+                          <div className="text-xs text-base-content/60">Points</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Menu Items */}
+                    <div className="p-2">
+                      <motion.li whileHover={{ x: 4 }} transition={{ duration: 0.2 }}>
+                        <Link
+                          to="/profile"
+                          className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-codeflow-purple/10 hover:to-codeflow-blue/10 hover:text-codeflow-purple transition-all duration-200 group"
+                        >
+                          <div className="p-2 bg-blue-500/10 rounded-lg group-hover:bg-blue-500/20 transition-colors">
+                            <User className="w-4 h-4 text-blue-400" />
+                          </div>
+                          <div className="flex-1">
+                            <div className="font-medium">My Profile</div>
+                            <div className="text-xs text-base-content/60">View and edit profile</div>
+                          </div>
                         </Link>
-                      </li>
-                    )}
-                  </ul>
+                      </motion.li>
+
+                      <motion.li whileHover={{ x: 4 }} transition={{ duration: 0.2 }}>
+                        <Link
+                          to="/achievements"
+                          className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-codeflow-purple/10 hover:to-codeflow-blue/10 hover:text-codeflow-purple transition-all duration-200 group"
+                        >
+                          <div className="p-2 bg-yellow-500/10 rounded-lg group-hover:bg-yellow-500/20 transition-colors">
+                            <Trophy className="w-4 h-4 text-yellow-400" />
+                          </div>
+                          <div className="flex-1">
+                            <div className="font-medium">Achievements</div>
+                            <div className="text-xs text-base-content/60">View your progress</div>
+                          </div>
+                        </Link>
+                      </motion.li>
+
+                      <motion.li whileHover={{ x: 4 }} transition={{ duration: 0.2 }}>
+                        <Link
+                          to="/bookmarks"
+                          className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-codeflow-purple/10 hover:to-codeflow-blue/10 hover:text-codeflow-purple transition-all duration-200 group"
+                        >
+                          <div className="p-2 bg-purple-500/10 rounded-lg group-hover:bg-purple-500/20 transition-colors">
+                            <BookOpen className="w-4 h-4 text-purple-400" />
+                          </div>
+                          <div className="flex-1">
+                            <div className="font-medium">Bookmarks</div>
+                            <div className="text-xs text-base-content/60">Saved problems</div>
+                          </div>
+                        </Link>
+                      </motion.li>
+
+                      {authUser?.role === 'ADMIN' && (
+                        <>
+                          <div className="divider my-2 text-xs text-base-content/40">Admin Tools</div>
+                          <motion.li whileHover={{ x: 4 }} transition={{ duration: 0.2 }}>
+                            <Link
+                              to="/add-problem"
+                              className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-orange-500/10 hover:to-red-500/10 hover:text-orange-400 transition-all duration-200 group"
+                            >
+                              <div className="p-2 bg-orange-500/10 rounded-lg group-hover:bg-orange-500/20 transition-colors">
+                                <Code className="w-4 h-4 text-orange-400" />
+                              </div>
+                              <div className="flex-1">
+                                <div className="font-medium">Add Problem</div>
+                                <div className="text-xs text-base-content/60">Create new challenges</div>
+                              </div>
+                            </Link>
+                          </motion.li>
+                        </>
+                      )}
+
+                      <motion.li whileHover={{ x: 4 }} transition={{ duration: 0.2 }}>
+                        <Link
+                          to="/settings"
+                          className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-codeflow-purple/10 hover:to-codeflow-blue/10 hover:text-codeflow-purple transition-all duration-200 group"
+                        >
+                          <div className="p-2 bg-gray-500/10 rounded-lg group-hover:bg-gray-500/20 transition-colors">
+                            <Settings className="w-4 h-4 text-gray-400" />
+                          </div>
+                          <div className="flex-1">
+                            <div className="font-medium">Settings</div>
+                            <div className="text-xs text-base-content/60">Preferences & privacy</div>
+                          </div>
+                        </Link>
+                      </motion.li>
+
+                      <div className="divider my-2"></div>
+
+                      
+                    </div>
+                  </motion.ul>
                 </div>
               </>
             ) : (
