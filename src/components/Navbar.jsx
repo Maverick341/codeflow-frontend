@@ -120,16 +120,16 @@ const Navbar = () => {
                                 Admin
                               </span>
                             )}
-                            <span className="px-2 py-0.5 bg-green-400/20 text-green-400 text-xs rounded-full">
+                            {/* <span className="px-2 py-0.5 bg-green-400/20 text-green-400 text-xs rounded-full">
                               Online
-                            </span>
+                            </span> */}
                           </div>
                         </div>
                       </div>
                     </div>
 
                     {/* Stats Section */}
-                    <div className="p-4 border-b border-white/10">
+                    {/* <div className="p-4 border-b border-white/10">
                       <div className="grid grid-cols-3 gap-4 text-center">
                         <div className="flex flex-col items-center">
                           <div className="text-lg font-bold text-codeflow-purple">127</div>
@@ -144,7 +144,7 @@ const Navbar = () => {
                           <div className="text-xs text-base-content/60">Points</div>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
 
                     {/* Menu Items */}
                     <div className="p-2">
@@ -163,7 +163,7 @@ const Navbar = () => {
                         </Link>
                       </motion.li>
 
-                      <motion.li whileHover={{ x: 4 }} transition={{ duration: 0.2 }}>
+                      {/* <motion.li whileHover={{ x: 4 }} transition={{ duration: 0.2 }}>
                         <Link
                           to="/achievements"
                           className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-codeflow-purple/10 hover:to-codeflow-blue/10 hover:text-codeflow-purple transition-all duration-200 group"
@@ -176,9 +176,9 @@ const Navbar = () => {
                             <div className="text-xs text-base-content/60">View your progress</div>
                           </div>
                         </Link>
-                      </motion.li>
+                      </motion.li> */}
 
-                      <motion.li whileHover={{ x: 4 }} transition={{ duration: 0.2 }}>
+                      {/* <motion.li whileHover={{ x: 4 }} transition={{ duration: 0.2 }}>
                         <Link
                           to="/bookmarks"
                           className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-codeflow-purple/10 hover:to-codeflow-blue/10 hover:text-codeflow-purple transition-all duration-200 group"
@@ -191,7 +191,7 @@ const Navbar = () => {
                             <div className="text-xs text-base-content/60">Saved problems</div>
                           </div>
                         </Link>
-                      </motion.li>
+                      </motion.li> */}
 
                       {authUser?.role === 'ADMIN' && (
                         <>
@@ -213,7 +213,7 @@ const Navbar = () => {
                         </>
                       )}
 
-                      <motion.li whileHover={{ x: 4 }} transition={{ duration: 0.2 }}>
+                      {/* <motion.li whileHover={{ x: 4 }} transition={{ duration: 0.2 }}>
                         <Link
                           to="/settings"
                           className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-codeflow-purple/10 hover:to-codeflow-blue/10 hover:text-codeflow-purple transition-all duration-200 group"
@@ -226,9 +226,9 @@ const Navbar = () => {
                             <div className="text-xs text-base-content/60">Preferences & privacy</div>
                           </div>
                         </Link>
-                      </motion.li>
+                      </motion.li> */}
 
-                      <div className="divider my-2"></div>
+                      {/* <div className="divider my-2"></div> */}
 
                       
                     </div>
