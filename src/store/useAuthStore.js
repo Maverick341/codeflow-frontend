@@ -149,4 +149,38 @@ export const useAuthStore = create((set, get) => ({
       toast.error('Error logging out');
     }
   },
+
+  updateDetails: async (data) => {
+    // data: { username, fullname }
+    try {
+      const res = await axiosInstance.post('/auth/updateProfile', data);
+      const userData = res.data.data;
+      set({ authUser: userData });
+      toast.success(res.data.message || 'Profile updated successfully!');
+      return true;
+    } catch (error) {
+      console.log('Error updating profile', error);
+      toast.error(error.response?.data?.message || 'Error updating profile');
+      return false;
+    }
+  },
+
+  updateAvatar: async (imageFile) => {
+    // imageFile: File object
+    const formData = new FormData();
+    formData.append('avatar', imageFile);
+    try {
+      const res = await axiosInstance.post('/auth/updateAvatar', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      const userData = res.data.data;
+      set({ authUser: userData });
+      toast.success(res.data.message || 'Avatar updated successfully!');
+      return true;
+    } catch (error) {
+      console.log('Error updating avatar', error);
+      toast.error(error.response?.data?.message || 'Error updating avatar');
+      return false;
+    }
+  },
 }));
