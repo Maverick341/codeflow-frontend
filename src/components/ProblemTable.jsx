@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { motion } from 'framer-motion';
 import { useAuthStore } from '../store/useAuthStore';
 import { Link } from 'react-router-dom';
 import {
@@ -8,6 +9,14 @@ import {
   Plus,
   Trash,
   TrashIcon,
+  Search,
+  Filter,
+  ChevronLeft,
+  ChevronRight,
+  CheckCircle2,
+  Clock,
+  Zap,
+  Star,
 } from 'lucide-react';
 import { useActionStore } from '../store/useActionStore';
 import { usePlaylistStore } from '../store/usePlaylistStore';
@@ -76,179 +85,323 @@ const ProblemTable = ({ problems }) => {
 
   const difficulties = ['EASY', 'MEDIUM', 'HARD'];
 
+  const getDifficultyColor = (difficulty) => {
+    switch (difficulty) {
+      case 'EASY': return 'bg-green-500/20 text-green-400 border-green-500/30';
+      case 'MEDIUM': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case 'HARD': return 'bg-red-500/20 text-red-400 border-red-500/30';
+      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+    }
+  };
+
+  const solvedCount = problems?.filter(problem => 
+    problem.solvedBy.some(user => user.userId === authUser?.id)
+  ).length || 0;
+
   return (
-    <div className="w-full max-w-6xl mx-auto mt-10">
-      {/* Header with Create Playlist Button */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Problems</h2>
-        <button
-          className="btn btn-primary gap-2"
-          onClick={() => setIsCreateModalOpen(true)}
-        >
-          <Plus className="w-4 h-4" />
-          Create Playlist
-        </button>
-      </div>
+    <div className="w-full max-w-7xl mx-auto">
+      {/* Header Section */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="card bg-base-100/50 backdrop-blur-sm shadow-xl border border-white/10 p-6 mb-8"
+      >
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-gradient-to-r from-codeflow-purple to-codeflow-blue rounded-lg">
+                <Zap className="w-5 h-5 text-white" />
+              </div>
+              <h2 className="text-3xl font-bold text-base-content">Problems</h2>
+            </div>
+            <p className="text-base-content/70">
+              Solve {problems?.length || 0} problems • {solvedCount} completed • {Math.round((solvedCount / (problems?.length || 1)) * 100)}% progress
+            </p>
+          </div>
+          
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="btn bg-gradient-to-r from-codeflow-purple to-codeflow-blue hover:from-codeflow-purple/90 hover:to-codeflow-blue/90 text-white border-0 gap-2"
+            onClick={() => setIsCreateModalOpen(true)}
+          >
+            <Plus className="w-4 h-4" />
+            Create Playlist
+          </motion.button>
+        </div>
+      </motion.div>
 
-      <div className="flex flex-wrap justify-between items-center mb-6 gap-4">
-        <input
-          type="text"
-          placeholder="Search by title"
-          className="input input-bordered w-full md:w-1/3 bg-base-200"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <select
-          className="select select-bordered bg-base-200"
-          value={difficulty}
-          onChange={(e) => setDifficulty(e.target.value)}
-        >
-          <option value="ALL">All Difficulties</option>
-          {difficulties.map((diff) => (
-            <option key={diff} value={diff}>
-              {diff.charAt(0).toUpperCase() + diff.slice(1).toLowerCase()}
-            </option>
-          ))}
-        </select>
-        <select
-          className="select select-bordered bg-base-200"
-          value={selectedTag}
-          onChange={(e) => setSelectedTag(e.target.value)}
-        >
-          <option value="ALL">All Tags</option>
-          {allTags.map((tag) => (
-            <option key={tag} value={tag}>
-              {tag}
-            </option>
-          ))}
-        </select>
-      </div>
+      {/* Filters Section */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="card bg-base-100/30 backdrop-blur-sm shadow-xl border border-white/10 p-6 mb-8"
+      >
+        <div className="flex flex-col lg:flex-row gap-4">
+          {/* Search */}
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-base-content/50" />
+            <input
+              type="text"
+              placeholder="Search problems by title..."
+              className="input input-bordered w-full pl-10 bg-base-200/50 border-white/20 focus:border-codeflow-purple/50"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto rounded-xl shadow-md">
-        <table className="table table-zebra table-lg bg-base-200 text-base-content">
-          <thead className="bg-base-300">
-            <tr>
-              <th>Solved</th>
-              <th>Title</th>
-              <th>Tags</th>
-              <th>Difficulty</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedProblems.length > 0 ? (
-              paginatedProblems.map((problem) => {
-                const isSolved = problem.solvedBy.some(
-                  (user) => user.userId === authUser?.id
-                );
-                return (
-                  <tr key={problem.id}>
-                    <td>
-                      <input
-                        type="checkbox"
-                        checked={isSolved}
-                        readOnly
-                        className="checkbox checkbox-sm"
-                      />
-                    </td>
-                    <td>
-                      <Link
-                        to={`/problem/${problem.id}`}
-                        className="font-semibold hover:underline"
-                      >
-                        {problem.title}
-                      </Link>
-                    </td>
-                    <td>
-                      <div className="flex flex-wrap gap-1">
-                        {(problem.tags || []).map((tag, idx) => (
-                          <span
-                            key={idx}
-                            className="badge badge-outline badge-warning text-xs font-bold"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </td>
-                    <td>
-                      <span
-                        className={`badge font-semibold text-xs text-white ${
-                          problem.difficulty === 'EASY'
-                            ? 'badge-success'
-                            : problem.difficulty === 'MEDIUM'
-                              ? 'badge-warning'
-                              : 'badge-error'
-                        }`}
-                      >
-                        {problem.difficulty}
-                      </span>
-                    </td>
-                    <td>
-                      <div className="flex flex-col md:flex-row gap-2 items-start md:items-center">
-                        {authUser?.role === 'ADMIN' && (
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => handleDelete(problem.id)}
-                              className="btn btn-sm btn-error"
-                            >
-                              {isDeletingProblem ? (
-                                <Loader2 className="animate-spin h-4 w-4" />
-                              ) : (
-                                <TrashIcon className="w-4 h-4 text-white" />
-                              )}
-                            </button>
-                            <button disabled className="btn btn-sm btn-warning">
-                              <PencilIcon className="w-4 h-4 text-white" />
-                            </button>
-                          </div>
-                        )}
-                        <button
-                          className="btn btn-sm btn-outline flex gap-2 items-center"
-                          onClick={() => handleAddToPlaylist(problem.id)}
-                        >
-                          <Bookmark className="w-4 h-4" />
-                          <span className="hidden sm:inline">
-                            Save to Playlist
-                          </span>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })
-            ) : (
-              <tr>
-                <td colSpan={5} className="text-center py-6 text-gray-500">
-                  No problems found.
-                </td>
-              </tr>
+          {/* Difficulty Filter */}
+          <div className="relative">
+            <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-base-content/50" />
+            <select
+              className="select select-bordered bg-base-200/50 border-white/20 pl-10 min-w-48"
+              value={difficulty}
+              onChange={(e) => setDifficulty(e.target.value)}
+            >
+              <option value="ALL">All Difficulties</option>
+              {difficulties.map((diff) => (
+                <option key={diff} value={diff}>
+                  {diff.charAt(0).toUpperCase() + diff.slice(1).toLowerCase()}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Tag Filter */}
+          <select
+            className="select select-bordered bg-base-200/50 border-white/20 min-w-48"
+            value={selectedTag}
+            onChange={(e) => setSelectedTag(e.target.value)}
+          >
+            <option value="ALL">All Tags</option>
+            {allTags.map((tag) => (
+              <option key={tag} value={tag}>
+                {tag}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Active Filters Display */}
+        {(search || difficulty !== 'ALL' || selectedTag !== 'ALL') && (
+          <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-white/10">
+            <span className="text-sm text-base-content/60">Active filters:</span>
+            {search && (
+              <span className="badge bg-codeflow-purple/20 text-codeflow-purple border-codeflow-purple/30">
+                Search: "{search}"
+              </span>
             )}
-          </tbody>
-        </table>
-      </div>
+            {difficulty !== 'ALL' && (
+              <span className="badge bg-codeflow-blue/20 text-codeflow-blue border-codeflow-blue/30">
+                {difficulty.toLowerCase()}
+              </span>
+            )}
+            {selectedTag !== 'ALL' && (
+              <span className="badge bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
+                {selectedTag}
+              </span>
+            )}
+          </div>
+        )}
+      </motion.div>
 
-      {/* Pagination */}
-      <div className="flex justify-center mt-6 gap-2">
-        <button
-          className="btn btn-sm"
-          disabled={currentPage === 1}
-          onClick={() => setCurrentPage((prev) => prev - 1)}
-        >
-          Prev
-        </button>
-        <span className="btn btn-ghost btn-sm">
-          {currentPage} / {totalPages}
-        </span>
-        <button
-          className="btn btn-sm"
-          disabled={currentPage === totalPages}
-          onClick={() => setCurrentPage((prev) => prev + 1)}
-        >
-          Next
-        </button>
-      </div>
+      {/* Table Section */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="card bg-base-100/30 backdrop-blur-sm shadow-xl border border-white/10 overflow-hidden"
+      >
+        <div className="overflow-x-auto">
+          <table className="table table-lg">
+            <thead className="bg-base-200/50">
+              <tr className="border-white/10">
+                <th className="text-base-content/80 font-semibold">Status</th>
+                <th className="text-base-content/80 font-semibold">Title</th>
+                <th className="text-base-content/80 font-semibold">Tags</th>
+                <th className="text-base-content/80 font-semibold">Difficulty</th>
+                <th className="text-base-content/80 font-semibold">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginatedProblems.length > 0 ? (
+                paginatedProblems.map((problem, index) => {
+                  const isSolved = problem.solvedBy.some(
+                    (user) => user.userId === authUser?.id
+                  );
+                  return (
+                    <motion.tr 
+                      key={problem.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="border-white/10 hover:bg-base-200/30 transition-colors"
+                    >
+                      <td>
+                        <div className="flex items-center gap-2">
+                          {isSolved ? (
+                            <CheckCircle2 className="w-5 h-5 text-green-400" />
+                          ) : (
+                            <Clock className="w-5 h-5 text-base-content/40" />
+                          )}
+                          <span className={`text-sm font-medium ${isSolved ? 'text-green-400' : 'text-base-content/60'}`}>
+                            {isSolved ? 'Solved' : 'Pending'}
+                          </span>
+                        </div>
+                      </td>
+                      <td>
+                        <Link
+                          to={`/problem/${problem.id}`}
+                          className="font-semibold text-base-content hover:text-codeflow-purple transition-colors hover:underline"
+                        >
+                          {problem.title}
+                        </Link>
+                      </td>
+                      <td>
+                        <div className="flex flex-wrap gap-1">
+                          {(problem.tags || []).slice(0, 3).map((tag, idx) => (
+                            <span
+                              key={idx}
+                              className="badge bg-yellow-500/20 text-yellow-400 border-yellow-500/30 text-xs font-medium"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                          {(problem.tags || []).length > 3 && (
+                            <span className="badge bg-base-200/50 text-base-content/60 text-xs">
+                              +{(problem.tags || []).length - 3}
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td>
+                        <span className={`badge border font-semibold text-xs ${getDifficultyColor(problem.difficulty)}`}>
+                          {problem.difficulty}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="flex flex-wrap gap-2">
+                          {authUser?.role === 'ADMIN' && (
+                            <div className="flex gap-2">
+                              <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => handleDelete(problem.id)}
+                                className="btn btn-sm bg-red-500/20 hover:bg-red-500/30 text-red-400 border-red-500/30"
+                              >
+                                {isDeletingProblem ? (
+                                  <Loader2 className="animate-spin h-4 w-4" />
+                                ) : (
+                                  <TrashIcon className="w-4 h-4" />
+                                )}
+                              </motion.button>
+                              <motion.button 
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                disabled 
+                                className="btn btn-sm bg-yellow-500/20 text-yellow-400 border-yellow-500/30 opacity-50"
+                              >
+                                <PencilIcon className="w-4 h-4" />
+                              </motion.button>
+                            </div>
+                          )}
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="btn btn-sm bg-codeflow-purple/20 hover:bg-codeflow-purple/30 text-codeflow-purple border-codeflow-purple/30 gap-1"
+                            onClick={() => handleAddToPlaylist(problem.id)}
+                          >
+                            <Bookmark className="w-4 h-4" />
+                            <span className="hidden sm:inline text-xs">Save</span>
+                          </motion.button>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan={5} className="text-center py-12">
+                    <div className="flex flex-col items-center">
+                      <div className="p-4 bg-base-200/50 rounded-full mb-4">
+                        <Search className="w-8 h-8 text-base-content/40" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-base-content/70 mb-2">No problems found</h3>
+                      <p className="text-base-content/50">Try adjusting your filters or search terms</p>
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-between items-center p-6 border-t border-white/10 bg-base-200/30">
+            <div className="text-sm text-base-content/60">
+              Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredProblems.length)} of {filteredProblems.length} problems
+            </div>
+            
+            <div className="flex gap-2">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="btn btn-sm bg-base-200/50 border-white/20"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((prev) => prev - 1)}
+              >
+                <ChevronLeft className="w-4 h-4" />
+                Prev
+              </motion.button>
+              
+              <div className="flex items-center gap-1">
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  const page = i + 1;
+                  return (
+                    <button
+                      key={page}
+                      className={`btn btn-sm ${currentPage === page 
+                        ? 'bg-gradient-to-r from-codeflow-purple to-codeflow-blue text-white border-0' 
+                        : 'bg-base-200/50 border-white/20'
+                      }`}
+                      onClick={() => setCurrentPage(page)}
+                    >
+                      {page}
+                    </button>
+                  );
+                })}
+                {totalPages > 5 && (
+                  <>
+                    <span className="text-base-content/40">...</span>
+                    <button
+                      className={`btn btn-sm ${currentPage === totalPages 
+                        ? 'bg-gradient-to-r from-codeflow-purple to-codeflow-blue text-white border-0' 
+                        : 'bg-base-200/50 border-white/20'
+                      }`}
+                      onClick={() => setCurrentPage(totalPages)}
+                    >
+                      {totalPages}
+                    </button>
+                  </>
+                )}
+              </div>
+              
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="btn btn-sm bg-base-200/50 border-white/20"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((prev) => prev + 1)}
+              >
+                Next
+                <ChevronRight className="w-4 h-4" />
+              </motion.button>
+            </div>
+          </div>
+        )}
+      </motion.div>
 
       {/* Modals */}
       <CreatePlaylistModal
