@@ -3,7 +3,7 @@
 Frontend for **CodeFlow**, a LeetCode-style online coding platform. This React + Vite project provides users with a clean interface to browse problems, write code, and view results in real-time.
 
 
-![CodeFlow UI Screenshot](./src/assets/codeflow-ui.png)
+![CodeFlow UI Screenshot](./public/code-flow-landing.png)
 
 ---
 
@@ -31,11 +31,11 @@ Frontend for **CodeFlow**, a LeetCode-style online coding platform. This React +
 
 ---
 
-## 📸 Demo
+## 📸 UI
 
-Here’s a preview of the CodeFlow frontend in action(not yet add):
+Here’s a preview of the CodeFlow frontend :
 
-<!-- ![CodeFlow UI](./src/assets/codeflow-ui.png) -->
+![CodeFlow UI](./public/code-flow-editor.png)
 <!-- Or use an external link: ![CodeFlow UI](https://yourhost.com/codeflow-ui.png) -->
 
 > ⚠️ Make sure to run both the frontend and backend servers for full functionality.
