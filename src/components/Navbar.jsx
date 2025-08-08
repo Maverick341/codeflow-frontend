@@ -75,7 +75,7 @@ const Navbar = () => {
                   >
                     <div className="w-10 h-10 rounded-full ring-2 ring-offset-2 ring-offset-background ring-transparent group-hover:ring-codeflow-purple/50 transition-all duration-300">
                       <img
-                        src={authUser?.avatarUrl || 'https://avatar.iran.liara.run/public/boy'}
+                        src={authUser?.avatarUrl}
                         alt="User Avatar"
                         className="w-full h-full object-cover rounded-full"
                       />
