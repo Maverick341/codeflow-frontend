@@ -4,7 +4,7 @@ Frontend for **CodeFlow**, a LeetCode-style online coding platform. This React +
 
 
 <div align="center">
-	<img src="./public/code-flow-landing.png" alt="CodeFlow UI Screenshot" width="320" style="margin: 0 auto; display: block;" />
+	<img src="./public/code-flow-landing.png" alt="CodeFlow UI Screenshot" width="70%" style="margin: 0 auto; display: block;" />
 </div>
 
 ---
