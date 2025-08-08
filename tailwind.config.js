@@ -56,11 +56,11 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        // Custom colors for the gradients and effects
+        // Custom colors for the gradients and effects - bright and visible
         codeflow: {
           dark: "#0f1117",
-          purple: "#6c5ce7",
-          blue: "#0984e3",
+          purple: "#a78bfa", // Brighter purple for visibility
+          blue: "#60a5fa",   // Brighter blue for visibility
           yellow: "#fdcb6e",
           green: "#00b894",
         },
@@ -94,5 +94,40 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("daisyui")
+  ],
+  daisyui: {
+    themes: [
+      {
+        codeflow: {
+          "primary": "#a78bfa",
+          "primary-content": "#ffffff",
+          "secondary": "#60a5fa",
+          "secondary-content": "#ffffff",
+          "accent": "#a78bfa",
+          "accent-content": "#ffffff",
+          "neutral": "#1f2937",
+          "neutral-content": "#ffffff",
+          "base-100": "#1a1d29",
+          "base-200": "#232838",
+          "base-300": "#2d3548",
+          "base-content": "#ffffff",
+          "info": "#0984e3",
+          "info-content": "#ffffff",
+          "success": "#10b981",
+          "success-content": "#ffffff",
+          "warning": "#f59e0b",
+          "warning-content": "#000000",
+          "error": "#ef4444",
+          "error-content": "#ffffff",
+        }
+      }
+    ],
+    darkTheme: "codeflow",
+    base: true,
+    utils: true,
+    logs: false,
+  },
 };

@@ -13,7 +13,7 @@ export default function FeatureCard({ icon: Icon, title, description, delay = 0 
       }}
       className="group relative"
     >
-      <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-white/5 to-white/[0.02] p-8 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:bg-white/[0.08]">
+      <div className="relative overflow-hidden rounded-2xl border border-gray-600/20 bg-gradient-to-b from-white/5 to-white/[0.02] p-8 backdrop-blur-sm transition-all duration-300 hover:border-codeflow-purple/30 hover:bg-white/[0.08]">
         {/* Glow effect on hover */}
         <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-codeflow-purple/10 to-codeflow-blue/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         
@@ -23,6 +23,9 @@ export default function FeatureCard({ icon: Icon, title, description, delay = 0 
             whileHover={{ scale: 1.1, rotate: 5 }}
             transition={{ duration: 0.2 }}
             className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-codeflow-purple to-codeflow-blue shadow-lg"
+            style={{
+              background: 'linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%)'
+            }}
           >
             <Icon className="h-7 w-7 text-white" />
           </motion.div>
@@ -37,7 +40,7 @@ export default function FeatureCard({ icon: Icon, title, description, delay = 0 
         </div>
 
         {/* Subtle border highlight */}
-        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-codeflow-purple/20 via-transparent to-codeflow-blue/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ padding: '1px' }}>
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-codeflow-purple/30 via-transparent to-codeflow-blue/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ padding: '1px' }}>
           <div className="h-full w-full rounded-2xl bg-background" />
         </div>
       </div>

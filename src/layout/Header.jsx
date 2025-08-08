@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Zap, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/Button";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -20,8 +20,8 @@ export default function Header() {
     <motion.header
       className={`sticky top-0 z-50 border-b transition-all duration-300 ${
         isScrolled
-          ? "border-white/20 bg-background/80 backdrop-blur-md shadow-lg"
-          : "border-border bg-background/80 backdrop-blur-sm"
+          ? "border-gray-600/30 bg-background/80 backdrop-blur-md shadow-lg"
+          : "border-gray-700/20 bg-background/80 backdrop-blur-sm"
       }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
@@ -33,11 +33,14 @@ export default function Header() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <Link to="/temp-landing" className="flex items-center space-x-2 group">
+          <Link to="/" className="flex items-center space-x-2 group">
             <motion.div
               className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-codeflow-purple to-codeflow-blue shadow-lg"
+              style={{
+                background: 'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)'
+              }}
               whileHover={{
-                boxShadow: "0 0 20px rgba(108, 92, 231, 0.5)",
+                boxShadow: "0 0 20px rgba(139, 92, 246, 0.5)",
                 scale: 1.1,
               }}
               transition={{ duration: 0.2 }}
@@ -50,7 +53,11 @@ export default function Header() {
               </motion.div>
             </motion.div>
             <motion.span
-              className="text-xl font-bold text-foreground group-hover:bg-gradient-to-r group-hover:from-codeflow-purple group-hover:to-codeflow-blue group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300"
+              className="text-xl font-bold transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-codeflow-purple group-hover:to-codeflow-blue group-hover:bg-clip-text group-hover:text-transparent"
+              style={{
+                color: '#ffffff',
+                textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+              }}
             >
               CodeFlow
             </motion.span>
@@ -68,12 +75,12 @@ export default function Header() {
             whileHover={{ scale: 1.05 }}
             className="relative"
           >
-            <div className="flex items-center gap-2 rounded-full border border-white/20 bg-gradient-to-r from-white/5 to-white/10 px-4 py-2 backdrop-blur-sm">
+            <div className="flex items-center gap-2 rounded-full border border-gray-600/20 bg-gradient-to-r from-white/5 to-white/10 px-4 py-2 backdrop-blur-sm hover:border-codeflow-purple/40 hover:bg-gradient-to-r hover:from-codeflow-purple/10 hover:to-codeflow-blue/10 transition-all duration-300">
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
               >
-                <Sparkles className="h-4 w-4 text-codeflow-purple" />
+                <Sparkles className="h-4 w-4" style={{ color: '#8b5cf6' }} />
               </motion.div>
               <span className="text-sm font-medium text-white/90">
                 Made for Developers
@@ -82,9 +89,12 @@ export default function Header() {
             
             {/* Animated border glow */}
             <motion.div
-              className="absolute inset-0 rounded-full bg-gradient-to-r from-codeflow-purple/20 to-codeflow-blue/20 blur-sm"
+              className="absolute inset-0 rounded-full bg-gradient-to-r from-codeflow-purple/30 to-codeflow-blue/30 blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              style={{
+                background: 'linear-gradient(90deg, rgba(139, 92, 246, 0.3) 0%, rgba(59, 130, 246, 0.3) 100%)'
+              }}
               animate={{
-                opacity: [0.5, 1, 0.5],
+                opacity: [0.3, 0.7, 0.3],
                 scale: [1, 1.1, 1],
               }}
               transition={{
@@ -106,12 +116,15 @@ export default function Header() {
               asChild
               variant="ghost"
               size="sm"
-              className="relative text-muted-foreground hover:text-foreground transition-colors duration-300 group"
+              className="relative text-white/70 hover:text-white hover:bg-sky-400 transition-all duration-300 group"
             >
               <Link to="/login">
                 Login
                 <motion.div
                   className="absolute bottom-0 left-1/2 h-0.5 w-0 bg-gradient-to-r from-codeflow-purple to-codeflow-blue"
+                  style={{
+                    background: 'linear-gradient(90deg, #8b5cf6 0%, #3b82f6 100%)'
+                  }}
                   whileHover={{ width: "100%", x: "-50%" }}
                   transition={{ duration: 0.3 }}
                 />
@@ -138,7 +151,10 @@ export default function Header() {
             <Button
               asChild
               size="sm"
-              className="relative overflow-hidden bg-gradient-to-r from-codeflow-purple to-codeflow-blue hover:from-codeflow-purple/90 hover:to-codeflow-blue/90 text-white font-medium shadow-lg"
+              className="relative overflow-hidden bg-gradient-to-r from-codeflow-purple to-codeflow-blue hover:from-codeflow-purple/90 hover:to-codeflow-blue/90 text-white font-medium shadow-lg border-0"
+              style={{
+                background: 'linear-gradient(90deg, #a78bfa 0%, #60a5fa 100%)'
+              }}
             >
               <Link to="/signup">
                 <motion.span
