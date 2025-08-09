@@ -56,12 +56,14 @@ const LogInPage = () => {
               className="text-center mb-8"
             >
               <div className="flex justify-center mb-4">
-                <motion.div
-                  whileHover={{ scale: 1.05, rotate: -5 }}
-                  className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#6c5ce7] to-[#0984e3] shadow-lg"
-                >
-                  <Zap className="h-6 w-6 text-white" />
-                </motion.div>
+                <Link to="/">
+                  <motion.div
+                    whileHover={{ scale: 1.05, rotate: -5 }}
+                    className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#6c5ce7] to-[#0984e3] shadow-lg"
+                  >
+                    <Zap className="h-6 w-6 text-white" />
+                  </motion.div>
+                </Link>
               </div>
               <h1 className="text-2xl font-bold text-white mb-2 lg:hidden">
                 Welcome Back

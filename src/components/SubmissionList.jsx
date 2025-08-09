@@ -67,39 +67,39 @@ const SubmissionsList = ({ submissions, isLoading }) => {
             key={submission.id}
             className="card bg-base-200 shadow-lg hover:shadow-xl transition-shadow rounded-lg"
           >
-            <div className="card-body p-4">
-              <div className="flex items-center justify-between">
+            <div className="card-body p-3 sm:p-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
                 {/* Left Section: Status and Language */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
                   {submission.status === 'ACCEPTED' ? (
                     <div className="flex items-center gap-2 text-success">
-                      <CheckCircle2 className="w-6 h-6" />
-                      <span className="font-semibold">Accepted</span>
+                      <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6" />
+                      <span className="font-semibold text-sm sm:text-base">Accepted</span>
                     </div>
                   ) : (
                     <div className="flex items-center gap-2 text-error">
-                      <XCircle className="w-6 h-6" />
-                      <span className="font-semibold">Wrong Answer{/*submission.status*/}</span>
+                      <XCircle className="w-5 h-5 sm:w-6 sm:h-6" />
+                      <span className="font-semibold text-sm sm:text-base">Wrong Answer{/*submission.status*/}</span>
                     </div>
                   )}
-                  <div className="badge badge-neutral">
+                  <div className="badge badge-neutral badge-sm sm:badge-md">
                     {submission.language}
                   </div>
                 </div>
 
                 {/* Right Section: Runtime, Memory, and Date */}
-                <div className="flex items-center gap-4 text-base-content/70">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-base-content/70">
                   <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    <span>{avgTime.toFixed(3)} s</span>
+                    <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="whitespace-nowrap">{avgTime.toFixed(3)} s</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Memory className="w-4 h-4" />
-                    <span>{avgMemory.toFixed(0)} KB</span>
+                    <Memory className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="whitespace-nowrap">{avgMemory.toFixed(0)} KB</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    <span>
+                    <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="whitespace-nowrap">
                       {new Date(submission.createdAt).toLocaleDateString()}
                     </span>
                   </div>

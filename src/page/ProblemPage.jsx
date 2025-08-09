@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Editor from '@monaco-editor/react';
+import toast from 'react-hot-toast';
 import {
   Play,
   FileText,
@@ -23,6 +24,7 @@ import {
   Timer,
   Zap,
   AlignLeft,
+  Copy,
 } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { useProblemStore } from '../store/useProblemStore';
@@ -106,6 +108,37 @@ const ProblemPage = () => {
     const lang = e.target.value;
     setSelectedLanguage(lang);
     setCode(problem.codeSnippets?.[lang] || '');
+  };
+  
+  // share functionality
+  const handleShareProblem = async () => {
+    try {
+      const currentUrl = window.location.href;
+      
+      // Try to use the Web Share API if available (mobile devices)
+      if (navigator.share) {
+        await navigator.share({
+          title: `CodeFlow - ${problem.title}`,
+          text: `Check out this coding problem: ${problem.title}`,
+          url: currentUrl,
+        });
+        toast.success('Problem shared successfully!');
+      } else {
+        // Fallback to clipboard copy
+        await navigator.clipboard.writeText(currentUrl);
+        toast.success('Problem URL copied to clipboard!');
+      }
+    } catch (error) {
+      // If both fail, show an error or fallback
+      console.log('Sharing failed:', error);
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        toast.success('Problem URL copied to clipboard!');
+      } catch (clipboardError) {
+        console.log('Clipboard copy also failed:', clipboardError);
+        toast.error('Failed to share problem. Please try again.');
+      }
+    }
   };
 
   const handleSubmitCode = (e) => {
@@ -308,63 +341,66 @@ const ProblemPage = () => {
         className="bg-base-100/80 backdrop-blur-sm shadow-2xl border-b border-white/10"
       >
         <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+          <div className="flex items-center justify-between flex-wrap">
+            <div className="flex items-center gap-4 flex-wrap">
               <Link to={'/'} className="flex items-center gap-2 text-codeflow-purple hover:text-codeflow-blue transition-colors">
                 <Home className="w-6 h-6" />
                 <ChevronRight className="w-4 h-4" />
               </Link>
               <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <h1 className="text-2xl font-bold text-base-content">{problem.title}</h1>
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getDifficultyColor(problem.difficulty)}`}>
+                <div className="flex items-center gap-3 mb-2 flex-wrap">
+                  <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-base-content truncate max-w-full">{problem.title}</h1>
+                  <span className={`px-3 py-1 rounded-full text-xs font-semibold flex-shrink-0 ${getDifficultyColor(problem.difficulty)}`}>
                     {problem.difficulty || 'Easy'}
                   </span>
                 </div>
-                <div className="flex items-center gap-4 text-sm text-base-content/70">
+                <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm text-base-content/70 flex-wrap">
                   <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    <span>
+                    <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="whitespace-nowrap">
                       Updated {new Date(problem.createdAt).toLocaleDateString()}
                     </span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Users className="w-4 h-4" />
-                    <span>{submissionCount} Submissions</span>
+                    <Users className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="whitespace-nowrap">{submissionCount} Submissions</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <ThumbsUp className="w-4 h-4" />
-                    <span>{problem.acceptance || 95}% Success Rate</span>
+                    <ThumbsUp className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="whitespace-nowrap">{problem.acceptance || 95}% Success</span>
                   </div>
                 </div>
               </div>
             </div>
             
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 mt-3 sm:mt-0">
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                className={`btn btn-ghost btn-circle ${isBookmarked ? 'text-yellow-400' : 'text-base-content/60'}`}
+                className={`btn btn-ghost btn-circle btn-sm sm:btn-md ${isBookmarked ? 'text-yellow-400' : 'text-base-content/60'}`}
                 onClick={() => setIsBookmarked(!isBookmarked)}
               >
-                <Bookmark className="w-5 h-5" fill={isBookmarked ? 'currentColor' : 'none'} />
+                <Bookmark className="w-4 h-4 sm:w-5 sm:h-5" fill={isBookmarked ? 'currentColor' : 'none'} />
               </motion.button>
               
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                className="btn btn-ghost btn-circle text-base-content/60 hover:text-codeflow-blue"
+                className="btn btn-ghost btn-circle btn-sm sm:btn-md text-base-content/60 hover:text-codeflow-blue"
+                onClick={handleShareProblem}
+                title="Share this problem"
               >
-                <Share2 className="w-5 h-5" />
+                <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
               </motion.button>
               
               <select
-                className="select select-bordered bg-base-200/50 border-white/20 text-base-content w-40"
+                className="select select-xs sm:select-sm select-bordered bg-base-200/80 hover:bg-base-200 border-base-300/60 hover:border-codeflow-purple/50 text-base-content w-24 sm:w-32 text-xs transition-colors duration-200 focus:border-codeflow-purple focus:ring-1 focus:ring-codeflow-purple/20 focus:outline-none backdrop-blur-sm"
+                style={{ boxShadow: 'inset 0 1px 3px rgba(255, 255, 255, 0.35)' }}
                 value={selectedLanguage}
                 onChange={handleLanguageChange}
               >
                 {Object.keys(problem.codeSnippets || {}).map((lang) => (
-                  <option key={lang} value={lang}>
+                  <option key={lang} value={lang} className="bg-base-100 text-base-content">
                     {lang.charAt(0).toUpperCase() + lang.slice(1)}
                   </option>
                 ))}
@@ -420,30 +456,31 @@ const ProblemPage = () => {
             className="card bg-base-100/50 backdrop-blur-sm shadow-2xl border border-white/10"
           >
             <div className="card-body p-0">
-              <div className="flex items-center justify-between p-4 border-b border-white/10 bg-base-200/30">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border-b border-white/10 bg-base-200/30 gap-3 sm:gap-0">
                 <div className="flex items-center gap-2">
-                  <Terminal className="w-5 h-5 text-codeflow-purple" />
-                  <span className="font-semibold text-base-content">Code Editor</span>
+                  <Terminal className="w-4 h-4 sm:w-5 sm:h-5 text-codeflow-purple" />
+                  <span className="font-semibold text-sm sm:text-base text-base-content">Code Editor</span>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2 text-sm text-base-content/60">
-                    <Zap className="w-4 h-4" />
-                    <span>Auto-save enabled</span>
+                <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
+                  <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-base-content/60">
+                    <Zap className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="hidden sm:inline">Auto-save enabled</span>
+                    <span className="sm:hidden">Auto-save</span>
                   </div>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={handleFormatCode}
-                    className="btn btn-sm bg-codeflow-purple/20 hover:bg-codeflow-purple/30 border-codeflow-purple/40 text-codeflow-purple gap-1.5 transition-all duration-200"
+                    className="btn btn-xs sm:btn-sm bg-codeflow-purple/20 hover:bg-codeflow-purple/30 border-codeflow-purple/40 text-codeflow-purple gap-1 sm:gap-1.5 transition-all duration-200"
                     title="Format Code (Ctrl+Shift+F)"
                   >
-                    <AlignLeft className="w-3.5 h-3.5" />
-                    Format
+                    <AlignLeft className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                    <span className="text-xs sm:text-sm">Format</span>
                   </motion.button>
                 </div>
               </div>
 
-              <div className="h-[600px] w-full relative">
+              <div className="h-[400px] sm:h-[500px] lg:h-[600px] w-full relative">
                 <Editor
                   height="100%"
                   language={selectedLanguage ? selectedLanguage.toLowerCase() : ''}
@@ -474,7 +511,7 @@ const ProblemPage = () => {
                   }}
                   options={{
                     minimap: { enabled: false },
-                    fontSize: 14,
+                    fontSize: 12,
                     lineNumbers: 'on',
                     roundedSelection: false,
                     scrollBeyondLastLine: false,
@@ -482,7 +519,7 @@ const ProblemPage = () => {
                     automaticLayout: true,
                     tabSize: 2,
                     wordWrap: 'on',
-                    lineHeight: 20,
+                    lineHeight: 18,
                     contextmenu: false,
                     selectOnLineNumbers: false,
                     selectionHighlight: false,
@@ -491,32 +528,40 @@ const ProblemPage = () => {
                 />
               </div>
 
-              <div className="p-4 bg-base-200/30 border-t border-white/10">
-                <div className="flex justify-between items-center">
+              <div className="p-3 sm:p-4 bg-base-200/30 border-t border-white/10">
+                <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-3 sm:gap-4">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className={`btn bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white border-0 gap-2 ${
-                      isRunning ? 'loading' : ''
+                    className={`btn btn-sm sm:btn-md bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white border-0 gap-1.5 sm:gap-2 w-4/5 sm:w-auto min-w-[120px] ${
+                      isRunning ? 'opacity-80' : ''
                     }`}
                     onClick={handleRunCodeOnly}
                     disabled={isRunning}
                   >
-                    {!isRunning && <Play className="w-4 h-4" />}
-                    Run Code
+                    {isRunning ? (
+                      <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                    ) : (
+                      <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    )}
+                    <span className="text-sm sm:text-base">Run Code</span>
                   </motion.button>
                   
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className={`btn bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white border-0 gap-2 ${
-                      isExecuting ? 'loading' : ''
+                    className={`btn btn-sm sm:btn-md bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white border-0 gap-1.5 sm:gap-2 w-4/5 sm:w-auto min-w-[140px] ${
+                      isExecuting ? 'opacity-80' : ''
                     }`}
                     onClick={handleSubmitCode}
                     disabled={isExecuting}
                   >
-                    {!isExecuting && <Award className="w-4 h-4" />}
-                    Submit Solution
+                    {isExecuting ? (
+                      <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                    ) : (
+                      <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    )}
+                    <span className="text-sm sm:text-base">Submit Solution</span>
                   </motion.button>
                 </div>
               </div>
@@ -538,23 +583,23 @@ const ProblemPage = () => {
               <ExecutionResults execution={execution} />
             ) : (
               <>
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-gradient-to-r from-codeflow-purple to-codeflow-blue rounded-lg">
-                      <BookOpen className="w-5 h-5 text-white" />
+                      <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                     </div>
-                    <h3 className="text-xl font-bold text-base-content">Test Cases</h3>
+                    <h3 className="text-lg sm:text-xl font-bold text-base-content">Test Cases</h3>
                   </div>
-                  <span className="text-sm text-base-content/60">{testcases.length} test cases</span>
+                  <span className="text-xs sm:text-sm text-base-content/60">{testcases.length} test cases</span>
                 </div>
                 
                 <div className="overflow-x-auto">
                   <table className="table w-full">
                     <thead>
                       <tr className="border-white/10">
-                        <th className="text-codeflow-purple font-semibold">Input</th>
-                        <th className="text-codeflow-purple font-semibold">Expected Output</th>
-                        <th className="text-codeflow-purple font-semibold">Status</th>
+                        <th className="text-codeflow-purple font-semibold text-xs sm:text-sm">Input</th>
+                        <th className="text-codeflow-purple font-semibold text-xs sm:text-sm">Expected Output</th>
+                        <th className="text-codeflow-purple font-semibold text-xs sm:text-sm">Status</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -566,12 +611,12 @@ const ProblemPage = () => {
                           transition={{ delay: index * 0.1 }}
                           className="border-white/10 hover:bg-base-200/30"
                         >
-                          <td className="font-mono text-sm bg-black/30 rounded p-2">{testCase.input}</td>
-                          <td className="font-mono text-sm bg-black/30 rounded p-2">{testCase.output}</td>
+                          <td className="font-mono text-xs sm:text-sm bg-black/30 rounded p-2 max-w-[120px] sm:max-w-none truncate">{testCase.input}</td>
+                          <td className="font-mono text-xs sm:text-sm bg-black/30 rounded p-2 max-w-[120px] sm:max-w-none truncate">{testCase.output}</td>
                           <td>
-                            <div className="flex items-center gap-2 text-base-content/60">
-                              <Timer className="w-4 h-4" />
-                              <span className="text-sm">Pending</span>
+                            <div className="flex items-center gap-1 sm:gap-2 text-base-content/60">
+                              <Timer className="w-3 h-3 sm:w-4 sm:h-4" />
+                              <span className="text-xs sm:text-sm">Pending</span>
                             </div>
                           </td>
                         </motion.tr>
