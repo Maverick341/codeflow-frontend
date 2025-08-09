@@ -1,40 +1,33 @@
-import React from 'react';
-import { clsx } from 'clsx';
 
-// DaisyUI Button component with ShadCN-like API
-export function Button({
-  className,
-  variant = "default", 
-  size = "default",
-  asChild = false,
-  children,
-  style,
-  ...props
-}) {
+import * as React from "react";
+import { clsx } from "clsx";
+
+// DaisyUI Button component with ShadCN-like API and forwardRef
+const variantClasses = {
+  default: "btn-primary",
+  destructive: "btn-error",
+  outline: "btn-outline",
+  secondary: "btn-secondary",
+  ghost: "btn-ghost",
+  link: "btn-link",
+};
+
+const sizeClasses = {
+  default: "btn-md",
+  sm: "btn-sm",
+  lg: "btn-lg",
+  icon: "btn-square btn-md",
+};
+
+export const Button = React.forwardRef(function Button(
+  { className, variant = "default", size = "default", asChild = false, children, style, ...props },
+  ref
+) {
   const Comp = asChild ? "span" : "button";
-  
-  // Map variants to DaisyUI classes
-  const variantClasses = {
-    default: "btn-primary",
-    destructive: "btn-error",
-    outline: "btn-outline", 
-    secondary: "btn-secondary",
-    ghost: "btn-ghost",
-    link: "btn-link"
-  };
-
-  // Map sizes to DaisyUI classes
-  const sizeClasses = {
-    default: "btn-md",
-    sm: "btn-sm", 
-    lg: "btn-lg",
-    icon: "btn-square btn-md"
-  };
-  
   const buttonClasses = clsx(
     "btn",
-    "border-0", // Remove default borders for custom styling
-    "outline-none", // Remove focus outlines that might interfere
+    "border-0",
+    "outline-none",
     variantClasses[variant] || variantClasses.default,
     sizeClasses[size] || sizeClasses.default,
     className
@@ -42,21 +35,23 @@ export function Button({
 
   if (asChild) {
     return (
-      <span className={buttonClasses} style={style}>
+      <span className={buttonClasses} style={style} ref={ref}>
         {children}
       </span>
     );
   }
 
   return (
-    <Comp 
+    <button
       className={buttonClasses}
       style={style}
+      ref={ref}
       {...props}
     >
       {children}
-    </Comp>
+    </button>
   );
-}
+});
+Button.displayName = "Button";
 
-export const buttonVariants = {}; // Keep for compatibility
+export const buttonVariants = { variantClasses, sizeClasses };
