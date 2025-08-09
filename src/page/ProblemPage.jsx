@@ -343,10 +343,10 @@ const ProblemPage = () => {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between flex-wrap">
             <div className="flex items-center gap-4 flex-wrap">
-              <Link to={'/'} className="flex items-center gap-2 text-codeflow-purple hover:text-codeflow-blue transition-colors">
+              {/* <Link to={'/'} className="flex items-center gap-2 text-codeflow-purple hover:text-codeflow-blue transition-colors">
                 <Home className="w-6 h-6" />
                 <ChevronRight className="w-4 h-4" />
-              </Link>
+              </Link> */}
               <div>
                 <div className="flex items-center gap-3 mb-2 flex-wrap">
                   <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-base-content truncate max-w-full">{problem.title}</h1>
