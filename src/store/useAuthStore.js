@@ -10,8 +10,17 @@ export const useAuthStore = create((set, get) => ({
   isEmailVerified: false,
   verificationStatus: 'pending', // 'pending', 'loading', 'success', 'error'
   isVerifying: false,
+  justLoggedOut: false, // Flag to prevent checkAuth immediately after logout
 
   checkAuth: async () => {
+    // Skip auth check if user just logged out to prevent race condition
+    const { justLoggedOut } = get();
+    if (justLoggedOut) {
+      console.log('🚫 Skipping checkAuth - user just logged out');
+      set({ justLoggedOut: false }); // Reset flag
+      return false;
+    }
+
     set({ isCheckingAuth: true });
     try {
       const res = await axiosInstance.get('/auth/profile');
@@ -138,14 +147,60 @@ export const useAuthStore = create((set, get) => ({
   logout: async () => {
     try {
       await axiosInstance.get('/auth/logout');
+      
+      // Force clear the specific cookies your backend uses + common variations
+      const cookiesToClear = [
+        'accessToken',    // Your backend uses this
+        'refreshToken',   // Your backend uses this
+        'token', 'jwt', 'authToken', 'auth-token', 'access_token'  // Common variations
+      ];
+      
+      cookiesToClear.forEach(cookieName => {
+        // Clear for current domain
+        document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
+        document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+        
+        // Also try with leading dot for subdomain cookies (production deployment)
+        if (window.location.hostname.includes('.')) {
+          const rootDomain = window.location.hostname.split('.').slice(-2).join('.');
+          document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${rootDomain};`;
+        }
+      });
+
       set({
         authUser: null,
         isEmailVerified: false,
+        justLoggedOut: true, // Set flag to prevent immediate checkAuth
       });
 
+      console.log('✅ Logout completed - auth state cleared');
       toast.success('Logout successful');
+      
+      // Clear any cached data to prevent stale state
+      if ('caches' in window) {
+        caches.keys().then(names => {
+          names.forEach(name => {
+            if (name.includes('auth') || name.includes('user')) {
+              caches.delete(name);
+            }
+          });
+        });
+      }
+      
     } catch (error) {
       console.log('Error logging out', error);
+      
+      // Even if backend logout fails, clear frontend state
+      set({
+        authUser: null,
+        isEmailVerified: false,
+        justLoggedOut: true,
+      });
+      
+      // Still try to clear cookies on error (focus on your backend cookie names)
+      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      
       toast.error('Error logging out');
     }
   },

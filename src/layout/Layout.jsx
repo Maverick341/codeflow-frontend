@@ -7,15 +7,20 @@ import { useAuthStore } from '../store/useAuthStore';
 import { Loader } from 'lucide-react';
 
 const Layout = () => {
-  const { isCheckingAuth, checkAuth, authUser } = useAuthStore();
+  const { isCheckingAuth, checkAuth, authUser, justLoggedOut } = useAuthStore();
   const location = useLocation();
 
   // Use landing page layout for homepage when not authenticated
   const isLandingPage = location.pathname === '/' && !authUser;
 
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+    // Don't check auth if user just logged out (prevents race condition in production)
+    if (!justLoggedOut) {
+      checkAuth();
+    } else {
+      console.log('🚫 Skipping checkAuth in Layout - user just logged out');
+    }
+  }, [checkAuth, justLoggedOut]);
 
   if (isCheckingAuth) {
     return (
