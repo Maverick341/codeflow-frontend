@@ -14,6 +14,6 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: process.env.PORT ? Number(process.env.PORT) : 3000,
-    allowedHosts: ['codeflow-frontend.onrender.com'],
+    allowedHosts: ['codeflow-frontend.onrender.com', 'codeflow.solio-tech.me'],
   },
 });
