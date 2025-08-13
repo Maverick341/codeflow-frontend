@@ -483,7 +483,7 @@ const ProblemPage = () => {
               <div className="h-[400px] sm:h-[500px] lg:h-[600px] w-full relative">
                 <Editor
                   height="100%"
-                  language={selectedLanguage ? selectedLanguage.toLowerCase() : ''}
+                  language={selectedLanguage ? selectedLanguage.toLowerCase() : 'javascript'}
                   theme="vs-dark"
                   value={code}
                   onChange={(value) => setCode(value || '')}
