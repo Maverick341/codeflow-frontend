@@ -84,9 +84,7 @@ const ProblemPage = () => {
         lang = availableLangs[0] || '';
         setSelectedLanguage(lang);
       }
-      setCode(
-        problem.codeSnippets?.[lang] || submission?.sourceCode || ''
-      );
+      setCode(problem.codeSnippets?.[lang] || submission?.sourceCode || '');
       setTestCases(
         problem.testcases?.map((tc) => ({
           input: tc.input,
@@ -109,12 +107,12 @@ const ProblemPage = () => {
     setSelectedLanguage(lang);
     setCode(problem.codeSnippets?.[lang] || '');
   };
-  
+
   // share functionality
   const handleShareProblem = async () => {
     try {
       const currentUrl = window.location.href;
-      
+
       // Try to use the Web Share API if available (mobile devices)
       if (navigator.share) {
         await navigator.share({
@@ -167,17 +165,21 @@ const ProblemPage = () => {
 
   const getDifficultyColor = (difficulty) => {
     switch (difficulty?.toLowerCase()) {
-      case 'easy': return 'text-green-400 bg-green-400/10';
-      case 'medium': return 'text-yellow-400 bg-yellow-400/10';
-      case 'hard': return 'text-red-400 bg-red-400/10';
-      default: return 'text-gray-400 bg-gray-400/10';
+      case 'easy':
+        return 'text-green-400 bg-green-400/10';
+      case 'medium':
+        return 'text-yellow-400 bg-yellow-400/10';
+      case 'hard':
+        return 'text-red-400 bg-red-400/10';
+      default:
+        return 'text-gray-400 bg-gray-400/10';
     }
   };
 
   if (isProblemLoading || !problem) {
     return (
       <div className="flex items-center justify-center h-screen bg-gradient-to-br from-codeflow-dark via-base-300 to-base-200">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="card bg-base-100/50 backdrop-blur-sm p-8 shadow-2xl border border-white/10"
@@ -185,7 +187,7 @@ const ProblemPage = () => {
           <div className="flex flex-col items-center">
             <motion.div
               animate={{ rotate: 360 }}
-              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
               className="w-16 h-16 border-4 border-codeflow-purple border-t-transparent rounded-full mb-4"
             />
             <p className="text-base-content/70 text-lg">Loading problem...</p>
@@ -199,19 +201,23 @@ const ProblemPage = () => {
     switch (activeTab) {
       case 'description':
         return (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
             className="prose max-w-none text-base-content"
           >
             <div className="mb-6">
-              <p className="text-lg leading-relaxed text-base-content/90">{problem.description}</p>
+              <p className="text-lg leading-relaxed text-base-content/90">
+                {problem.description}
+              </p>
             </div>
 
             {problem.examples && (
               <div className="mb-8">
-                <h3 className="text-xl font-bold mb-4 text-codeflow-purple">Examples:</h3>
+                <h3 className="text-xl font-bold mb-4 text-codeflow-purple">
+                  Examples:
+                </h3>
                 <div className="space-y-6">
                   {Object.entries(problem.examples).map(
                     ([lang, example], idx) => (
@@ -260,7 +266,9 @@ const ProblemPage = () => {
 
             {problem.constraints && (
               <div className="mb-6">
-                <h3 className="text-xl font-bold mb-4 text-codeflow-purple">Constraints:</h3>
+                <h3 className="text-xl font-bold mb-4 text-codeflow-purple">
+                  Constraints:
+                </h3>
                 <div className="bg-gradient-to-r from-base-200/50 to-base-300/30 p-6 rounded-xl border border-white/10">
                   <pre className="text-base-content/80 text-sm leading-relaxed whitespace-pre-wrap">
                     {problem.constraints}
@@ -271,7 +279,9 @@ const ProblemPage = () => {
 
             {problem.topics && (
               <div className="mb-6">
-                <h3 className="text-xl font-bold mb-4 text-codeflow-purple">Topics:</h3>
+                <h3 className="text-xl font-bold mb-4 text-codeflow-purple">
+                  Topics:
+                </h3>
                 <div className="flex flex-wrap gap-2">
                   {problem.topics.map((topic) => (
                     <span
@@ -298,21 +308,25 @@ const ProblemPage = () => {
           <div className="p-8 text-center">
             <MessageSquare className="w-16 h-16 text-base-content/30 mx-auto mb-4" />
             <p className="text-base-content/70 text-lg">No discussions yet</p>
-            <p className="text-base-content/50 text-sm mt-2">Be the first to start a discussion!</p>
+            <p className="text-base-content/50 text-sm mt-2">
+              Be the first to start a discussion!
+            </p>
           </div>
         );
       case 'hints':
         return (
           <div className="p-4">
             {problem?.hints ? (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 p-6 rounded-xl border border-yellow-500/20"
               >
                 <div className="flex items-center gap-2 mb-4">
                   <Lightbulb className="w-5 h-5 text-yellow-400" />
-                  <h4 className="text-lg font-semibold text-yellow-400">Hint</h4>
+                  <h4 className="text-lg font-semibold text-yellow-400">
+                    Hint
+                  </h4>
                 </div>
                 <p className="text-base-content/80 leading-relaxed">
                   {problem.hints}
@@ -322,7 +336,9 @@ const ProblemPage = () => {
               <div className="text-center text-base-content/70 p-8">
                 <Lightbulb className="w-16 h-16 text-base-content/30 mx-auto mb-4" />
                 <p className="text-lg">No hints available</p>
-                <p className="text-sm mt-2 text-base-content/50">Try to solve it on your own first!</p>
+                <p className="text-sm mt-2 text-base-content/50">
+                  Try to solve it on your own first!
+                </p>
               </div>
             )}
           </div>
@@ -335,7 +351,7 @@ const ProblemPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-codeflow-dark via-base-300 to-base-200 w-full">
       {/* Enhanced Header */}
-      <motion.nav 
+      <motion.nav
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className="bg-base-100/80 backdrop-blur-sm shadow-2xl border-b border-white/10"
@@ -349,8 +365,12 @@ const ProblemPage = () => {
               </Link> */}
               <div>
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <h1 className="text-base sm:text-lg font-bold text-base-content truncate max-w-full">{problem.title}</h1>
-                  <span className={`px-2 py-0.5 rounded text-xs font-semibold flex-shrink-0 ${getDifficultyColor(problem.difficulty)}`}>
+                  <h1 className="text-base sm:text-lg font-bold text-base-content truncate max-w-full">
+                    {problem.title}
+                  </h1>
+                  <span
+                    className={`px-2 py-0.5 rounded text-xs font-semibold flex-shrink-0 ${getDifficultyColor(problem.difficulty)}`}
+                  >
                     {problem.difficulty || 'Easy'}
                   </span>
                 </div>
@@ -363,16 +383,20 @@ const ProblemPage = () => {
                   </div>
                   <div className="flex items-center gap-1">
                     <Users className="w-3 h-3 sm:w-4 sm:h-4" />
-                    <span className="whitespace-nowrap">{submissionCount} Submissions</span>
+                    <span className="whitespace-nowrap">
+                      {submissionCount} Submissions
+                    </span>
                   </div>
                   <div className="flex items-center gap-1">
                     <ThumbsUp className="w-3 h-3 sm:w-4 sm:h-4" />
-                    <span className="whitespace-nowrap">{problem.acceptance || 95}% Success</span>
+                    <span className="whitespace-nowrap">
+                      {problem.acceptance || 95}% Success
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-2 sm:gap-3 mt-3 sm:mt-0">
               <motion.button
                 whileHover={{ scale: 1.1 }}
@@ -380,9 +404,12 @@ const ProblemPage = () => {
                 className={`btn btn-ghost btn-circle btn-sm sm:btn-md ${isBookmarked ? 'text-yellow-400' : 'text-base-content/60'}`}
                 onClick={() => setIsBookmarked(!isBookmarked)}
               >
-                <Bookmark className="w-4 h-4 sm:w-5 sm:h-5" fill={isBookmarked ? 'currentColor' : 'none'} />
+                <Bookmark
+                  className="w-4 h-4 sm:w-5 sm:h-5"
+                  fill={isBookmarked ? 'currentColor' : 'none'}
+                />
               </motion.button>
-              
+
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
@@ -392,14 +419,18 @@ const ProblemPage = () => {
               >
                 <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
               </motion.button>
-              
+
               <select
                 className="px-3 py-1 rounded-lg bg-base-200/90 hover:bg-base-200 border border-base-300/60 hover:border-codeflow-purple/50 text-base-content text-xs transition-colors duration-200 focus:border-codeflow-purple focus:ring-1 focus:ring-codeflow-purple/20 focus:outline-none backdrop-blur-sm min-w-[80px]"
                 value={selectedLanguage || ''}
                 onChange={handleLanguageChange}
               >
                 {Object.keys(problem.codeSnippets || {}).map((lang) => (
-                  <option key={lang} value={lang} className="bg-base-100 text-base-content">
+                  <option
+                    key={lang}
+                    value={lang}
+                    className="bg-base-100 text-base-content"
+                  >
                     {lang.charAt(0).toUpperCase() + lang.slice(1)}
                   </option>
                 ))}
@@ -412,7 +443,7 @@ const ProblemPage = () => {
       <div className="container mx-auto p-4">
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           {/* Problem Description Panel */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
@@ -423,8 +454,12 @@ const ProblemPage = () => {
                 {[
                   { key: 'description', icon: FileText, label: 'Description' },
                   { key: 'submissions', icon: Code2, label: 'Submissions' },
-                  { key: 'discussion', icon: MessageSquare, label: 'Discussion' },
-                  { key: 'hints', icon: Lightbulb, label: 'Hints' }
+                  {
+                    key: 'discussion',
+                    icon: MessageSquare,
+                    label: 'Discussion',
+                  },
+                  { key: 'hints', icon: Lightbulb, label: 'Hints' },
                 ].map(({ key, icon: Icon, label }) => (
                   <button
                     key={key}
@@ -448,7 +483,7 @@ const ProblemPage = () => {
           </motion.div>
 
           {/* Code Editor Panel */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -458,7 +493,9 @@ const ProblemPage = () => {
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-3 py-2 border-b border-white/10 bg-base-200/30 gap-2 sm:gap-0">
                 <div className="flex items-center gap-2">
                   <Terminal className="w-4 h-4 text-codeflow-purple" />
-                  <span className="font-semibold text-sm text-base-content">Code Editor</span>
+                  <span className="font-semibold text-sm text-base-content">
+                    Code Editor
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
                   <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-base-content/60">
@@ -482,7 +519,11 @@ const ProblemPage = () => {
               <div className="h-[400px] sm:h-[500px] lg:h-[600px] w-full relative">
                 <Editor
                   height="100%"
-                  language={selectedLanguage ? selectedLanguage.toLowerCase() : 'javascript'}
+                  language={
+                    selectedLanguage
+                      ? selectedLanguage.toLowerCase()
+                      : 'javascript'
+                  }
                   theme="vs-dark"
                   value={code}
                   onChange={(value) => setCode(value || '')}
@@ -491,22 +532,34 @@ const ProblemPage = () => {
                     editorRef.current = editor;
 
                     // Disable copy/paste/cut/select all commands by overriding them
-                    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyC, () => {
-                      // Copy disabled
-                      return null;
-                    });
-                    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyV, () => {
-                      // Paste disabled
-                      return null;
-                    });
-                    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyX, () => {
-                      // Cut disabled
-                      return null;
-                    });
-                    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyA, () => {
-                      // Select All disabled
-                      return null;
-                    });
+                    editor.addCommand(
+                      monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyC,
+                      () => {
+                        // Copy disabled
+                        return null;
+                      }
+                    );
+                    editor.addCommand(
+                      monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyV,
+                      () => {
+                        // Paste disabled
+                        return null;
+                      }
+                    );
+                    editor.addCommand(
+                      monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyX,
+                      () => {
+                        // Cut disabled
+                        return null;
+                      }
+                    );
+                    editor.addCommand(
+                      monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyA,
+                      () => {
+                        // Select All disabled
+                        return null;
+                      }
+                    );
                   }}
                   options={{
                     minimap: { enabled: false },
@@ -569,7 +622,7 @@ const ProblemPage = () => {
         </div>
 
         {/* Results Panel */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
@@ -587,35 +640,51 @@ const ProblemPage = () => {
                     <div className="p-2 bg-gradient-to-r from-codeflow-purple to-codeflow-blue rounded-lg">
                       <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                     </div>
-                    <h3 className="text-lg sm:text-xl font-bold text-base-content">Test Cases</h3>
+                    <h3 className="text-lg sm:text-xl font-bold text-base-content">
+                      Test Cases
+                    </h3>
                   </div>
-                  <span className="text-xs sm:text-sm text-base-content/60">{testcases.length} test cases</span>
+                  <span className="text-xs sm:text-sm text-base-content/60">
+                    {testcases.length} test cases
+                  </span>
                 </div>
-                
+
                 <div className="overflow-x-auto">
                   <table className="table w-full">
                     <thead>
                       <tr className="border-white/10">
-                        <th className="text-codeflow-purple font-semibold text-xs sm:text-sm">Input</th>
-                        <th className="text-codeflow-purple font-semibold text-xs sm:text-sm">Expected Output</th>
-                        <th className="text-codeflow-purple font-semibold text-xs sm:text-sm">Status</th>
+                        <th className="text-codeflow-purple font-semibold text-xs sm:text-sm">
+                          Input
+                        </th>
+                        <th className="text-codeflow-purple font-semibold text-xs sm:text-sm">
+                          Expected Output
+                        </th>
+                        <th className="text-codeflow-purple font-semibold text-xs sm:text-sm">
+                          Status
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
                       {testcases.map((testCase, index) => (
-                        <motion.tr 
+                        <motion.tr
                           key={index}
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: index * 0.1 }}
                           className="border-white/10 hover:bg-base-200/30"
                         >
-                          <td className="font-mono text-xs sm:text-sm bg-black/30 rounded p-2 max-w-[120px] sm:max-w-none truncate">{testCase.input}</td>
-                          <td className="font-mono text-xs sm:text-sm bg-black/30 rounded p-2 max-w-[120px] sm:max-w-none truncate">{testCase.output}</td>
+                          <td className="font-mono text-xs sm:text-sm bg-black/30 rounded p-2 max-w-[120px] sm:max-w-none truncate">
+                            {testCase.input}
+                          </td>
+                          <td className="font-mono text-xs sm:text-sm bg-black/30 rounded p-2 max-w-[120px] sm:max-w-none truncate">
+                            {testCase.output}
+                          </td>
                           <td>
                             <div className="flex items-center gap-1 sm:gap-2 text-base-content/60">
                               <Timer className="w-3 h-3 sm:w-4 sm:h-4" />
-                              <span className="text-xs sm:text-sm">Pending</span>
+                              <span className="text-xs sm:text-sm">
+                                Pending
+                              </span>
                             </div>
                           </td>
                         </motion.tr>

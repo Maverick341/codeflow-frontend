@@ -15,7 +15,7 @@ const Layout = () => {
   const isLandingPage = location.pathname === '/' && !authUser;
   const isProblemPage = location.pathname.startsWith('/problem/') && authUser;
   const isProfilePage = location.pathname === '/profile' && authUser;
-  
+
   const isLeftNavPage = isProblemPage || isProfilePage;
 
   useEffect(() => {
@@ -42,7 +42,9 @@ const Layout = () => {
   ) : isProfilePage ? (
     <div className="min-h-screen bg-background flex w-full">
       <Navbar variant="sidebar-profile" onExpandChange={setSidebarExpanded} />
-      <main className={`flex-1 transition-all duration-300 min-h-screen ${sidebarExpanded ? 'ml-[240px]' : 'ml-[80px]'}`}>
+      <main
+        className={`flex-1 transition-all duration-300 min-h-screen ${sidebarExpanded ? 'ml-[240px]' : 'ml-[80px]'}`}
+      >
         <Outlet />
       </main>
     </div>
