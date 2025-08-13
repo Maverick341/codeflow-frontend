@@ -19,6 +19,13 @@ const Navbar = ({ variant = "top", onExpandChange }) => {
       onExpandChange(expanded);
     }
   };
+
+  // Sync initial state with parent
+  useEffect(() => {
+    if (onExpandChange && variant === "sidebar-profile") {
+      onExpandChange(isExpanded);
+    }
+  }, []);
   
   // Sidebar variants
   if (variant === "sidebar-profile" || variant === "sidebar-problem") {
