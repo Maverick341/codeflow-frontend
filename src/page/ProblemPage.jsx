@@ -49,7 +49,7 @@ const ProblemPage = () => {
 
   const [code, setCode] = useState('');
   const [activeTab, setActiveTab] = useState('description');
-  const [selectedLanguage, setSelectedLanguage] = useState(null);
+  const [selectedLanguage, setSelectedLanguage] = useState('');
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [testcases, setTestCases] = useState([]);
 
