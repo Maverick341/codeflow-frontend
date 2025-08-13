@@ -38,9 +38,16 @@ const Layout = () => {
       </main>
       <Footer />
     </div>
-  ) : isLeftNavPage ? (
+  ) : isProfilePage ? (
     <div className="min-h-screen bg-background flex w-full">
-      <Navbar variant="sidebar" />
+      <Navbar variant="sidebar-profile" />
+      <main className="flex-1 ml-[80px] transition-all duration-300 min-h-screen">
+        <Outlet />
+      </main>
+    </div>
+  ) : isProblemPage ? (
+    <div className="min-h-screen bg-background flex w-full">
+      <Navbar variant="sidebar-problem" />
       <main className="flex-1 ml-[80px] transition-all duration-300 min-h-screen">
         <Outlet />
       </main>
