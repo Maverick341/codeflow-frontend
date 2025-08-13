@@ -394,8 +394,7 @@ const ProblemPage = () => {
               </motion.button>
               
               <select
-                className="select select-xs sm:select-sm select-bordered bg-base-200/80 hover:bg-base-200 border-base-300/60 hover:border-codeflow-purple/50 text-base-content w-24 sm:w-32 text-xs transition-colors duration-200 focus:border-codeflow-purple focus:ring-1 focus:ring-codeflow-purple/20 focus:outline-none backdrop-blur-sm"
-                style={{ boxShadow: 'inset 0 1px 3px rgba(255, 255, 255, 0.35)' }}
+                className="px-3 py-1 rounded-lg bg-base-200/90 hover:bg-base-200 border border-base-300/60 hover:border-codeflow-purple/50 text-base-content text-xs transition-colors duration-200 focus:border-codeflow-purple focus:ring-1 focus:ring-codeflow-purple/20 focus:outline-none backdrop-blur-sm min-w-[80px]"
                 value={selectedLanguage || ''}
                 onChange={handleLanguageChange}
               >
