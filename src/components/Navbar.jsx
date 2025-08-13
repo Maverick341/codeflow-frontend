@@ -172,25 +172,32 @@ const Navbar = ({ variant = "top" }) => {
 
         {/* Logout Button */}
         <div className="p-4 border-t border-white/10">
-          <div className={`${!isExpanded ? 'tooltip tooltip-right' : ''}`} data-tip="Logout">
-            <LogoutButton className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-red-500/10 hover:to-red-500/20 hover:text-red-400 transition-all duration-200 group w-full justify-start">
-              <div className="p-2 bg-red-500/10 rounded-lg group-hover:bg-red-500/20 transition-colors flex-shrink-0">
-                <LogOut className="w-5 h-5 text-red-400" />
-              </div>
-              {isExpanded && (
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.2, delay: 0.1 }}
-                  className="overflow-hidden"
-                >
-                  <div className="font-medium">Logout</div>
-                  <div className="text-xs text-base-content/60">Sign out of account</div>
-                </motion.div>
-              )}
-            </LogoutButton>
-          </div>
+          <LogoutButton className="flex flex-col items-center p-3 rounded-xl hover:bg-gradient-to-r hover:from-codeflow-purple/10 hover:to-codeflow-blue/10 hover:text-codeflow-purple transition-all duration-200 group w-full justify-center">
+            {!isExpanded ? (
+              <>
+                <div className="p-2 bg-gradient-to-r from-codeflow-purple/20 to-codeflow-blue/20 rounded-lg group-hover:from-codeflow-purple/30 group-hover:to-codeflow-blue/30 transition-colors">
+                  <LogOut className="w-4 h-4 text-codeflow-purple" />
+                </div>
+                <span className="text-xs font-medium text-base-content/70 mt-1">Logout</span>
+              </>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.2, delay: 0.1 }}
+                className="flex items-center gap-3 w-full"
+              >
+                <div className="p-2 bg-gradient-to-r from-codeflow-purple/20 to-codeflow-blue/20 rounded-lg group-hover:from-codeflow-purple/30 group-hover:to-codeflow-blue/30 transition-colors flex-shrink-0">
+                  <LogOut className="w-4 h-4 text-codeflow-purple" />
+                </div>
+                <div>
+                  <div className="font-medium text-sm">Logout</div>
+                  <div className="text-xs text-base-content/60">Sign out</div>
+                </div>
+              </motion.div>
+            )}
+          </LogoutButton>
         </div>
       </motion.aside>
     );
