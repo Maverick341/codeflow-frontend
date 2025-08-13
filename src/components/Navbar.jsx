@@ -7,8 +7,9 @@ import { motion } from "framer-motion";
 import { Zap, Sparkles } from "lucide-react";
 import { Button } from "@/components/Button";
 
-const Navbar = () => {
+const Navbar = ({ variant = "top" }) => {
   const { authUser } = useAuthStore();
+  const [isExpanded, setIsExpanded] = useState(false);
   console.log(authUser?.avatarUrl);
   
   return (
