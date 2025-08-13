@@ -40,10 +40,11 @@ const Layout = () => {
       <Footer />
     </div>
   ) : isLeftNavPage ? (
-    <div className="min-h-screen bg-background flex flex-col w-full">
-      <Navbar />
-      <Outlet />
-      {/* <Footer /> */}
+    <div className="min-h-screen bg-background flex w-full">
+      <Sidebar />
+      <main className="flex-1 ml-[80px] transition-all duration-300 min-h-screen">
+        <Outlet />
+      </main>
     </div>
   ) : (
     <div className="bg-background min-h-screen w-full">
