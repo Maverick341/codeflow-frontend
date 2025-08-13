@@ -9,7 +9,7 @@ import { Button } from "@/components/Button";
 
 const Navbar = ({ variant = "top" }) => {
   const { authUser } = useAuthStore();
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(variant === "sidebar-profile");
   console.log(authUser?.avatarUrl);
   
   // Sidebar variants
