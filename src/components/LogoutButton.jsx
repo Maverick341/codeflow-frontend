@@ -13,7 +13,7 @@ const LogoutButton = ({ children }) => {
   }
 
   return (
-    <button className="btn btn-primary rounded-4xl" onClick={onLogout}>
+    <button className="w-full justify-start" onClick={onLogout}>
       {children}
     </button>
   );
