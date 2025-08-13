@@ -12,8 +12,9 @@ const Navbar = ({ variant = "top" }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   console.log(authUser?.avatarUrl);
   
-  // Sidebar variant
-  if (variant === "sidebar") {
+  // Sidebar variants
+  if (variant === "sidebar-profile" || variant === "sidebar-problem") {
+    const hasHover = variant === "sidebar-profile"; // Only profile page has hover
     return (
       <motion.aside
         className="fixed left-0 top-0 h-full bg-gradient-to-b from-base-100/95 via-base-100/98 to-base-200/95 backdrop-blur-md border-r border-white/10 z-40 flex flex-col shadow-2xl"
