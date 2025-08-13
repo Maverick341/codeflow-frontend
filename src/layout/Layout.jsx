@@ -41,7 +41,7 @@ const Layout = () => {
   ) : isLeftNavPage ? (
     <div className="min-h-screen bg-background flex w-full">
       <Navbar variant="sidebar" />
-      <main className="flex-1 transition-all duration-300 min-h-screen">
+      <main className="flex-1 ml-[80px] transition-all duration-300 min-h-screen">
         <Outlet />
       </main>
     </div>
