@@ -117,7 +117,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
             whileHover={{ x: isExpanded ? 4 : 0 }}
             transition={{ duration: 0.2 }}
           >
-            <div className={`tooltip tooltip-right ${!isExpanded ? 'tooltip-open' : ''}`} data-tip="My Profile">
+            <div className={`${!isExpanded ? 'tooltip tooltip-right' : ''}`} data-tip="My Profile">
               <Link
                 to="/profile"
                 className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-200 group w-full ${
