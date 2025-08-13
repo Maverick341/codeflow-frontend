@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, LogOut, Zap, Crown, Shield, Code } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
