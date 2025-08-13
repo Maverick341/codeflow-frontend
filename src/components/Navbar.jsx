@@ -55,7 +55,6 @@ const Navbar = ({ variant = "top" }) => {
                     <Zap className="h-5 w-5 text-white" />
                   </motion.div>
                 </motion.div>
-                <span className="text-xs text-gray-400 mt-1">CodeFlow</span>
               </Link>
             )}
           </div>
