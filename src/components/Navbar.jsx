@@ -7,10 +7,18 @@ import { motion } from "framer-motion";
 import { Zap, Sparkles } from "lucide-react";
 import { Button } from "@/components/Button";
 
-const Navbar = ({ variant = "top" }) => {
+const Navbar = ({ variant = "top", onExpandChange }) => {
   const { authUser } = useAuthStore();
   const [isExpanded, setIsExpanded] = useState(variant === "sidebar-profile");
   console.log(authUser?.avatarUrl);
+
+  // Notify parent component when expansion state changes
+  const handleExpandChange = (expanded) => {
+    setIsExpanded(expanded);
+    if (onExpandChange) {
+      onExpandChange(expanded);
+    }
+  };
   
   // Sidebar variants
   if (variant === "sidebar-profile" || variant === "sidebar-problem") {
