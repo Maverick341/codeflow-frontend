@@ -15,189 +15,203 @@ const Navbar = ({ variant = "top" }) => {
   // Sidebar variants
   if (variant === "sidebar-profile" || variant === "sidebar-problem") {
     const hasHover = variant === "sidebar-profile"; // Only profile page has hover
+    const showExpanded = hasHover ? isExpanded : variant === "sidebar-profile";
+
     return (
       <motion.aside
-        className="fixed left-0 top-0 h-full bg-gradient-to-b from-base-100/95 via-base-100/98 to-base-200/95 backdrop-blur-md border-r border-white/10 z-40 flex flex-col shadow-2xl"
-        style={{
-          background: 'linear-gradient(180deg, rgba(26, 29, 41, 0.95) 0%, rgba(35, 40, 56, 0.98) 50%, rgba(45, 53, 72, 0.95) 100%)',
-          backdropFilter: 'blur(12px)',
-          boxShadow: '4px 0 20px rgba(0, 0, 0, 0.3), inset 1px 0 0 rgba(255, 255, 255, 0.1)'
-        }}
-        animate={{ width: isExpanded ? '280px' : '80px' }}
+        className="fixed left-0 top-0 h-full bg-gray-900 border-r border-gray-800 z-40 flex flex-col"
+        animate={{ width: showExpanded ? '240px' : '80px' }}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
         onMouseEnter={hasHover ? () => setIsExpanded(true) : undefined}
         onMouseLeave={hasHover ? () => setIsExpanded(false) : undefined}
       >
         {/* Logo Section */}
-        <div className="p-4 border-b border-white/10">
-          <div className="flex flex-col items-center gap-2">
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link to="/" className="flex flex-col items-center group">
-                <motion.div
-                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-codeflow-purple to-codeflow-blue shadow-lg"
-                  style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)' }}
-                  whileHover={{ boxShadow: "0 0 20px rgba(139, 92, 246, 0.5)", scale: 1.1 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <motion.div animate={{ rotate: [0, 5, -5, 0] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}>
-                    <Zap className="h-5 w-5 text-white" />
-                  </motion.div>
-                </motion.div>
-                {!isExpanded && (
-                  <span className="text-xs font-medium text-base-content/70 mt-1">
-                    CodeFlow
-                  </span>
-                )}
-              </Link>
-            </motion.div>
-
-            {isExpanded && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.2, delay: 0.1 }}
-                className="overflow-hidden text-center"
-              >
-                <Link to="/" className="block">
-                  <motion.span
-                    className="text-lg font-bold transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-codeflow-purple group-hover:to-codeflow-blue group-hover:bg-clip-text group-hover:text-transparent"
-                    style={{ color: '#ffffff', textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}
-                  >
-                    CodeFlow
-                  </motion.span>
-                </Link>
-              </motion.div>
-            )}
-          </div>
-        </div>
-
-        {/* User Profile Section */}
-        <div className="p-4 border-b border-white/10">
-          <div className="flex items-center gap-3">
-            <div className="relative flex-shrink-0">
-              <img
-                src={authUser?.avatarUrl || 'https://avatar.iran.liara.run/public/boy'}
-                alt="User Avatar"
-                className="w-12 h-12 object-cover rounded-xl ring-2 ring-codeflow-purple/50"
-              />
-              <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-base-100"></div>
-            </div>
-
-            {isExpanded && (
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.2, delay: 0.1 }}
-                className="flex-1 min-w-0 overflow-hidden"
-              >
-                <p className="text-sm font-semibold text-base-content truncate">
-                  {authUser?.fullname || 'User'}
-                </p>
-                <p className="text-xs text-base-content/60 truncate">
-                  {authUser?.email || 'user@example.com'}
-                </p>
-              </motion.div>
-            )}
-          </div>
+        <div className="p-4 flex items-center justify-center">
+          {showExpanded ? (
+            <Link to="/" className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center">
+                <span className="text-black font-bold text-lg">{'<>'}</span>
+              </div>
+              <span className="text-white font-bold text-xl">CodeFlow</span>
+            </Link>
+          ) : (
+            <Link to="/" className="flex flex-col items-center">
+              <div className="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center">
+                <span className="text-black font-bold text-lg">{'<>'}</span>
+              </div>
+            </Link>
+          )}
         </div>
 
         {/* Navigation Links */}
-        <div className="flex-1 p-2">
-          <nav className="space-y-2">
+        <div className="flex-1 px-4">
+          <nav className="space-y-1">
+            {/* Home */}
             <Link
-              to="/profile"
-              className="flex flex-col items-center p-3 rounded-xl hover:bg-gradient-to-r hover:from-codeflow-purple/10 hover:to-codeflow-blue/10 hover:text-codeflow-purple transition-all duration-200 group w-full"
+              to="/"
+              className="flex items-center text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors duration-200"
             >
-              {!isExpanded ? (
-                <>
-                  <div className="p-2 bg-gradient-to-r from-codeflow-purple/20 to-codeflow-blue/20 rounded-lg group-hover:from-codeflow-purple/30 group-hover:to-codeflow-blue/30 transition-colors">
-                    <User className="w-5 h-5 text-codeflow-purple" />
-                  </div>
-                  <span className="text-xs font-medium text-base-content/70 mt-1">Profile</span>
-                </>
+              {showExpanded ? (
+                <div className="flex items-center gap-3 px-3 py-3 w-full">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  </svg>
+                  <span className="font-medium">Home</span>
+                </div>
               ) : (
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.2, delay: 0.1 }}
-                  className="flex items-center gap-3 w-full"
-                >
-                  <div className="p-2 bg-gradient-to-r from-codeflow-purple/20 to-codeflow-blue/20 rounded-lg group-hover:from-codeflow-purple/30 group-hover:to-codeflow-blue/30 transition-colors flex-shrink-0">
-                    <User className="w-5 h-5 text-codeflow-purple" />
-                  </div>
-                  <div>
-                    <div className="font-medium">My Profile</div>
-                    <div className="text-xs text-base-content/60">View and edit profile</div>
-                  </div>
-                </motion.div>
+                <div className="flex flex-col items-center gap-1 px-2 py-3 w-full">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  </svg>
+                  <span className="text-xs">Home</span>
+                </div>
+              )}
+            </Link>
+
+            {/* Practice Problems */}
+            <Link
+              to="/"
+              className="flex items-center text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors duration-200"
+            >
+              {showExpanded ? (
+                <div className="flex items-center gap-3 px-3 py-3 w-full">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                  <span className="font-medium">Practice Problems</span>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center gap-1 px-2 py-3 w-full">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                  <span className="text-xs">Practice</span>
+                </div>
+              )}
+            </Link>
+
+            {/* Sheets Library */}
+            <Link
+              to="/"
+              className="flex items-center text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors duration-200"
+            >
+              {showExpanded ? (
+                <div className="flex items-center gap-3 px-3 py-3 w-full">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span className="font-medium">Sheets Library</span>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center gap-1 px-2 py-3 w-full">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span className="text-xs">Sheets</span>
+                </div>
               )}
             </Link>
 
             {authUser?.role === 'ADMIN' && (
               <Link
                 to="/add-problem"
-                className="flex flex-col items-center p-3 rounded-xl hover:bg-gradient-to-r hover:from-codeflow-purple/10 hover:to-codeflow-blue/10 hover:text-codeflow-purple transition-all duration-200 group w-full"
+                className="flex items-center text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors duration-200"
               >
-                {!isExpanded ? (
-                  <>
-                    <div className="p-2 bg-gradient-to-r from-codeflow-purple/20 to-codeflow-blue/20 rounded-lg group-hover:from-codeflow-purple/30 group-hover:to-codeflow-blue/30 transition-colors">
-                      <Code className="w-5 h-5 text-codeflow-purple" />
-                    </div>
-                    <span className="text-xs font-medium text-base-content/70 mt-1">Add</span>
-                  </>
+                {showExpanded ? (
+                  <div className="flex items-center gap-3 px-3 py-3 w-full">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    <span className="font-medium">Contribute</span>
+                  </div>
                 ) : (
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.2, delay: 0.1 }}
-                    className="flex items-center gap-3 w-full"
-                  >
-                    <div className="p-2 bg-gradient-to-r from-codeflow-purple/20 to-codeflow-blue/20 rounded-lg group-hover:from-codeflow-purple/30 group-hover:to-codeflow-blue/30 transition-colors flex-shrink-0">
-                      <Code className="w-5 h-5 text-codeflow-purple" />
-                    </div>
-                    <div>
-                      <div className="font-medium">Add Problem</div>
-                      <div className="text-xs text-base-content/60">Create new challenges</div>
-                    </div>
-                  </motion.div>
+                  <div className="flex flex-col items-center gap-1 px-2 py-3 w-full">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    <span className="text-xs">Add</span>
+                  </div>
                 )}
               </Link>
+            )}
+
+            {/* More dropdown placeholder - collapsed state */}
+            {!showExpanded && (
+              <div className="flex flex-col items-center gap-1 px-2 py-3 w-full text-gray-300">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+                <span className="text-xs">More</span>
+              </div>
             )}
           </nav>
         </div>
 
-        {/* Logout Button */}
-        <div className="p-4 border-t border-white/10">
-          <LogoutButton className="flex flex-col items-center p-3 rounded-xl hover:bg-gradient-to-r hover:from-codeflow-purple/10 hover:to-codeflow-blue/10 hover:text-codeflow-purple transition-all duration-200 group w-full justify-center">
-            {!isExpanded ? (
-              <>
-                <div className="p-2 bg-gradient-to-r from-codeflow-purple/20 to-codeflow-blue/20 rounded-lg group-hover:from-codeflow-purple/30 group-hover:to-codeflow-blue/30 transition-colors">
-                  <LogOut className="w-4 h-4 text-codeflow-purple" />
-                </div>
-                <span className="text-xs font-medium text-base-content/70 mt-1">Logout</span>
-              </>
+        {/* Bottom section */}
+        <div className="px-4 pb-4 space-y-1">
+          {/* Dark Mode toggle */}
+          <div className="flex items-center text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors duration-200">
+            {showExpanded ? (
+              <div className="flex items-center gap-3 px-3 py-3 w-full">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+                <span className="font-medium">Dark Mode</span>
+              </div>
             ) : (
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.2, delay: 0.1 }}
-                className="flex items-center gap-3 w-full"
-              >
-                <div className="p-2 bg-gradient-to-r from-codeflow-purple/20 to-codeflow-blue/20 rounded-lg group-hover:from-codeflow-purple/30 group-hover:to-codeflow-blue/30 transition-colors flex-shrink-0">
-                  <LogOut className="w-4 h-4 text-codeflow-purple" />
-                </div>
-                <div>
-                  <div className="font-medium text-sm">Logout</div>
-                  <div className="text-xs text-base-content/60">Sign out</div>
-                </div>
-              </motion.div>
+              <div className="flex flex-col items-center gap-1 px-2 py-3 w-full">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+                <span className="text-xs">Dark Mode</span>
+              </div>
+            )}
+          </div>
+
+          {/* Logout */}
+          <LogoutButton className="flex items-center text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors duration-200 w-full">
+            {showExpanded ? (
+              <div className="flex items-center gap-3 px-3 py-3 w-full">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <span className="font-medium">Logout</span>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center gap-1 px-2 py-3 w-full">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <span className="text-xs">Logout</span>
+              </div>
             )}
           </LogoutButton>
+
+          {/* Profile */}
+          <Link
+            to="/profile"
+            className="flex items-center text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors duration-200"
+          >
+            {showExpanded ? (
+              <div className="flex items-center gap-3 px-3 py-3 w-full">
+                <img
+                  src={authUser?.avatarUrl || 'https://avatar.iran.liara.run/public/boy'}
+                  alt="Profile"
+                  className="w-5 h-5 rounded-full"
+                />
+                <span className="font-medium">{authUser?.fullname || 'Profile'}</span>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center gap-1 px-2 py-3 w-full">
+                <img
+                  src={authUser?.avatarUrl || 'https://avatar.iran.liara.run/public/boy'}
+                  alt="Profile"
+                  className="w-6 h-6 rounded-full"
+                />
+                <span className="text-xs">Profile</span>
+              </div>
+            )}
+          </Link>
         </div>
       </motion.aside>
     );
