@@ -5,10 +5,9 @@ import { useAuthStore } from '../store/useAuthStore';
 import { Link, useLocation } from 'react-router-dom';
 import LogoutButton from './LogoutButton';
 
-const Sidebar = () => {
+const Sidebar = ({ isExpanded, setIsExpanded }) => {
   const { authUser } = useAuthStore();
   const location = useLocation();
-  const [isExpanded, setIsExpanded] = useState(false);
 
   const sidebarVariants = {
     collapsed: { width: '80px' },
