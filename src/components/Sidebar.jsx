@@ -157,37 +157,39 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
               whileHover={{ x: isExpanded ? 4 : 0 }}
               transition={{ duration: 0.2 }}
             >
-              <Link
-                to="/add-problem"
-                className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-200 group ${
-                  location.pathname === '/add-problem'
-                    ? 'bg-gradient-to-r from-orange-500/20 to-red-500/20 text-orange-400'
-                    : 'hover:bg-gradient-to-r hover:from-orange-500/10 hover:to-red-500/10 hover:text-orange-400'
-                }`}
-              >
-                <div className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
-                  location.pathname === '/add-problem'
-                    ? 'bg-orange-500/20'
-                    : 'bg-orange-500/10 group-hover:bg-orange-500/20'
-                }`}>
-                  <Code className="w-5 h-5 text-orange-400" />
-                </div>
-                <AnimatePresence>
-                  {isExpanded && (
-                    <motion.div
-                      variants={contentVariants}
-                      initial="collapsed"
-                      animate="expanded"
-                      exit="collapsed"
-                      transition={{ duration: 0.2, delay: 0.1 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="font-medium">Add Problem</div>
-                      <div className="text-xs text-base-content/60">Create new challenges</div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </Link>
+              <div className={`tooltip tooltip-right ${!isExpanded ? 'tooltip-open' : ''}`} data-tip="Add Problem">
+                <Link
+                  to="/add-problem"
+                  className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-200 group w-full ${
+                    location.pathname === '/add-problem'
+                      ? 'bg-gradient-to-r from-orange-500/20 to-red-500/20 text-orange-400'
+                      : 'hover:bg-gradient-to-r hover:from-orange-500/10 hover:to-red-500/10 hover:text-orange-400'
+                  }`}
+                >
+                  <div className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
+                    location.pathname === '/add-problem'
+                      ? 'bg-orange-500/20'
+                      : 'bg-orange-500/10 group-hover:bg-orange-500/20'
+                  }`}>
+                    <Code className="w-5 h-5 text-orange-400" />
+                  </div>
+                  <AnimatePresence>
+                    {isExpanded && (
+                      <motion.div
+                        variants={contentVariants}
+                        initial="collapsed"
+                        animate="expanded"
+                        exit="collapsed"
+                        transition={{ duration: 0.2, delay: 0.1 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="font-medium">Add Problem</div>
+                        <div className="text-xs text-base-content/60">Create new challenges</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </Link>
+              </div>
             </motion.div>
           )}
         </nav>
