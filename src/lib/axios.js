@@ -14,13 +14,10 @@ axiosInstance.interceptors.response.use(
       const currentPath = window.location.pathname;
       if (!['/login', '/signup', '/verify-email'].includes(currentPath)) {
         console.log('🔒 Session expired - clearing auth state');
-        // Import here to avoid circular dependency
         import('../store/useAuthStore.js').then(({ useAuthStore }) => {
-          useAuthStore.getState().set?.({
-            authUser: null,
-            isEmailVerified: false,
-            justLoggedOut: true,
-          });
+          // Use helper to safely clear
+          const { clearAuthState } = useAuthStore.getState();
+          if (clearAuthState) clearAuthState();
         });
       }
     }

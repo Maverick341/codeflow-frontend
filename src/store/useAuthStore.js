@@ -6,21 +6,24 @@ export const useAuthStore = create((set, get) => ({
   authUser: null,
   isSigningUp: false,
   isLoggingIn: false,
-  isCheckingAuth: false,
+  // Start in checking state to avoid premature redirects before first checkAuth completes
+  isCheckingAuth: true,
   isEmailVerified: false,
   verificationStatus: 'pending', // 'pending', 'loading', 'success', 'error'
   isVerifying: false,
-  justLoggedOut: false, // Flag to prevent checkAuth immediately after logout
+  justLoggedOut: false, 
+  hasAttemptedAuth: false, // Tracks if at least one auth attempt finished (success or fail)
 
   checkAuth: async () => {
     // Skip auth check if user just logged out to prevent race condition
     const { justLoggedOut } = get();
     if (justLoggedOut) {
       console.log('🚫 Skipping checkAuth - user just logged out');
-      set({ justLoggedOut: false }); // Reset flag
+      set({ justLoggedOut: false, isCheckingAuth: false, hasAttemptedAuth: true }); // Reset flag & mark attempt
       return false;
     }
 
+    // Ensure checking flag true
     set({ isCheckingAuth: true });
     try {
       const res = await axiosInstance.get('/auth/profile');
@@ -47,7 +50,7 @@ export const useAuthStore = create((set, get) => ({
       });
       return false;
     } finally {
-      set({ isCheckingAuth: false });
+  set({ isCheckingAuth: false, hasAttemptedAuth: true });
     }
   },
 
@@ -171,6 +174,7 @@ export const useAuthStore = create((set, get) => ({
         authUser: null,
         isEmailVerified: false,
         justLoggedOut: true, // Set flag to prevent immediate checkAuth
+        hasAttemptedAuth: true,
       });
 
       console.log('✅ Logout completed - auth state cleared');
@@ -195,6 +199,7 @@ export const useAuthStore = create((set, get) => ({
         authUser: null,
         isEmailVerified: false,
         justLoggedOut: true,
+        hasAttemptedAuth: true,
       });
       
       // Still try to clear cookies on error (focus on your backend cookie names)
@@ -237,5 +242,9 @@ export const useAuthStore = create((set, get) => ({
       toast.error(error.response?.data?.message || 'Error updating avatar');
       return false;
     }
+  },
+  // Helper to force clear auth state (used by axios interceptor)
+  clearAuthState: () => {
+    set({ authUser: null, isEmailVerified: false, justLoggedOut: true, hasAttemptedAuth: true });
   },
 }));

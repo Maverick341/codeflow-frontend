@@ -4,9 +4,9 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { Loader } from 'lucide-react';
 
 const AdminRoute = () => {
-  const { authUser, isCheckingAuth } = useAuthStore();
+  const { authUser, isCheckingAuth, hasAttemptedAuth } = useAuthStore();
 
-  if (isCheckingAuth) {
+  if (isCheckingAuth && !hasAttemptedAuth) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader className="size-10 animate-spin" />

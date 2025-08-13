@@ -4,10 +4,10 @@ import { Loader } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 
 const ProtectedRoute = ({ children }) => {
-  const { authUser, isEmailVerified, isCheckingAuth } = useAuthStore();
+  const { authUser, isEmailVerified, isCheckingAuth, hasAttemptedAuth } = useAuthStore();
 
   // Show loading while checking authentication
-  if (isCheckingAuth) {
+  if (isCheckingAuth && !hasAttemptedAuth) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader className="size-10 animate-spin" />

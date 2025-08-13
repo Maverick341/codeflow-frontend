@@ -7,7 +7,7 @@ import { useAuthStore } from '../store/useAuthStore';
 import { Loader } from 'lucide-react';
 
 const Layout = () => {
-  const { isCheckingAuth, checkAuth, authUser, justLoggedOut } = useAuthStore();
+  const { isCheckingAuth, checkAuth, authUser, justLoggedOut, hasAttemptedAuth } = useAuthStore();
   const location = useLocation();
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
 
@@ -26,7 +26,7 @@ const Layout = () => {
     }
   }, [checkAuth, justLoggedOut]);
 
-  return isCheckingAuth ? (
+  return isCheckingAuth && !hasAttemptedAuth ? (
     <div className="flex items-center justify-center h-screen bg-background">
       <Loader className="size-10 animate-spin text-primary" />
     </div>
