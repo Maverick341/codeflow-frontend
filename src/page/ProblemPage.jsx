@@ -527,40 +527,40 @@ const ProblemPage = () => {
                 />
               </div>
 
-              <div className="p-3 sm:p-4 bg-base-200/30 border-t border-white/10">
-                <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-3 sm:gap-4">
+              <div className="px-3 py-2 bg-base-200/30 border-t border-white/10">
+                <div className="flex flex-col sm:flex-row justify-center sm:justify-end items-center gap-2">
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className={`btn btn-sm sm:btn-md bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white border-0 gap-1.5 sm:gap-2 w-4/5 sm:w-auto min-w-[120px] ${
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`btn btn-sm bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white border-0 gap-1 ${
                       isRunning ? 'opacity-80' : ''
                     }`}
                     onClick={handleRunCodeOnly}
                     disabled={isRunning}
                   >
                     {isRunning ? (
-                      <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                      <div className="w-3 h-3 border-2 border-white/20 border-t-white rounded-full animate-spin" />
                     ) : (
-                      <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      <Play className="w-3 h-3" />
                     )}
-                    <span className="text-sm sm:text-base">Run Code</span>
+                    <span className="text-xs">Run</span>
                   </motion.button>
-                  
+
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className={`btn btn-sm sm:btn-md bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white border-0 gap-1.5 sm:gap-2 w-4/5 sm:w-auto min-w-[140px] ${
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`btn btn-sm bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white border-0 gap-1 ${
                       isExecuting ? 'opacity-80' : ''
                     }`}
                     onClick={handleSubmitCode}
                     disabled={isExecuting}
                   >
                     {isExecuting ? (
-                      <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                      <div className="w-3 h-3 border-2 border-white/20 border-t-white rounded-full animate-spin" />
                     ) : (
-                      <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      <Award className="w-3 h-3" />
                     )}
-                    <span className="text-sm sm:text-base">Submit Solution</span>
+                    <span className="text-xs">Submit</span>
                   </motion.button>
                 </div>
               </div>
