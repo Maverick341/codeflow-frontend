@@ -419,7 +419,7 @@ const ProblemPage = () => {
             className="card bg-base-100/50 backdrop-blur-sm shadow-2xl border border-white/10"
           >
             <div className="card-body p-0">
-              <div className="tabs tabs-boxed bg-transparent p-4 border-b border-white/10">
+              <div className="tabs tabs-boxed bg-transparent px-3 py-2 border-b border-white/10">
                 {[
                   { key: 'description', icon: FileText, label: 'Description' },
                   { key: 'submissions', icon: Code2, label: 'Submissions' },
