@@ -201,26 +201,28 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
           whileHover={{ x: isExpanded ? 4 : 0 }}
           transition={{ duration: 0.2 }}
         >
-          <LogoutButton className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-red-500/10 hover:to-red-500/20 hover:text-red-400 transition-all duration-200 group w-full justify-start">
-            <div className="p-2 bg-red-500/10 rounded-lg group-hover:bg-red-500/20 transition-colors flex-shrink-0">
-              <LogOut className="w-5 h-5 text-red-400" />
-            </div>
-            <AnimatePresence>
-              {isExpanded && (
-                <motion.div
-                  variants={contentVariants}
-                  initial="collapsed"
-                  animate="expanded"
-                  exit="collapsed"
-                  transition={{ duration: 0.2, delay: 0.1 }}
-                  className="overflow-hidden"
-                >
-                  <div className="font-medium">Logout</div>
-                  <div className="text-xs text-base-content/60">Sign out of account</div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </LogoutButton>
+          <div className={`tooltip tooltip-right ${!isExpanded ? 'tooltip-open' : ''}`} data-tip="Logout">
+            <LogoutButton className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-red-500/10 hover:to-red-500/20 hover:text-red-400 transition-all duration-200 group w-full justify-start">
+              <div className="p-2 bg-red-500/10 rounded-lg group-hover:bg-red-500/20 transition-colors flex-shrink-0">
+                <LogOut className="w-5 h-5 text-red-400" />
+              </div>
+              <AnimatePresence>
+                {isExpanded && (
+                  <motion.div
+                    variants={contentVariants}
+                    initial="collapsed"
+                    animate="expanded"
+                    exit="collapsed"
+                    transition={{ duration: 0.2, delay: 0.1 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="font-medium">Logout</div>
+                    <div className="text-xs text-base-content/60">Sign out of account</div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </LogoutButton>
+          </div>
         </motion.div>
       </div>
     </motion.aside>
