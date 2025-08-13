@@ -81,7 +81,7 @@ const ProblemPage = () => {
       const availableLangs = Object.keys(problem.codeSnippets || {});
       let lang = selectedLanguage;
       if (!lang || !availableLangs.includes(lang)) {
-        lang = availableLangs[0] || null;
+        lang = availableLangs[0] || '';
         setSelectedLanguage(lang);
       }
       setCode(
