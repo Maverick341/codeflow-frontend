@@ -455,7 +455,7 @@ const ProblemPage = () => {
             className="card bg-base-100/50 backdrop-blur-sm shadow-2xl border border-white/10"
           >
             <div className="card-body p-0">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border-b border-white/10 bg-base-200/30 gap-3 sm:gap-0">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-3 py-2 border-b border-white/10 bg-base-200/30 gap-2 sm:gap-0">
                 <div className="flex items-center gap-2">
                   <Terminal className="w-4 h-4 sm:w-5 sm:h-5 text-codeflow-purple" />
                   <span className="font-semibold text-sm sm:text-base text-base-content">Code Editor</span>
