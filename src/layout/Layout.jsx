@@ -12,6 +12,10 @@ const Layout = () => {
 
   // Use landing page layout for homepage when not authenticated
   const isLandingPage = location.pathname === '/' && !authUser;
+  const isProblemPage = location.pathname.startsWith('/problem/') && authUser;
+  const isProfilePage = location.pathname === '/profile' && authUser;
+  
+  const isLeftNavPage = isProblemPage || isProfilePage;
 
   useEffect(() => {
     // Don't check auth if user just logged out (prevents race condition in production)
@@ -22,27 +26,25 @@ const Layout = () => {
     }
   }, [checkAuth, justLoggedOut]);
 
-  if (isCheckingAuth) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-background">
-        <Loader className="size-10 animate-spin text-primary" />
-      </div>
-    );
-  }
-
-  if (isLandingPage) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col w-full">
-        <Header />
-        <main className="flex-1 w-full">
-          <Outlet />
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
-  return (
+  return isCheckingAuth ? (
+    <div className="flex items-center justify-center h-screen bg-background">
+      <Loader className="size-10 animate-spin text-primary" />
+    </div>
+  ) : isLandingPage ? (
+    <div className="min-h-screen bg-background flex flex-col w-full">
+      <Header />
+      <main className="flex-1 w-full">
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
+  ) : isLeftNavPage ? (
+    <div className="min-h-screen bg-background flex flex-col w-full">
+      <Navbar />
+      <Outlet />
+      {/* <Footer /> */}
+    </div>
+  ) : (
     <div className="bg-background min-h-screen w-full">
       <Navbar />
       <Outlet />
