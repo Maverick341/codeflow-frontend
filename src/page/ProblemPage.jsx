@@ -25,6 +25,8 @@ import {
   Zap,
   AlignLeft,
   Copy,
+  ChevronUp,
+  ChevronDown,
 } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { useProblemStore } from '../store/useProblemStore';
@@ -53,6 +55,7 @@ const ProblemPage = () => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [testcases, setTestCases] = useState([]);
   const [testTab, setTestTab] = useState('testCases');
+  const [isTestPanelExpanded, setIsTestPanelExpanded] = useState(false);
 
   const editorRef = useRef(null);
 
@@ -147,8 +150,9 @@ const ProblemPage = () => {
       const stdin = problem.testcases.map((tc) => tc.input);
       const expected_outputs = problem.testcases.map((tc) => tc.output);
       executeCode(code, language_id, stdin, expected_outputs, id);
-      // Switch to test results tab when submitting
+      // Switch to test results tab when submitting and expand panel
       setTestTab('testResults');
+      setIsTestPanelExpanded(true);
     } catch (error) {
       console.log('Error submitting code', error);
     }
@@ -161,8 +165,9 @@ const ProblemPage = () => {
       const stdin = problem.testcases.map((tc) => tc.input);
       const expected_outputs = problem.testcases.map((tc) => tc.output);
       runCode(code, language_id, stdin, expected_outputs, id);
-      // Switch to test results tab when running
+      // Switch to test results tab when running and expand panel
       setTestTab('testResults');
+      setIsTestPanelExpanded(true);
     } catch (error) {
       console.log('Error executing code', error);
     }
@@ -548,13 +553,13 @@ const ProblemPage = () => {
       </motion.nav>
 
       <div className="w-full mx-auto p-4">
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 items-start">
           {/* Problem Description Panel */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="card bg-base-100/50 backdrop-blur-sm shadow-2xl border border-white/10"
+            className="card bg-base-100/50 backdrop-blur-sm shadow-2xl border border-white/10 h-fit"
           >
             <div className="card-body p-0">
               <div className="tabs tabs-boxed bg-transparent px-3 py-2 border-b border-white/10">
@@ -594,7 +599,7 @@ const ProblemPage = () => {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="card bg-base-100/50 backdrop-blur-sm shadow-2xl border border-white/10"
+            className="card bg-base-100/50 backdrop-blur-sm shadow-2xl border border-white/10 h-fit"
           >
             <div className="card-body p-0">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-3 py-2 border-b border-white/10 bg-base-200/30 gap-2 sm:gap-0">
@@ -618,12 +623,28 @@ const ProblemPage = () => {
                     title="Format Code (Ctrl+Shift+F)"
                   >
                     <AlignLeft className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                    {/* <span className="text-xs sm:text-sm">Format</span> */}
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setIsTestPanelExpanded(!isTestPanelExpanded)}
+                    className="btn btn-xs sm:btn-sm bg-codeflow-blue/20 hover:bg-codeflow-blue/30 border-codeflow-blue/40 text-codeflow-blue gap-1 sm:gap-1.5 transition-all duration-200"
+                    title={isTestPanelExpanded ? "Collapse Test Panel" : "Expand Test Panel"}
+                  >
+                    {isTestPanelExpanded ? (
+                      <ChevronDown className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                    ) : (
+                      <ChevronUp className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                    )}
                   </motion.button>
                 </div>
               </div>
 
-              <div className="h-[400px] sm:h-[500px] lg:h-[650px] w-full relative">
+              <div className={`w-full relative transition-all duration-300 ${
+                isTestPanelExpanded
+                  ? 'h-[200px] sm:h-[250px] lg:h-[300px]'
+                  : 'h-[400px] sm:h-[500px] lg:h-[650px]'
+              }`}>
                 <Editor
                   height="100%"
                   language={
@@ -753,9 +774,19 @@ const ProblemPage = () => {
               </div>
 
               {/* Test Results Panel */}
-              <div className="h-[300px] border-t border-white/10 bg-base-100/30">
-                {renderTestTabContent()}
-              </div>
+              <motion.div
+                initial={false}
+                animate={{
+                  height: isTestPanelExpanded ? '450px' : '0px',
+                  opacity: isTestPanelExpanded ? 1 : 0
+                }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="border-t border-white/10 bg-base-100/30 overflow-hidden"
+              >
+                <div className="h-full">
+                  {renderTestTabContent()}
+                </div>
+              </motion.div>
             </div>
           </motion.div>
         </div>

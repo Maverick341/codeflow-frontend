@@ -1,26 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   User,
   Mail,
   Calendar,
-  MapPin,
   Edit3,
   Shield,
   Crown,
-  Trophy,
-  Target,
-  TrendingUp,
-  Code,
-  Clock,
-  Star
+  Check,
+  X,
+  Camera,
+  Loader2,
+  Save
 } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
-import EditProfileModal from './EditProfileModal';
 
 const UserDetails = () => {
-  const { authUser } = useAuthStore();
-  const [isEditing, setIsEditing] = useState(false);
+  const { authUser, updateDetails, updateAvatar } = useAuthStore();
+  const fileInputRef = useRef(null);
+
+  
+  // Editing states
+  const [editingField, setEditingField] = useState(null);
+  const [editValues, setEditValues] = useState({
+    fullname: '',
+    username: ''
+  });
+  const [isUpdating, setIsUpdating] = useState({
+    fullname: false,
+    username: false,
+    avatar: false
+  });
 
   // Mock data for demonstration
   const userStats = {
@@ -32,23 +42,167 @@ const UserDetails = () => {
     points: 1247,
   };
 
-  const achievements = [
-    { icon: Trophy, label: 'First Solve', color: 'text-yellow-400' },
-    { icon: Target, label: '100 Problems', color: 'text-green-400' },
-    { icon: Star, label: 'Week Streak', color: 'text-blue-400' },
-  ];
+  const startEditing = (field) => {
+    setEditingField(field);
+    setEditValues({
+      ...editValues,
+      [field]: authUser?.[field] || ''
+    });
+  };
+
+  const cancelEditing = () => {
+    setEditingField(null);
+    setEditValues({
+      fullname: '',
+      username: ''
+    });
+  };
+
+  const saveField = async (field) => {
+    const value = editValues[field]?.trim();
+
+    if (!value || value === authUser?.[field]) {
+      cancelEditing();
+      return;
+    }
+
+    setIsUpdating(prev => ({ ...prev, [field]: true }));
+
+    try {
+      const success = await updateDetails({ [field]: value });
+
+      if (success) {
+        setEditingField(null);
+        setEditValues(prev => ({ ...prev, [field]: '' }));
+      }
+    } catch (error) {
+      console.error(`Error updating ${field}:`, error);
+    } finally {
+      setIsUpdating(prev => ({ ...prev, [field]: false }));
+    }
+  };
+
+  const handleAvatarChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validate file
+    if (!file.type.startsWith('image/')) {
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      return;
+    }
+
+    setIsUpdating(prev => ({ ...prev, avatar: true }));
+    
+    try {
+      await updateAvatar(file);
+    } catch (error) {
+      console.error('Error updating avatar:', error);
+    } finally {
+      setIsUpdating(prev => ({ ...prev, avatar: false }));
+    }
+  };
+
+  const renderEditableField = (field, label, icon, value) => {
+    const isEditing = editingField === field;
+    const isLoading = isUpdating[field];
+
+    const IconComponent = icon;
+
+    return (
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-medium text-base-content/70">
+            {label}
+          </label>
+          {!isEditing && (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => startEditing(field)}
+              className="text-blue-500 hover:text-blue-600 font-medium text-sm flex items-center gap-1 transition-colors"
+              disabled={editingField !== null}
+            >
+              <Edit3 className="w-3 h-3" />
+              Edit
+            </motion.button>
+          )}
+        </div>
+
+        {isEditing ? (
+          <div className="space-y-2">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <IconComponent className="h-4 w-4 text-base-content/40" />
+              </div>
+              <input
+                type="text"
+                value={editValues[field]}
+                onChange={(e) => setEditValues(prev => ({ ...prev, [field]: e.target.value }))}
+                className="input input-bordered w-full pl-10 text-sm h-10"
+                placeholder={`Enter your ${label.toLowerCase()}`}
+                autoFocus
+                disabled={isLoading}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') saveField(field);
+                  if (e.key === 'Escape') cancelEditing();
+                }}
+              />
+            </div>
+            <div className="flex gap-2">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => saveField(field)}
+                className="btn btn-primary btn-sm gap-1"
+                disabled={isLoading || !editValues[field]?.trim()}
+              >
+                {isLoading ? (
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                ) : (
+                  <Save className="w-3 h-3" />
+                )}
+                Save
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={cancelEditing}
+                className="btn btn-ghost btn-sm gap-1"
+                disabled={isLoading}
+              >
+                <X className="w-3 h-3" />
+                Cancel
+              </motion.button>
+            </div>
+          </div>
+        ) : (
+          <div className="p-3 bg-base-200/30 rounded-lg border border-base-300/50">
+            <div className="flex items-center gap-3">
+              <IconComponent className="w-4 h-4 text-base-content/60" />
+              <span className="text-base-content font-medium">
+                {value || `No ${label.toLowerCase()} set`}
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="card bg-base-100/50 backdrop-blur-sm shadow-xl border border-white/10">
       <div className="card-body p-0">
-        {/* Header with Avatar and Basic Info */}
+        {/* Header with Avatar */}
         <div className="relative p-6 bg-gradient-to-r from-codeflow-purple/20 to-codeflow-blue/20 rounded-t-2xl">
           <div className="flex flex-col items-center text-center">
-            <div className="relative mb-4">
+            <div className="relative mb-4 group">
               <img
                 src={authUser?.avatarUrl || 'https://avatar.iran.liara.run/public/boy'}
                 alt="Profile"
-                className="w-24 h-24 rounded-full ring-4 ring-codeflow-purple/50 object-cover"
+                className="w-24 h-24 rounded-full ring-4 ring-codeflow-purple/50 object-cover transition-all duration-300"
               />
               {authUser?.role === 'ADMIN' && (
                 <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center">
@@ -56,11 +210,30 @@ const UserDetails = () => {
                 </div>
               )}
               <div className="absolute bottom-0 right-0 w-6 h-6 bg-green-400 rounded-full border-2 border-base-100"></div>
+              
+              {/* Avatar upload overlay */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => fileInputRef.current?.click()}
+                className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center backdrop-blur-sm"
+                disabled={isUpdating.avatar}
+              >
+                {isUpdating.avatar ? (
+                  <Loader2 className="w-6 h-6 text-white animate-spin" />
+                ) : (
+                  <Camera className="w-6 h-6 text-white" />
+                )}
+              </motion.button>
+              
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarChange}
+                className="hidden"
+              />
             </div>
-            
-            <h2 className="text-2xl font-bold text-base-content mb-1">
-              {authUser?.fullname || 'John Doe'}
-            </h2>
             
             <div className="flex items-center gap-2 mb-3">
               {authUser?.role === 'ADMIN' && (
@@ -69,46 +242,55 @@ const UserDetails = () => {
                   Admin
                 </span>
               )}
-              {/* <span className="px-3 py-1 bg-codeflow-purple/20 text-codeflow-purple text-xs rounded-full">
-                {userStats.rank}
-              </span> */}
             </div>
-
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => setIsEditing(true)}
-              className="btn btn-sm bg-gradient-to-r from-codeflow-purple to-codeflow-blue hover:from-codeflow-purple/90 hover:to-codeflow-blue/90 text-white border-0 gap-2"
-            >
-              <Edit3 className="w-4 h-4" />
-              Edit Profile
-            </motion.button>
           </div>
         </div>
 
-        {/* User Information */}
-        <div className="p-6 space-y-4">
-          <div className="flex items-center gap-3 text-base-content/80">
-            <Mail className="w-4 h-4 text-codeflow-blue" />
-            <span className="text-sm">{authUser?.email || 'john.doe@example.com'}</span>
+        {/* Basic Info Section */}
+        <div className="p-6 space-y-6">
+          <div className="border-b border-white/10 pb-4">
+            <h3 className="text-lg font-semibold text-base-content mb-4">Basic Info</h3>
           </div>
-          
-          <div className="flex items-center gap-3 text-base-content/80">
-            <Calendar className="w-4 h-4 text-codeflow-blue" />
-            <span className="text-sm">
-              Joined {authUser?.createdAt ? new Date(authUser.createdAt).toLocaleDateString() : 'Unknown'}
-            </span>
-          </div>
-          
-          {/* <div className="flex items-center gap-3 text-base-content/80">
-            <MapPin className="w-4 h-4 text-codeflow-blue" />
-            <span className="text-sm">San Francisco, CA</span>
-          </div> */}
 
-          {/* <div className="flex items-center gap-3 text-base-content/80">
-            <Clock className="w-4 h-4 text-codeflow-blue" />
-            <span className="text-sm">{userStats.streak} day streak</span>
-          </div> */}
+          {/* Full Name */}
+          {renderEditableField('fullname', 'Name', User, authUser?.fullname)}
+
+          {/* Username */}
+          {renderEditableField('username', 'Username', User, authUser?.username)}
+
+          {/* Email (Read-only) */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-sm font-medium text-base-content/70">
+                Email
+              </label>
+            </div>
+            <div className="p-3 bg-base-200/30 rounded-lg border border-base-300/50">
+              <div className="flex items-center gap-3">
+                <Mail className="w-4 h-4 text-base-content/60" />
+                <span className="text-base-content font-medium">
+                  {authUser?.email || 'No email set'}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Join Date (Read-only) */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-sm font-medium text-base-content/70">
+                Member Since
+              </label>
+            </div>
+            <div className="p-3 bg-base-200/30 rounded-lg border border-base-300/50">
+              <div className="flex items-center gap-3">
+                <Calendar className="w-4 h-4 text-base-content/60" />
+                <span className="text-base-content font-medium">
+                  {authUser?.createdAt ? new Date(authUser.createdAt).toLocaleDateString() : 'Unknown'}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Stats Grid */}
@@ -133,37 +315,7 @@ const UserDetails = () => {
             </div>
           </div>
         </div>
-
-        {/* Recent Achievements */}
-        {/* <div className="p-6 border-t border-white/10">
-          <h3 className="text-lg font-semibold text-base-content mb-4">Recent Achievements</h3>
-          <div className="space-y-3">
-            {achievements.map((achievement, index) => (
-              <motion.div
-                key={achievement.label}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="flex items-center gap-3 p-3 bg-base-200/20 rounded-xl hover:bg-base-200/30 transition-colors"
-              >
-                <div className="p-2 bg-base-200/50 rounded-lg">
-                  <achievement.icon className={`w-4 h-4 ${achievement.color}`} />
-                </div>
-                <div>
-                  <div className="font-medium text-base-content">{achievement.label}</div>
-                  <div className="text-xs text-base-content/60">Recently earned</div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div> */}
       </div>
-
-      {/* Edit Profile Modal */}
-      <EditProfileModal
-        isOpen={isEditing}
-        onClose={() => setIsEditing(false)}
-      />
     </div>
   );
 };

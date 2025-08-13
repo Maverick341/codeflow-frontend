@@ -27,90 +27,86 @@ const SubmissionResults = ({ submission }) => {
   const successRate = (passedTests / totalTests) * 100;
 
   return (
-    <div className="space-y-6">
-      {/* Overall Status */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="card bg-base-200 shadow-lg">
-          <div className="card-body p-4">
-            <h3 className="card-title text-sm">Status</h3>
-            <div
-              className={`text-lg font-bold ${
-                submission.status === 'ACCEPTED' ? 'text-success' : 'text-error'
-              }`}
-            >
-              {submission.status}
-            </div>
+    <div className="space-y-3 p-4">
+      {/* Overall Status - Compact Layout */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+        <div className="bg-base-200/50 p-2 rounded-lg border border-white/10">
+          <div className="text-xs text-base-content/60">Status</div>
+          <div
+            className={`text-sm font-semibold ${
+              submission.status === 'ACCEPTED' ? 'text-success' : 'text-error'
+            }`}
+          >
+            {submission.status}
           </div>
         </div>
 
-        <div className="card bg-base-200 shadow-lg">
-          <div className="card-body p-4">
-            <h3 className="card-title text-sm">Success Rate</h3>
-            <div className="text-lg font-bold">{successRate.toFixed(1)}%</div>
-          </div>
+        <div className="bg-base-200/50 p-2 rounded-lg border border-white/10">
+          <div className="text-xs text-base-content/60">Success Rate</div>
+          <div className="text-sm font-semibold">{successRate.toFixed(1)}%</div>
         </div>
 
-        <div className="card bg-base-200 shadow-lg">
-          <div className="card-body p-4">
-            <h3 className="card-title text-sm flex items-center gap-2">
-              <Clock className="w-4 h-4" />
-              Avg. Runtime
-            </h3>
-            <div className="text-lg font-bold">{avgTime.toFixed(3)} s</div>
+        <div className="bg-base-200/50 p-2 rounded-lg border border-white/10">
+          <div className="text-xs text-base-content/60 flex items-center gap-1">
+            <Clock className="w-3 h-3" />
+            Runtime
           </div>
+          <div className="text-sm font-semibold">{avgTime.toFixed(3)} s</div>
         </div>
 
-        <div className="card bg-base-200 shadow-lg">
-          <div className="card-body p-4">
-            <h3 className="card-title text-sm flex items-center gap-2">
-              <Memory className="w-4 h-4" />
-              Avg. Memory
-            </h3>
-            <div className="text-lg font-bold">{avgMemory.toFixed(0)} KB</div>
+        <div className="bg-base-200/50 p-2 rounded-lg border border-white/10">
+          <div className="text-xs text-base-content/60 flex items-center gap-1">
+            <Memory className="w-3 h-3" />
+            Memory
           </div>
+          <div className="text-sm font-semibold">{avgMemory.toFixed(0)} KB</div>
         </div>
       </div>
 
-      {/* Test Cases Results */}
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body">
-          <h2 className="card-title mb-4">Test Cases Results</h2>
-          <div className="overflow-x-auto">
-            <table className="table table-zebra w-full">
-              <thead>
-                <tr>
-                  <th>Status</th>
-                  <th>Expected Output</th>
-                  <th>Your Output</th>
-                  <th>Memory</th>
-                  <th>Time</th>
+      {/* Test Cases Results - Compact Table */}
+      <div className="bg-base-100/30 rounded-lg border border-white/10">
+        <div className="p-3 border-b border-white/10">
+          <h3 className="text-sm font-semibold text-base-content">Test Results</h3>
+        </div>
+        <div className="overflow-x-auto max-h-80 overflow-y-auto">
+          <table className="table table-sm w-full">
+            <thead className="sticky top-0 bg-base-200/80 backdrop-blur-sm">
+              <tr className="text-xs">
+                <th className="py-2">Status</th>
+                <th className="py-2">Expected</th>
+                <th className="py-2">Output</th>
+                <th className="py-2">Memory</th>
+                <th className="py-2">Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {submission.testCases.map((testCase) => (
+                <tr key={testCase.id} className="hover:bg-base-200/20">
+                  <td className="py-1">
+                    {testCase.passed ? (
+                      <div className="flex items-center gap-1 text-success">
+                        <CheckCircle2 className="w-3 h-3" />
+                        <span className="text-xs">Pass</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-1 text-error">
+                        <XCircle className="w-3 h-3" />
+                        <span className="text-xs">Fail</span>
+                      </div>
+                    )}
+                  </td>
+                  <td className="font-mono text-xs max-w-24 truncate" title={testCase.expected}>
+                    {testCase.expected}
+                  </td>
+                  <td className="font-mono text-xs max-w-24 truncate" title={testCase.stdout || 'null'}>
+                    {testCase.stdout || 'null'}
+                  </td>
+                  <td className="text-xs">{testCase.memory}</td>
+                  <td className="text-xs">{testCase.time}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {submission.testCases.map((testCase) => (
-                  <tr key={testCase.id}>
-                    <td>
-                      {testCase.passed ? (
-                        <div className="flex items-center gap-2 text-success">
-                          <CheckCircle2 className="w-5 h-5" />
-                          Passed
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-2 text-error">
-                          <XCircle className="w-5 h-5" />
-                          Failed
-                        </div>
-                      )}
-                    </td>
-                    <td className="font-mono">{testCase.expected}</td>
-                    <td className="font-mono">{testCase.stdout || 'null'}</td>
-                    <td>{testCase.memory}</td>
-                    <td>{testCase.time}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
