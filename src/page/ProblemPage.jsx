@@ -409,7 +409,7 @@ const ProblemPage = () => {
         </div>
       </motion.nav>
 
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto p-4">
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           {/* Problem Description Panel */}
           <motion.div 
