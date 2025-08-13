@@ -15,7 +15,8 @@ const Navbar = ({ variant = "top" }) => {
   // Sidebar variants
   if (variant === "sidebar-profile" || variant === "sidebar-problem") {
     const hasHover = variant === "sidebar-profile"; // Only profile page has hover
-    const showExpanded = hasHover ? isExpanded : variant === "sidebar-profile";
+    const isProfilePage = variant === "sidebar-profile";
+    const showExpanded = isProfilePage ? (hasHover ? isExpanded : true) : false; // Profile expanded by default, problem collapsed
 
     return (
       <motion.aside
@@ -26,88 +27,75 @@ const Navbar = ({ variant = "top" }) => {
         onMouseLeave={hasHover ? () => setIsExpanded(false) : undefined}
       >
         {/* Logo Section */}
-        <div className="p-4 flex items-center justify-center">
-          {showExpanded ? (
-            <Link to="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center">
-                <span className="text-black font-bold text-lg">{'<>'}</span>
-              </div>
-              <span className="text-white font-bold text-xl">CodeFlow</span>
+        <div className="p-4 border-b border-gray-800">
+          <div className="flex items-center justify-center">
+            {showExpanded ? (
+              <Link to="/" className="flex items-center gap-3">
+                <motion.div
+                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-codeflow-purple to-codeflow-blue shadow-lg"
+                  style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)' }}
+                  whileHover={{ boxShadow: "0 0 20px rgba(139, 92, 246, 0.5)", scale: 1.05 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <motion.div animate={{ rotate: [0, 5, -5, 0] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}>
+                    <Zap className="h-5 w-5 text-white" />
+                  </motion.div>
+                </motion.div>
+                <span className="text-white font-bold text-xl">CodeFlow</span>
+              </Link>
+            ) : (
+              <Link to="/" className="flex flex-col items-center gap-1">
+                <motion.div
+                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-codeflow-purple to-codeflow-blue shadow-lg"
+                  style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)' }}
+                  whileHover={{ boxShadow: "0 0 20px rgba(139, 92, 246, 0.5)", scale: 1.05 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <motion.div animate={{ rotate: [0, 5, -5, 0] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}>
+                    <Zap className="h-5 w-5 text-white" />
+                  </motion.div>
+                </motion.div>
+              </Link>
+            )}
+          </div>
+        </div>
+
+        {/* User Avatar Section */}
+        <div className="p-4 border-b border-gray-800">
+          <div className="flex items-center justify-center">
+            <Link to="/profile" className="flex flex-col items-center gap-2">
+              <img
+                src={authUser?.avatarUrl || 'https://avatar.iran.liara.run/public/boy'}
+                alt="Profile"
+                className="w-10 h-10 rounded-full ring-2 ring-codeflow-purple/50"
+              />
+              {showExpanded && (
+                <div className="text-center">
+                  <p className="text-white font-medium text-sm">{authUser?.fullname || 'User'}</p>
+                  <p className="text-gray-400 text-xs">{authUser?.email?.substring(0, 20) || 'user@example.com'}</p>
+                </div>
+              )}
             </Link>
-          ) : (
-            <Link to="/" className="flex flex-col items-center">
-              <div className="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center">
-                <span className="text-black font-bold text-lg">{'<>'}</span>
-              </div>
-            </Link>
-          )}
+          </div>
         </div>
 
         {/* Navigation Links */}
-        <div className="flex-1 px-4">
+        <div className="flex-1 px-3 py-2">
           <nav className="space-y-1">
-            {/* Home */}
+            {/* Profile */}
             <Link
-              to="/"
+              to="/profile"
               className="flex items-center text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors duration-200"
             >
               {showExpanded ? (
-                <div className="flex items-center gap-3 px-3 py-3 w-full">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                  </svg>
-                  <span className="font-medium">Home</span>
+                <div className="flex items-center gap-3 px-3 py-2.5 w-full">
+                  <User className="w-5 h-5" />
+                  <span className="font-medium">My Profile</span>
                 </div>
               ) : (
-                <div className="flex flex-col items-center gap-1 px-2 py-3 w-full">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                  </svg>
-                  <span className="text-xs">Home</span>
-                </div>
-              )}
-            </Link>
-
-            {/* Practice Problems */}
-            <Link
-              to="/"
-              className="flex items-center text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors duration-200"
-            >
-              {showExpanded ? (
-                <div className="flex items-center gap-3 px-3 py-3 w-full">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                  <span className="font-medium">Practice Problems</span>
-                </div>
-              ) : (
-                <div className="flex flex-col items-center gap-1 px-2 py-3 w-full">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                  <span className="text-xs">Practice</span>
-                </div>
-              )}
-            </Link>
-
-            {/* Sheets Library */}
-            <Link
-              to="/"
-              className="flex items-center text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors duration-200"
-            >
-              {showExpanded ? (
-                <div className="flex items-center gap-3 px-3 py-3 w-full">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  <span className="font-medium">Sheets Library</span>
-                </div>
-              ) : (
-                <div className="flex flex-col items-center gap-1 px-2 py-3 w-full">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  <span className="text-xs">Sheets</span>
+                <div className="flex flex-col items-center gap-1 px-2 py-2.5 w-full">
+                  <User className="w-5 h-5" />
+                  <span className="text-xs">Profile</span>
                 </div>
               )}
             </Link>
@@ -118,100 +106,36 @@ const Navbar = ({ variant = "top" }) => {
                 className="flex items-center text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors duration-200"
               >
                 {showExpanded ? (
-                  <div className="flex items-center gap-3 px-3 py-3 w-full">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                    <span className="font-medium">Contribute</span>
+                  <div className="flex items-center gap-3 px-3 py-2.5 w-full">
+                    <Code className="w-5 h-5" />
+                    <span className="font-medium">Add Problem</span>
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center gap-1 px-2 py-3 w-full">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
+                  <div className="flex flex-col items-center gap-1 px-2 py-2.5 w-full">
+                    <Code className="w-5 h-5" />
                     <span className="text-xs">Add</span>
                   </div>
                 )}
               </Link>
             )}
-
-            {/* More dropdown placeholder - collapsed state */}
-            {!showExpanded && (
-              <div className="flex flex-col items-center gap-1 px-2 py-3 w-full text-gray-300">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-                <span className="text-xs">More</span>
-              </div>
-            )}
           </nav>
         </div>
 
-        {/* Bottom section */}
-        <div className="px-4 pb-4 space-y-1">
-          {/* Dark Mode toggle */}
-          <div className="flex items-center text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors duration-200">
+        {/* Bottom Logout Button */}
+        <div className="p-4 border-t border-gray-800">
+          <LogoutButton className="flex items-center text-gray-300 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all duration-200 w-full">
             {showExpanded ? (
-              <div className="flex items-center gap-3 px-3 py-3 w-full">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
-                <span className="font-medium">Dark Mode</span>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center gap-1 px-2 py-3 w-full">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
-                <span className="text-xs">Dark Mode</span>
-              </div>
-            )}
-          </div>
-
-          {/* Logout */}
-          <LogoutButton className="flex items-center text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors duration-200 w-full">
-            {showExpanded ? (
-              <div className="flex items-center gap-3 px-3 py-3 w-full">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
+              <div className="flex items-center gap-3 px-3 py-2.5 w-full">
+                <LogOut className="w-5 h-5" />
                 <span className="font-medium">Logout</span>
               </div>
             ) : (
-              <div className="flex flex-col items-center gap-1 px-2 py-3 w-full">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
+              <div className="flex flex-col items-center gap-1 px-2 py-2.5 w-full">
+                <LogOut className="w-5 h-5" />
                 <span className="text-xs">Logout</span>
               </div>
             )}
           </LogoutButton>
-
-          {/* Profile */}
-          <Link
-            to="/profile"
-            className="flex items-center text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors duration-200"
-          >
-            {showExpanded ? (
-              <div className="flex items-center gap-3 px-3 py-3 w-full">
-                <img
-                  src={authUser?.avatarUrl || 'https://avatar.iran.liara.run/public/boy'}
-                  alt="Profile"
-                  className="w-5 h-5 rounded-full"
-                />
-                <span className="font-medium">{authUser?.fullname || 'Profile'}</span>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center gap-1 px-2 py-3 w-full">
-                <img
-                  src={authUser?.avatarUrl || 'https://avatar.iran.liara.run/public/boy'}
-                  alt="Profile"
-                  className="w-6 h-6 rounded-full"
-                />
-                <span className="text-xs">Profile</span>
-              </div>
-            )}
-          </Link>
         </div>
       </motion.aside>
     );
