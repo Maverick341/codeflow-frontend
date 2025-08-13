@@ -41,8 +41,8 @@ const Layout = () => {
     </div>
   ) : isProfilePage ? (
     <div className="min-h-screen bg-background flex w-full">
-      <Navbar variant="sidebar-profile" />
-      <main className="flex-1 ml-[240px] transition-all duration-300 min-h-screen">
+      <Navbar variant="sidebar-profile" onExpandChange={setSidebarExpanded} />
+      <main className={`flex-1 transition-all duration-300 min-h-screen ${sidebarExpanded ? 'ml-[240px]' : 'ml-[80px]'}`}>
         <Outlet />
       </main>
     </div>
