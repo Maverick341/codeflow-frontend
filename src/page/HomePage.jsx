@@ -46,7 +46,7 @@ const HomePage = () => {
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              className="space-y-8 pl-14"
+              className="space-y-8 px-4 lg:pl-8 xl:pl-4 2xl:pl-0"
             >
               <div>
                 <motion.h1
@@ -135,7 +135,7 @@ const HomePage = () => {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="flex justify-center lg:justify-end"
+              className="flex justify-center lg:justify-end px-4 lg:pr-8 xl:pr-4 2xl:pr-0"
             >
               <CodeSnippet />
             </motion.div>
