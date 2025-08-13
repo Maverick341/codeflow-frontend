@@ -25,8 +25,8 @@ const Navbar = ({ variant = "top" }) => {
         }}
         animate={{ width: isExpanded ? '280px' : '80px' }}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
-        onMouseEnter={() => setIsExpanded(true)}
-        onMouseLeave={() => setIsExpanded(false)}
+        onMouseEnter={hasHover ? () => setIsExpanded(true) : undefined}
+        onMouseLeave={hasHover ? () => setIsExpanded(false) : undefined}
       >
         {/* Logo Section */}
         <div className="p-4 border-b border-white/10">
