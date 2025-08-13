@@ -10,6 +10,7 @@ import { Loader } from 'lucide-react';
 const Layout = () => {
   const { isCheckingAuth, checkAuth, authUser, justLoggedOut } = useAuthStore();
   const location = useLocation();
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
 
   // Use landing page layout for homepage when not authenticated
   const isLandingPage = location.pathname === '/' && !authUser;
