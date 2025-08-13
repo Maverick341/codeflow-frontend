@@ -21,7 +21,12 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
 
   return (
     <motion.aside
-      className="fixed left-0 top-0 h-full bg-base-100/95 backdrop-blur-sm border-r border-white/10 z-40 flex flex-col shadow-2xl"
+      className="fixed left-0 top-0 h-full bg-gradient-to-b from-base-100/95 via-base-100/98 to-base-200/95 backdrop-blur-md border-r border-white/10 z-40 flex flex-col shadow-2xl"
+      style={{
+        background: 'linear-gradient(180deg, rgba(26, 29, 41, 0.95) 0%, rgba(35, 40, 56, 0.98) 50%, rgba(45, 53, 72, 0.95) 100%)',
+        backdropFilter: 'blur(12px)',
+        boxShadow: '4px 0 20px rgba(0, 0, 0, 0.3), inset 1px 0 0 rgba(255, 255, 255, 0.1)'
+      }}
       variants={sidebarVariants}
       animate={isExpanded ? 'expanded' : 'collapsed'}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
