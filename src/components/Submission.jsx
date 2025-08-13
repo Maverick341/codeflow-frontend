@@ -68,7 +68,7 @@ const SubmissionResults = ({ submission }) => {
         <div className="p-3 border-b border-white/10">
           <h3 className="text-sm font-semibold text-base-content">Test Results</h3>
         </div>
-        <div className="overflow-x-auto max-h-80 overflow-y-auto">
+        <div className="overflow-x-auto max-h-64 overflow-y-auto">
           <table className="table table-sm w-full">
             <thead className="sticky top-0 bg-base-200/80 backdrop-blur-sm">
               <tr className="text-xs">

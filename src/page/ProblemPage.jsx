@@ -777,13 +777,13 @@ const ProblemPage = () => {
               <motion.div
                 initial={false}
                 animate={{
-                  height: isTestPanelExpanded ? '450px' : '0px',
+                  height: isTestPanelExpanded ? '350px' : '0px',
                   opacity: isTestPanelExpanded ? 1 : 0
                 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="border-t border-white/10 bg-base-100/30 overflow-hidden"
               >
-                <div className="h-full">
+                <div className="h-full overflow-y-auto">
                   {renderTestTabContent()}
                 </div>
               </motion.div>
