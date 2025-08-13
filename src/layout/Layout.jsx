@@ -42,8 +42,15 @@ const Layout = () => {
     </div>
   ) : isLeftNavPage ? (
     <div className="min-h-screen bg-background flex w-full">
-      <Sidebar />
-      <main className="flex-1 ml-[80px] transition-all duration-300 min-h-screen">
+      <Sidebar
+        isExpanded={isSidebarExpanded}
+        setIsExpanded={setIsSidebarExpanded}
+      />
+      <main
+        className={`flex-1 transition-all duration-300 min-h-screen ${
+          isSidebarExpanded ? 'ml-[280px]' : 'ml-[80px]'
+        }`}
+      >
         <Outlet />
       </main>
     </div>
