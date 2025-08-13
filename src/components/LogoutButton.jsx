@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuthStore } from '../store/useAuthStore';
 
-const LogoutButton = ({ children }) => {
+const LogoutButton = ({ children, className = "btn btn-primary rounded-4xl" }) => {
   const { authUser, logout } = useAuthStore();
 
   const onLogout = async () => {
@@ -13,7 +13,7 @@ const LogoutButton = ({ children }) => {
   }
 
   return (
-    <button className="btn btn-primary rounded-4xl" onClick={onLogout}>
+    <button className={className} onClick={onLogout}>
       {children}
     </button>
   );
