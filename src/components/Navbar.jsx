@@ -30,32 +30,42 @@ const Navbar = ({ variant = "top" }) => {
       >
         {/* Logo Section */}
         <div className="p-4 border-b border-white/10">
-          <div className="flex items-center gap-3">
-            <motion.div
-              className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-codeflow-purple to-codeflow-blue shadow-lg flex-shrink-0"
-              whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(139, 92, 246, 0.5)" }}
-              transition={{ duration: 0.2 }}
-            >
-              <motion.div
-                animate={{ rotate: [0, 5, -5, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <Zap className="h-6 w-6 text-white" />
-              </motion.div>
+          <div className="flex flex-col items-center gap-2">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link to="/" className="flex flex-col items-center group">
+                <motion.div
+                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-codeflow-purple to-codeflow-blue shadow-lg"
+                  style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)' }}
+                  whileHover={{ boxShadow: "0 0 20px rgba(139, 92, 246, 0.5)", scale: 1.1 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <motion.div animate={{ rotate: [0, 5, -5, 0] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}>
+                    <Zap className="h-5 w-5 text-white" />
+                  </motion.div>
+                </motion.div>
+                {!isExpanded && (
+                  <span className="text-xs font-medium text-base-content/70 mt-1">
+                    CodeFlow
+                  </span>
+                )}
+              </Link>
             </motion.div>
 
             {isExpanded && (
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2, delay: 0.1 }}
-                className="overflow-hidden"
+                className="overflow-hidden text-center"
               >
                 <Link to="/" className="block">
-                  <span className="text-xl font-bold bg-gradient-to-r from-codeflow-purple to-codeflow-blue bg-clip-text text-transparent">
+                  <motion.span
+                    className="text-lg font-bold transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-codeflow-purple group-hover:to-codeflow-blue group-hover:bg-clip-text group-hover:text-transparent"
+                    style={{ color: '#ffffff', textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}
+                  >
                     CodeFlow
-                  </span>
+                  </motion.span>
                 </Link>
               </motion.div>
             )}
