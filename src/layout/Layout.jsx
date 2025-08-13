@@ -40,18 +40,8 @@ const Layout = () => {
     </div>
   ) : isLeftNavPage ? (
     <div className="min-h-screen bg-background flex w-full">
-      <Sidebar
-        isExpanded={isSidebarExpanded}
-        setIsExpanded={setIsSidebarExpanded}
-      />
-      <main
-        className={`flex-1 transition-all duration-300 ease-in-out min-h-screen ${
-          isSidebarExpanded ? 'ml-[280px] transform translate-x-2' : 'ml-[80px] transform translate-x-0'
-        }`}
-        style={{
-          filter: isSidebarExpanded ? 'brightness(0.98)' : 'brightness(1)',
-        }}
-      >
+      <Navbar variant="sidebar" />
+      <main className="flex-1 transition-all duration-300 min-h-screen">
         <Outlet />
       </main>
     </div>
