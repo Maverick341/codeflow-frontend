@@ -428,14 +428,14 @@ const ProblemPage = () => {
                 ].map(({ key, icon: Icon, label }) => (
                   <button
                     key={key}
-                    className={`tab gap-2 transition-all duration-200 ${
-                      activeTab === key 
-                        ? 'tab-active bg-gradient-to-r from-codeflow-purple to-codeflow-blue text-white' 
+                    className={`tab gap-1 text-sm transition-all duration-200 ${
+                      activeTab === key
+                        ? 'tab-active bg-gradient-to-r from-codeflow-purple to-codeflow-blue text-white'
                         : 'hover:bg-base-200/50'
                     }`}
                     onClick={() => setActiveTab(key)}
                   >
-                    <Icon className="w-4 h-4" />
+                    <Icon className="w-3.5 h-3.5" />
                     {label}
                   </button>
                 ))}
