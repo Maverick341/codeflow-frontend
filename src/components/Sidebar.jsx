@@ -117,37 +117,39 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
             whileHover={{ x: isExpanded ? 4 : 0 }}
             transition={{ duration: 0.2 }}
           >
-            <Link
-              to="/profile"
-              className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-200 group ${
-                location.pathname === '/profile'
-                  ? 'bg-gradient-to-r from-codeflow-purple/20 to-codeflow-blue/20 text-codeflow-purple'
-                  : 'hover:bg-gradient-to-r hover:from-codeflow-purple/10 hover:to-codeflow-blue/10 hover:text-codeflow-purple'
-              }`}
-            >
-              <div className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
-                location.pathname === '/profile'
-                  ? 'bg-blue-500/20'
-                  : 'bg-blue-500/10 group-hover:bg-blue-500/20'
-              }`}>
-                <User className="w-5 h-5 text-blue-400" />
-              </div>
-              <AnimatePresence>
-                {isExpanded && (
-                  <motion.div
-                    variants={contentVariants}
-                    initial="collapsed"
-                    animate="expanded"
-                    exit="collapsed"
-                    transition={{ duration: 0.2, delay: 0.1 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="font-medium">My Profile</div>
-                    <div className="text-xs text-base-content/60">View and edit profile</div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </Link>
+            <div className={`tooltip tooltip-right ${!isExpanded ? 'tooltip-open' : ''}`} data-tip="My Profile">
+              <Link
+                to="/profile"
+                className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-200 group w-full ${
+                  location.pathname === '/profile'
+                    ? 'bg-gradient-to-r from-codeflow-purple/20 to-codeflow-blue/20 text-codeflow-purple'
+                    : 'hover:bg-gradient-to-r hover:from-codeflow-purple/10 hover:to-codeflow-blue/10 hover:text-codeflow-purple'
+                }`}
+              >
+                <div className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
+                  location.pathname === '/profile'
+                    ? 'bg-blue-500/20'
+                    : 'bg-blue-500/10 group-hover:bg-blue-500/20'
+                }`}>
+                  <User className="w-5 h-5 text-blue-400" />
+                </div>
+                <AnimatePresence>
+                  {isExpanded && (
+                    <motion.div
+                      variants={contentVariants}
+                      initial="collapsed"
+                      animate="expanded"
+                      exit="collapsed"
+                      transition={{ duration: 0.2, delay: 0.1 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="font-medium">My Profile</div>
+                      <div className="text-xs text-base-content/60">View and edit profile</div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </Link>
+            </div>
           </motion.div>
 
           {authUser?.role === 'ADMIN' && (
