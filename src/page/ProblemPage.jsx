@@ -52,6 +52,7 @@ const ProblemPage = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('');
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [testcases, setTestCases] = useState([]);
+  const [testTab, setTestTab] = useState('testCases');
 
   const editorRef = useRef(null);
 
@@ -146,6 +147,8 @@ const ProblemPage = () => {
       const stdin = problem.testcases.map((tc) => tc.input);
       const expected_outputs = problem.testcases.map((tc) => tc.output);
       executeCode(code, language_id, stdin, expected_outputs, id);
+      // Switch to test results tab when submitting
+      setTestTab('testResults');
     } catch (error) {
       console.log('Error submitting code', error);
     }
@@ -158,6 +161,8 @@ const ProblemPage = () => {
       const stdin = problem.testcases.map((tc) => tc.input);
       const expected_outputs = problem.testcases.map((tc) => tc.output);
       runCode(code, language_id, stdin, expected_outputs, id);
+      // Switch to test results tab when running
+      setTestTab('testResults');
     } catch (error) {
       console.log('Error executing code', error);
     }
@@ -195,6 +200,110 @@ const ProblemPage = () => {
         </motion.div>
       </div>
     );
+  }
+
+  const renderTestTabContent = () => {
+    switch (testTab) {
+      case 'testResults':
+        // Show submission results if available (Submit button was pressed)
+        if (submission) {
+          return (
+            <div className="h-full overflow-y-auto">
+              <div className="flex items-center gap-2 mb-3 px-4 pt-4">
+                <Award className="w-4 h-4 text-green-500" />
+                <h4 className="font-semibold text-base-content">Submission Results</h4>
+              </div>
+              <Submission submission={submission} />
+            </div>
+          );
+        }
+        
+        // Show execution results if available (Run button was pressed)
+        if (execution) {
+          return (
+            <div className="h-full overflow-y-auto">
+              <div className="flex items-center gap-2 mb-3 px-4 pt-4">
+                <Timer className="w-4 h-4 text-blue-500" />
+                <h4 className="font-semibold text-base-content">Run Results</h4>
+              </div>
+              <ExecutionResults execution={execution} />
+            </div>
+          );
+        }
+        
+        // No results placeholder
+        return (
+          <div className="p-6 text-center text-base-content/70">
+            <div className="flex items-center justify-center gap-4 mb-3">
+              <Timer className="w-8 h-8 text-base-content/30" />
+              <Award className="w-8 h-8 text-base-content/30" />
+            </div>
+            <p className="text-lg mb-2">No results yet</p>
+            <p className="text-sm">Run or submit your code to see results here</p>
+          </div>
+        );
+
+      default: // testCases
+        return (
+          <>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3 px-4 pt-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gradient-to-r from-codeflow-purple to-codeflow-blue rounded-lg">
+                  <BookOpen className="w-4 h-4 text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-base-content">
+                  Test Cases
+                </h3>
+              </div>
+              <span className="text-xs text-base-content/60">
+                {testcases.length} test cases
+              </span>
+            </div>
+
+            <div className="overflow-x-auto px-4 pb-4">
+              <table className="table w-full">
+                <thead>
+                  <tr className="border-white/10">
+                    <th className="text-codeflow-purple font-semibold text-xs">
+                      Input
+                    </th>
+                    <th className="text-codeflow-purple font-semibold text-xs">
+                      Expected Output
+                    </th>
+                    <th className="text-codeflow-purple font-semibold text-xs">
+                      Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {testcases.map((testCase, index) => (
+                    <motion.tr
+                      key={index}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="border-white/10 hover:bg-base-200/30"
+                    >
+                      <td className="font-mono text-xs bg-black/30 rounded p-2 max-w-[120px] truncate">
+                        {testCase.input}
+                      </td>
+                      <td className="font-mono text-xs bg-black/30 rounded p-2 max-w-[120px] truncate">
+                        {testCase.output}
+                      </td>
+                      <td>
+                        <div className="flex items-center gap-1 text-base-content/60">
+                          <Timer className="w-3 h-3" />
+                          <span className="text-xs">Pending</span>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        );
+    }
   }
 
   const renderTabContent = () => {
@@ -356,7 +465,7 @@ const ProblemPage = () => {
         animate={{ opacity: 1, y: 0 }}
         className="bg-base-100/80 backdrop-blur-sm shadow-2xl border-b border-white/10"
       >
-        <div className="container mx-auto px-4 py-2">
+        <div className="container mx-auto px-4 py-1">
           <div className="flex items-center justify-between flex-wrap">
             <div className="flex items-center gap-4 flex-wrap">
               {/* <Link to={'/'} className="flex items-center gap-2 text-codeflow-purple hover:text-codeflow-blue transition-colors">
@@ -364,7 +473,7 @@ const ProblemPage = () => {
                 <ChevronRight className="w-4 h-4" />
               </Link> */}
               <div>
-                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm text-base-content/70 flex-wrap">
                   <h1 className="text-base sm:text-lg font-bold text-base-content truncate max-w-full">
                     {problem.title}
                   </h1>
@@ -373,23 +482,21 @@ const ProblemPage = () => {
                   >
                     {problem.difficulty || 'Easy'}
                   </span>
-                </div>
-                <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm text-base-content/70 flex-wrap">
                   <div className="flex items-center gap-1">
-                    <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
-                    <span className="whitespace-nowrap">
+                    <Clock className="w-3 h-3" />
+                    <span className="whitespace-nowrap text-xs">
                       Updated {new Date(problem.createdAt).toLocaleDateString()}
                     </span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Users className="w-3 h-3 sm:w-4 sm:h-4" />
-                    <span className="whitespace-nowrap">
+                    <Users className="w-3 h-3" />
+                    <span className="whitespace-nowrap text-xs">
                       {submissionCount} Submissions
                     </span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <ThumbsUp className="w-3 h-3 sm:w-4 sm:h-4" />
-                    <span className="whitespace-nowrap">
+                    <ThumbsUp className="w-3 h-3" />
+                    <span className="whitespace-nowrap text-xs">
                       {problem.acceptance || 95}% Success
                     </span>
                   </div>
@@ -397,7 +504,7 @@ const ProblemPage = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 sm:gap-3 mt-3 sm:mt-0">
+            <div className="flex items-center gap-2 sm:gap-3 mt-2 sm:mt-0">
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
@@ -440,8 +547,8 @@ const ProblemPage = () => {
         </div>
       </motion.nav>
 
-      <div className="container mx-auto p-4">
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <div className="w-full mx-auto p-4">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
           {/* Problem Description Panel */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -511,12 +618,12 @@ const ProblemPage = () => {
                     title="Format Code (Ctrl+Shift+F)"
                   >
                     <AlignLeft className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                    <span className="text-xs sm:text-sm">Format</span>
+                    {/* <span className="text-xs sm:text-sm">Format</span> */}
                   </motion.button>
                 </div>
               </div>
 
-              <div className="h-[400px] sm:h-[500px] lg:h-[600px] w-full relative">
+              <div className="h-[400px] sm:h-[500px] lg:h-[650px] w-full relative">
                 <Editor
                   height="100%"
                   language={
@@ -581,121 +688,77 @@ const ProblemPage = () => {
               </div>
 
               <div className="px-3 py-2 bg-base-200/30 border-t border-white/10">
-                <div className="flex flex-col sm:flex-row justify-center sm:justify-end items-center gap-2">
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className={`btn btn-sm bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white border-0 gap-1 ${
-                      isRunning ? 'opacity-80' : ''
-                    }`}
-                    onClick={handleRunCodeOnly}
-                    disabled={isRunning}
-                  >
-                    {isRunning ? (
-                      <div className="w-3 h-3 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                    ) : (
-                      <Play className="w-3 h-3" />
-                    )}
-                    <span className="text-xs">Run</span>
-                  </motion.button>
+                <div className="flex items-center justify-between">
+                  {/* Left side - Test Cases & Results tabs */}
+                  <div className="flex items-center gap-1">
+                    <button 
+                      className={`px-3 py-1 text-xs font-medium rounded transition-colors ${
+                        testTab === 'testCases' 
+                          ? 'text-codeflow-purple bg-codeflow-purple/10 border border-codeflow-purple/20' 
+                          : 'text-base-content/70 hover:text-base-content hover:bg-base-300/20'
+                      }`}
+                      onClick={() => setTestTab('testCases')}
+                    >
+                      Test Cases
+                    </button>
+                    <button 
+                      className={`px-3 py-1 text-xs font-medium rounded transition-colors ${
+                        testTab === 'testResults' 
+                          ? 'text-codeflow-purple bg-codeflow-purple/10 border border-codeflow-purple/20' 
+                          : 'text-base-content/70 hover:text-base-content hover:bg-base-300/20'
+                      }`}
+                      onClick={() => setTestTab('testResults')}
+                    >
+                      Test Results
+                    </button>
+                  </div>
 
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className={`btn btn-sm bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white border-0 gap-1 ${
-                      isExecuting ? 'opacity-80' : ''
-                    }`}
-                    onClick={handleSubmitCode}
-                    disabled={isExecuting}
-                  >
-                    {isExecuting ? (
-                      <div className="w-3 h-3 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                    ) : (
-                      <Award className="w-3 h-3" />
-                    )}
-                    <span className="text-xs">Submit</span>
-                  </motion.button>
+                  {/* Right side - Run & Submit buttons */}
+                  <div className="flex items-center gap-2">
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className={`btn btn-sm bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white border-0 gap-1 ${
+                        isRunning ? 'opacity-80' : ''
+                      }`}
+                      onClick={handleRunCodeOnly}
+                      disabled={isRunning}
+                    >
+                      {isRunning ? (
+                        <div className="w-3 h-3 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                      ) : (
+                        <Play className="w-3 h-3" />
+                      )}
+                      <span className="text-xs">Run</span>
+                    </motion.button>
+
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className={`btn btn-sm bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white border-0 gap-1 ${
+                        isExecuting ? 'opacity-80' : ''
+                      }`}
+                      onClick={handleSubmitCode}
+                      disabled={isExecuting}
+                    >
+                      {isExecuting ? (
+                        <div className="w-3 h-3 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                      ) : (
+                        <Award className="w-3 h-3" />
+                      )}
+                      <span className="text-xs">Submit</span>
+                    </motion.button>
+                  </div>
                 </div>
+              </div>
+
+              {/* Test Results Panel */}
+              <div className="h-[300px] border-t border-white/10 bg-base-100/30">
+                {renderTestTabContent()}
               </div>
             </div>
           </motion.div>
         </div>
-
-        {/* Results Panel */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="card bg-base-100/50 backdrop-blur-sm shadow-2xl mt-6 border border-white/10"
-        >
-          <div className="card-body">
-            {submission ? (
-              <Submission submission={submission} />
-            ) : execution ? (
-              <ExecutionResults execution={execution} />
-            ) : (
-              <>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-gradient-to-r from-codeflow-purple to-codeflow-blue rounded-lg">
-                      <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                    </div>
-                    <h3 className="text-lg sm:text-xl font-bold text-base-content">
-                      Test Cases
-                    </h3>
-                  </div>
-                  <span className="text-xs sm:text-sm text-base-content/60">
-                    {testcases.length} test cases
-                  </span>
-                </div>
-
-                <div className="overflow-x-auto">
-                  <table className="table w-full">
-                    <thead>
-                      <tr className="border-white/10">
-                        <th className="text-codeflow-purple font-semibold text-xs sm:text-sm">
-                          Input
-                        </th>
-                        <th className="text-codeflow-purple font-semibold text-xs sm:text-sm">
-                          Expected Output
-                        </th>
-                        <th className="text-codeflow-purple font-semibold text-xs sm:text-sm">
-                          Status
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {testcases.map((testCase, index) => (
-                        <motion.tr
-                          key={index}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: index * 0.1 }}
-                          className="border-white/10 hover:bg-base-200/30"
-                        >
-                          <td className="font-mono text-xs sm:text-sm bg-black/30 rounded p-2 max-w-[120px] sm:max-w-none truncate">
-                            {testCase.input}
-                          </td>
-                          <td className="font-mono text-xs sm:text-sm bg-black/30 rounded p-2 max-w-[120px] sm:max-w-none truncate">
-                            {testCase.output}
-                          </td>
-                          <td>
-                            <div className="flex items-center gap-1 sm:gap-2 text-base-content/60">
-                              <Timer className="w-3 h-3 sm:w-4 sm:h-4" />
-                              <span className="text-xs sm:text-sm">
-                                Pending
-                              </span>
-                            </div>
-                          </td>
-                        </motion.tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </>
-            )}
-          </div>
-        </motion.div>
       </div>
     </div>
   );

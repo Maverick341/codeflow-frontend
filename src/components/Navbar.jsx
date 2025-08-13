@@ -182,7 +182,7 @@ const Navbar = ({ variant = 'top', onExpandChange }) => {
         {/* Bottom Logout Button */}
         {authUser && (
           <div className="p-4 border-t border-gray-800">
-            <LogoutButton className="flex items-center text-gray-300 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all duration-200 w-full">
+            <LogoutButton className="flex items-center text-gray-300 hover:text-red-400 hover:bg-red-500/10 hover:cursor-pointer rounded-lg transition-all duration-200 w-full">
               {showExpanded ? (
                 <div className="flex items-center gap-3 px-3 py-2.5 w-full">
                   <LogOut className="w-5 h-5" />
