@@ -47,9 +47,12 @@ const Layout = () => {
         setIsExpanded={setIsSidebarExpanded}
       />
       <main
-        className={`flex-1 transition-all duration-300 min-h-screen ${
-          isSidebarExpanded ? 'ml-[280px]' : 'ml-[80px]'
+        className={`flex-1 transition-all duration-300 ease-in-out min-h-screen ${
+          isSidebarExpanded ? 'ml-[280px] transform translate-x-2' : 'ml-[80px] transform translate-x-0'
         }`}
+        style={{
+          filter: isSidebarExpanded ? 'brightness(0.98)' : 'brightness(1)',
+        }}
       >
         <Outlet />
       </main>
