@@ -201,7 +201,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
           whileHover={{ x: isExpanded ? 4 : 0 }}
           transition={{ duration: 0.2 }}
         >
-          <div className={`tooltip tooltip-right ${!isExpanded ? 'tooltip-open' : ''}`} data-tip="Logout">
+          <div className={`${!isExpanded ? 'tooltip tooltip-right' : ''}`} data-tip="Logout">
             <LogoutButton className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-red-500/10 hover:to-red-500/20 hover:text-red-400 transition-all duration-200 group w-full justify-start">
               <div className="p-2 bg-red-500/10 rounded-lg group-hover:bg-red-500/20 transition-colors flex-shrink-0">
                 <LogOut className="w-5 h-5 text-red-400" />
