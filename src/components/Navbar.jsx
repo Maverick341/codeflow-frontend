@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Code, LogOut, Settings, Trophy, BookOpen, Star, Shield, Crown } from 'lucide-react';
+import { User, Code, LogOut, Settings, Trophy, BookOpen, Star, Shield, Crown, Zap as ZapIcon } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import { Link } from 'react-router-dom';
 import LogoutButton from './LogoutButton';
