@@ -106,52 +106,66 @@ const Navbar = ({ variant = "top" }) => {
         {/* Navigation Links */}
         <div className="flex-1 p-2">
           <nav className="space-y-2">
-            <div className={`${!isExpanded ? 'tooltip tooltip-right' : ''}`} data-tip="My Profile">
+            <Link
+              to="/profile"
+              className="flex flex-col items-center p-3 rounded-xl hover:bg-gradient-to-r hover:from-codeflow-purple/10 hover:to-codeflow-blue/10 hover:text-codeflow-purple transition-all duration-200 group w-full"
+            >
+              {!isExpanded ? (
+                <>
+                  <div className="p-2 bg-gradient-to-r from-codeflow-purple/20 to-codeflow-blue/20 rounded-lg group-hover:from-codeflow-purple/30 group-hover:to-codeflow-blue/30 transition-colors">
+                    <User className="w-5 h-5 text-codeflow-purple" />
+                  </div>
+                  <span className="text-xs font-medium text-base-content/70 mt-1">Profile</span>
+                </>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.2, delay: 0.1 }}
+                  className="flex items-center gap-3 w-full"
+                >
+                  <div className="p-2 bg-gradient-to-r from-codeflow-purple/20 to-codeflow-blue/20 rounded-lg group-hover:from-codeflow-purple/30 group-hover:to-codeflow-blue/30 transition-colors flex-shrink-0">
+                    <User className="w-5 h-5 text-codeflow-purple" />
+                  </div>
+                  <div>
+                    <div className="font-medium">My Profile</div>
+                    <div className="text-xs text-base-content/60">View and edit profile</div>
+                  </div>
+                </motion.div>
+              )}
+            </Link>
+
+            {authUser?.role === 'ADMIN' && (
               <Link
-                to="/profile"
-                className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-codeflow-purple/10 hover:to-codeflow-blue/10 hover:text-codeflow-purple transition-all duration-200 group w-full"
+                to="/add-problem"
+                className="flex flex-col items-center p-3 rounded-xl hover:bg-gradient-to-r hover:from-codeflow-purple/10 hover:to-codeflow-blue/10 hover:text-codeflow-purple transition-all duration-200 group w-full"
               >
-                <div className="p-2 bg-blue-500/10 rounded-lg group-hover:bg-blue-500/20 transition-colors flex-shrink-0">
-                  <User className="w-5 h-5 text-blue-400" />
-                </div>
-                {isExpanded && (
+                {!isExpanded ? (
+                  <>
+                    <div className="p-2 bg-gradient-to-r from-codeflow-purple/20 to-codeflow-blue/20 rounded-lg group-hover:from-codeflow-purple/30 group-hover:to-codeflow-blue/30 transition-colors">
+                      <Code className="w-5 h-5 text-codeflow-purple" />
+                    </div>
+                    <span className="text-xs font-medium text-base-content/70 mt-1">Add</span>
+                  </>
+                ) : (
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ duration: 0.2, delay: 0.1 }}
-                    className="overflow-hidden"
+                    className="flex items-center gap-3 w-full"
                   >
-                    <div className="font-medium">My Profile</div>
-                    <div className="text-xs text-base-content/60">View and edit profile</div>
+                    <div className="p-2 bg-gradient-to-r from-codeflow-purple/20 to-codeflow-blue/20 rounded-lg group-hover:from-codeflow-purple/30 group-hover:to-codeflow-blue/30 transition-colors flex-shrink-0">
+                      <Code className="w-5 h-5 text-codeflow-purple" />
+                    </div>
+                    <div>
+                      <div className="font-medium">Add Problem</div>
+                      <div className="text-xs text-base-content/60">Create new challenges</div>
+                    </div>
                   </motion.div>
                 )}
               </Link>
-            </div>
-
-            {authUser?.role === 'ADMIN' && (
-              <div className={`${!isExpanded ? 'tooltip tooltip-right' : ''}`} data-tip="Add Problem">
-                <Link
-                  to="/add-problem"
-                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-orange-500/10 hover:to-red-500/10 hover:text-orange-400 transition-all duration-200 group w-full"
-                >
-                  <div className="p-2 bg-orange-500/10 rounded-lg group-hover:bg-orange-500/20 transition-colors flex-shrink-0">
-                    <Code className="w-5 h-5 text-orange-400" />
-                  </div>
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      transition={{ duration: 0.2, delay: 0.1 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="font-medium">Add Problem</div>
-                      <div className="text-xs text-base-content/60">Create new challenges</div>
-                    </motion.div>
-                  )}
-                </Link>
-              </div>
             )}
           </nav>
         </div>
