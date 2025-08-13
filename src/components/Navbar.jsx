@@ -39,7 +39,7 @@ const Navbar = ({ variant = "top" }) => {
                 animate={{ rotate: [0, 5, -5, 0] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
               >
-                <Zap className="h-6 w-6 text-white" />
+                <ZapIcon className="h-6 w-6 text-white" />
               </motion.div>
             </motion.div>
 
