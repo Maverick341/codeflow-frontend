@@ -348,9 +348,9 @@ const ProblemPage = () => {
                 <ChevronRight className="w-4 h-4" />
               </Link> */}
               <div>
-                <div className="flex items-center gap-3 mb-2 flex-wrap">
-                  <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-base-content truncate max-w-full">{problem.title}</h1>
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold flex-shrink-0 ${getDifficultyColor(problem.difficulty)}`}>
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <h1 className="text-base sm:text-lg font-bold text-base-content truncate max-w-full">{problem.title}</h1>
+                  <span className={`px-2 py-0.5 rounded text-xs font-semibold flex-shrink-0 ${getDifficultyColor(problem.difficulty)}`}>
                     {problem.difficulty || 'Easy'}
                   </span>
                 </div>
