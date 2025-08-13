@@ -340,7 +340,7 @@ const ProblemPage = () => {
         animate={{ opacity: 1, y: 0 }}
         className="bg-base-100/80 backdrop-blur-sm shadow-2xl border-b border-white/10"
       >
-        <div className="container mx-auto px-6 py-4">
+        <div className="container mx-auto px-4 py-2">
           <div className="flex items-center justify-between flex-wrap">
             <div className="flex items-center gap-4 flex-wrap">
               {/* <Link to={'/'} className="flex items-center gap-2 text-codeflow-purple hover:text-codeflow-blue transition-colors">
