@@ -294,7 +294,7 @@ const UserDetails = () => {
         </div>
 
         {/* Stats Grid */}
-        <div className="p-6 border-t border-white/10">
+        {/* <div className="p-6 border-t border-white/10">
           <h3 className="text-lg font-semibold text-base-content mb-4">Statistics</h3>
           <div className="grid grid-cols-2 gap-4">
             <div className="text-center p-3 bg-base-200/30 rounded-xl">
@@ -314,7 +314,7 @@ const UserDetails = () => {
               <div className="text-xs text-base-content/60">Submissions</div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

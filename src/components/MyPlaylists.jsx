@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Plus, 
-  BookOpen, 
-  Clock, 
-  Users, 
-  Play, 
+import {
+  Plus,
+  BookOpen,
+  Clock,
+  Users,
+  Play,
   MoreVertical,
   Edit3,
   Trash2,
@@ -14,93 +14,104 @@ import {
   Code,
   Star,
   Lock,
-  Globe
+  Globe,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CreatePlaylistModal from './CreatePlaylistModal';
 import { usePlaylistStore } from '../store/usePlaylistStore';
+import { useProblemStore } from '../store/useProblemStore';
 
 const MyPlaylists = () => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const { createPlaylist } = usePlaylistStore();
+  const {
+    playlists: originalPlaylists,
+    deletePlaylist,
+    createPlaylist,
+    getAllPlaylists,
+  } = usePlaylistStore();
+  const { solvedProblems, getSolvedProblemByUser } = useProblemStore();
 
-  // Mock playlists data
-  const playlists = [
-    {
-      id: 1,
-      title: 'Array Fundamentals',
-      description: 'Master the basics of array manipulation and algorithms',
-      problemCount: 15,
-      completedCount: 12,
-      isPublic: true,
-      createdAt: '2024-03-15',
-      lastUpdated: '2024-03-20',
-      difficulty: 'Easy',
-      estimatedTime: '8 hours',
-      tags: ['Arrays', 'Fundamentals', 'Beginner'],
-      color: 'from-green-500 to-emerald-500'
-    },
-    {
-      id: 2,
-      title: 'Dynamic Programming Mastery',
-      description: 'Advanced DP problems for interview preparation',
-      problemCount: 25,
-      completedCount: 8,
-      isPublic: false,
-      createdAt: '2024-03-10',
-      lastUpdated: '2024-03-22',
-      difficulty: 'Hard',
-      estimatedTime: '20 hours',
-      tags: ['Dynamic Programming', 'Advanced', 'Interview'],
-      color: 'from-red-500 to-pink-500'
-    },
-    {
-      id: 3,
-      title: 'Graph Algorithms',
-      description: 'Comprehensive collection of graph-based problems',
-      problemCount: 18,
-      completedCount: 18,
-      isPublic: true,
-      createdAt: '2024-02-28',
-      lastUpdated: '2024-03-18',
-      difficulty: 'Medium',
-      estimatedTime: '12 hours',
-      tags: ['Graphs', 'BFS', 'DFS', 'Algorithms'],
-      color: 'from-blue-500 to-purple-500'
-    },
-    {
-      id: 4,
-      title: 'Weekly Challenge #1',
-      description: 'Collection of problems from this week\'s challenges',
-      problemCount: 7,
-      completedCount: 5,
-      isPublic: false,
-      createdAt: '2024-03-18',
-      lastUpdated: '2024-03-25',
-      difficulty: 'Mixed',
-      estimatedTime: '5 hours',
-      tags: ['Challenge', 'Mixed', 'Weekly'],
-      color: 'from-orange-500 to-yellow-500'
-    }
+  useEffect(() => {
+    getSolvedProblemByUser();
+  }, [getSolvedProblemByUser]);
+
+  useEffect(() => {
+    getAllPlaylists();
+  }, [getAllPlaylists]);
+
+  console.log(originalPlaylists);
+
+  const RandomColors = [
+    'from-green-500 to-emerald-500',
+    'from-red-500 to-pink-500',
+    'from-blue-500 to-purple-500',
+    'from-orange-500 to-yellow-500',
   ];
+
+  const playlists = originalPlaylists.map((playlist) => {
+    const tagsSet = new Set();
+    const difficultyCount = { EASY: 0, MEDIUM: 0, HARD: 0 };
+    const problemIds = (playlist.problems || []).map((p) => p.problemId);
+
+    (playlist.problems || []).forEach((p) => {
+      p.problem.tags?.forEach((t) => tagsSet.add(t));
+      if (p.problem.difficulty) difficultyCount[p.problem.difficulty]++;
+    });
+
+    let playlistDifficulty = '';
+    const problemsLength = (playlist.problems || []).length;
+    const maxCount = Math.max(...Object.values(difficultyCount));
+    if (problemsLength === 0) {
+      playlistDifficulty = 'N/A';
+    } else if (maxCount === 0) {
+      playlistDifficulty = 'Mixed';
+    } else {
+      playlistDifficulty =
+        Object.keys(difficultyCount).find(
+          (key) => difficultyCount[key] === maxCount
+        ) || 'Mixed';
+    }
+
+    const completedCount = problemIds.filter((id) =>
+      solvedProblems.some((sp) => sp.id === id)
+    ).length;
+
+    return {
+      id: playlist.id ?? '',
+      title: playlist.name ?? 'Untitled Playlist',
+      description: playlist.description ?? '',
+      createdAt: playlist.createdAt ?? '',
+      updatedAt: playlist.updatedAt ?? '',
+      problemCount: problemsLength,
+      tags: Array.from(tagsSet),
+      difficulty: playlistDifficulty,
+      color: problemsLength
+        ? RandomColors[Math.floor(Math.random() * RandomColors.length)]
+        : 'from-gray-400 to-gray-600',
+      completedCount,
+    };
+  });
 
   const handleCreatePlaylist = async (data) => {
     await createPlaylist(data);
   };
 
-  const filteredPlaylists = playlists.filter(playlist => {
+  const filteredPlaylists = playlists.filter((playlist) => {
     switch (activeFilter) {
       case 'completed':
         return playlist.completedCount === playlist.problemCount;
       case 'in-progress':
-        return playlist.completedCount > 0 && playlist.completedCount < playlist.problemCount;
+        return (
+          playlist.completedCount > 0 &&
+          playlist.completedCount < playlist.problemCount
+        );
       case 'not-started':
         return playlist.completedCount === 0;
-      case 'public':
-        return playlist.isPublic;
-      case 'private':
-        return !playlist.isPublic;
+      // case 'public':
+      //   return playlist.isPublic;
+      // case 'private':
+      //   return !playlist.isPublic;
       default:
         return true;
     }
@@ -108,15 +119,23 @@ const MyPlaylists = () => {
 
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
-      case 'Easy': return 'text-green-400 bg-green-400/10';
-      case 'Medium': return 'text-yellow-400 bg-yellow-400/10';
-      case 'Hard': return 'text-red-400 bg-red-400/10';
-      default: return 'text-gray-400 bg-gray-400/10';
+      case 'Easy':
+        return 'text-green-400 bg-green-400/10';
+      case 'Medium':
+        return 'text-yellow-400 bg-yellow-400/10';
+      case 'Hard':
+        return 'text-red-400 bg-red-400/10';
+      default:
+        return 'text-gray-400 bg-gray-400/10';
     }
   };
 
+  const handleDelete = (id) => {
+    deletePlaylist(id);
+  };
+
   const getProgressPercentage = (completed, total) => {
-    return Math.round((completed / total) * 100);
+    return Math.round((completed / total) * 100) || 0;
   };
 
   return (
@@ -129,9 +148,11 @@ const MyPlaylists = () => {
               <div className="p-2 bg-gradient-to-r from-codeflow-purple to-codeflow-blue rounded-lg">
                 <BookOpen className="w-5 h-5 text-white" />
               </div>
-              <h2 className="text-2xl font-bold text-base-content">My Playlists</h2>
+              <h2 className="text-2xl font-bold text-base-content">
+                My Playlists
+              </h2>
             </div>
-            
+
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -150,8 +171,8 @@ const MyPlaylists = () => {
               { key: 'completed', label: 'Completed' },
               { key: 'in-progress', label: 'In Progress' },
               { key: 'not-started', label: 'Not Started' },
-              { key: 'public', label: 'Public' },
-              { key: 'private', label: 'Private' }
+              // { key: 'public', label: 'Public' },
+              // { key: 'private', label: 'Private' },
             ].map((filter) => (
               <button
                 key={filter.key}
@@ -184,25 +205,59 @@ const MyPlaylists = () => {
                     {/* Playlist Header */}
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-2">
-                        <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${playlist.color}`}></div>
+                        <div
+                          className={`w-3 h-3 rounded-full bg-gradient-to-r ${playlist.color}`}
+                        ></div>
                         <h3 className="font-semibold text-base-content group-hover:text-codeflow-purple transition-colors">
                           {playlist.title}
                         </h3>
-                        {playlist.isPublic ? (
+                        {/* {playlist.isPublic ? (
                           <Globe className="w-4 h-4 text-green-400" />
                         ) : (
                           <Lock className="w-4 h-4 text-base-content/40" />
-                        )}
+                        )} */}
                       </div>
-                      
+
                       <div className="dropdown dropdown-end">
                         <button className="btn btn-ghost btn-xs">
                           <MoreVertical className="w-4 h-4" />
                         </button>
                         <ul className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow border border-white/10">
-                          <li><a className="gap-2"><Eye className="w-4 h-4" />View Details</a></li>
-                          <li><a className="gap-2"><Edit3 className="w-4 h-4" />Edit</a></li>
-                          <li><a className="gap-2 text-red-400"><Trash2 className="w-4 h-4" />Delete</a></li>
+                          {/* <li>
+                            <button
+                              className="gap-2 flex items-center w-full"
+                              // onClick={handleViewDetails}
+                            >
+                              <Eye className="w-4 h-4" />
+                              View Details
+                            </button>
+                          </li> */}
+                          {/* <li>
+                            <button
+                              className="gap-2 flex items-center w-full"
+                              // onClick={handleEdit}
+                            >
+                              <Edit3 className="w-4 h-4" />
+                              Edit
+                            </button>
+                          </li> */}
+                          <li>
+                            <button
+                              className="gap-2 flex items-center w-full text-red-400"
+                              onClick={() => {
+                                if (
+                                  window.confirm(
+                                    'Are you sure you want to delete this playlist?'
+                                  )
+                                ) {
+                                  handleDelete(playlist.id);
+                                }
+                              }}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                              Delete
+                            </button>
+                          </li>
                         </ul>
                       </div>
                     </div>
@@ -215,39 +270,51 @@ const MyPlaylists = () => {
                     {/* Progress Bar */}
                     <div className="mb-4">
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-xs text-base-content/60">Progress</span>
+                        <span className="text-xs text-base-content/60">
+                          Progress
+                        </span>
                         <span className="text-xs font-medium text-base-content">
-                          {playlist.completedCount}/{playlist.problemCount} problems
+                          {playlist.completedCount}/{playlist.problemCount}{' '}
+                          problems
                         </span>
                       </div>
                       <div className="w-full bg-base-300 rounded-full h-2">
-                        <div 
+                        <div
                           className={`h-2 rounded-full bg-gradient-to-r ${playlist.color} transition-all duration-300`}
-                          style={{ width: `${getProgressPercentage(playlist.completedCount, playlist.problemCount)}%` }}
+                          style={{
+                            width: `${getProgressPercentage(playlist.completedCount, playlist.problemCount)}%`,
+                          }}
                         ></div>
                       </div>
                       <div className="text-right mt-1">
                         <span className="text-xs font-medium text-codeflow-purple">
-                          {getProgressPercentage(playlist.completedCount, playlist.problemCount)}%
+                          {getProgressPercentage(
+                            playlist.completedCount,
+                            playlist.problemCount
+                          )}
+                          %
                         </span>
                       </div>
                     </div>
 
                     {/* Meta Info */}
                     <div className="flex flex-wrap gap-2 mb-4">
-                      <span className={`badge border font-medium text-xs ${getDifficultyColor(playlist.difficulty)}`}>
+                      <span
+                        className={`badge border font-medium text-xs ${getDifficultyColor(playlist.difficulty)}`}
+                      >
                         {playlist.difficulty}
                       </span>
-                      <span className="badge bg-base-300/50 text-base-content/70 text-xs">
+                      {/* <span className="badge bg-base-300/50 text-base-content/70 text-xs">
                         <Clock className="w-3 h-3 mr-1" />
                         {playlist.estimatedTime}
-                      </span>
-                      {playlist.completedCount === playlist.problemCount && (
-                        <span className="badge bg-green-400/20 text-green-400 border-green-400/30 text-xs">
-                          <CheckCircle2 className="w-3 h-3 mr-1" />
-                          Completed
-                        </span>
-                      )}
+                      </span> */}
+                      {playlist.problemCount !== 0 &&
+                        playlist.completedCount === playlist.problemCount && (
+                          <span className="badge bg-green-400/20 text-green-400 border-green-400/30 text-xs">
+                            <CheckCircle2 className="w-3 h-3 mr-1" />
+                            Completed
+                          </span>
+                        )}
                     </div>
 
                     {/* Tags */}
@@ -287,12 +354,14 @@ const MyPlaylists = () => {
                 No playlists found
               </h3>
               <p className="text-base-content/50 mb-4">
-                {activeFilter === 'all' 
+                {activeFilter === 'all'
                   ? 'Create your first playlist to organize your practice problems'
-                  : `No playlists match the "${activeFilter}" filter`
-                }
+                  : `No playlists match the "${activeFilter}" filter`}
               </p>
-              <button className="btn bg-gradient-to-r from-codeflow-purple to-codeflow-blue hover:from-codeflow-purple/90 hover:to-codeflow-blue/90 text-white border-0 gap-2">
+              <button
+                className="btn bg-gradient-to-r from-codeflow-purple to-codeflow-blue hover:from-codeflow-purple/90 hover:to-codeflow-blue/90 text-white border-0 gap-2"
+                onClick={() => setIsCreateModalOpen(true)}
+              >
                 <Plus className="w-4 h-4" />
                 Create Your First Playlist
               </button>

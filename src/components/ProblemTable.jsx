@@ -287,7 +287,11 @@ const ProblemTable = ({ problems }) => {
                               <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                onClick={() => handleDelete(problem.id)}
+                                onClick={() => {
+                                  if (window.confirm('Are you sure you want to delete this problem?')) {
+                                    handleDelete(problem.id);
+                                  }
+                                }}
                                 className="btn btn-sm bg-red-500/20 hover:bg-red-500/30 text-red-400 border-red-500/30"
                               >
                                 {isDeletingProblem ? (
