@@ -17,9 +17,13 @@ import {
   Globe
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import CreatePlaylistModal from './CreatePlaylistModal';
+import { usePlaylistStore } from '../store/usePlaylistStore';
 
 const MyPlaylists = () => {
   const [activeFilter, setActiveFilter] = useState('all');
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const { createPlaylist } = usePlaylistStore();
 
   // Mock playlists data
   const playlists = [
@@ -81,6 +85,10 @@ const MyPlaylists = () => {
     }
   ];
 
+  const handleCreatePlaylist = async (data) => {
+    await createPlaylist(data);
+  };
+
   const filteredPlaylists = playlists.filter(playlist => {
     switch (activeFilter) {
       case 'completed':
@@ -128,6 +136,7 @@ const MyPlaylists = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="btn bg-gradient-to-r from-codeflow-purple to-codeflow-blue hover:from-codeflow-purple/90 hover:to-codeflow-blue/90 text-white border-0 gap-2"
+              onClick={() => setIsCreateModalOpen(true)}
             >
               <Plus className="w-4 h-4" />
               Create Playlist
@@ -291,6 +300,13 @@ const MyPlaylists = () => {
           )}
         </div>
       </div>
+
+      {/* Modals */}
+      <CreatePlaylistModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSubmit={handleCreatePlaylist}
+      />
     </div>
   );
 };

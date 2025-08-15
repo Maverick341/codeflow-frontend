@@ -2,6 +2,7 @@ import { X, BookOpen, Lock, Globe, Sparkles } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
+import ReactDOM from 'react-dom';
 
 const CreatePlaylistModal = ({ isOpen, onClose, onSubmit }) => {
   const {
@@ -22,7 +23,7 @@ const CreatePlaylistModal = ({ isOpen, onClose, onSubmit }) => {
 
   if (!isOpen) return null;
 
-  return (
+  return ReactDOM.createPortal(
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -195,7 +196,8 @@ const CreatePlaylistModal = ({ isOpen, onClose, onSubmit }) => {
           </div>
         </div>
       </motion.div>
-    </motion.div>
+    </motion.div>,
+    document.body
   );
 };
 

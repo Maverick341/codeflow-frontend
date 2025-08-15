@@ -17,97 +17,45 @@ import { motion } from 'framer-motion';
 import { Zap, Sparkles } from 'lucide-react';
 import { Button } from '@/components/Button';
 
-const Navbar = ({ variant = 'top', onExpandChange }) => {
+const Navbar = ({ variant = 'top' }) => {
   const { authUser } = useAuthStore();
-  const [isExpanded, setIsExpanded] = useState(variant === 'sidebar-profile');
-  console.log(authUser?.avatarUrl);
-
-  // Notify parent component when expansion state changes
-  const handleExpandChange = (expanded) => {
-    setIsExpanded(expanded);
-    if (onExpandChange) {
-      onExpandChange(expanded);
-    }
-  };
-
-  // Sync initial state with parent
-  useEffect(() => {
-    if (onExpandChange && variant === 'sidebar-profile') {
-      onExpandChange(isExpanded);
-    }
-  }, []);
 
   // Sidebar variants
-  if (variant === 'sidebar-profile' || variant === 'sidebar-problem') {
-    const hasHover = variant === 'sidebar-profile'; // Only profile page has hover
-    const isProfilePage = variant === 'sidebar-profile';
-    const showExpanded = isProfilePage ? (hasHover ? isExpanded : true) : false; // Profile expanded by default, problem collapsed
-
+  if (variant === 'sidebar-problem') {
     return (
       <motion.aside
         className="fixed left-0 top-0 h-full bg-gray-900 border-r border-gray-800 z-40 flex flex-col"
-        animate={{ width: showExpanded ? '240px' : '80px' }}
+        animate={{}}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
-        onMouseEnter={hasHover ? () => handleExpandChange(true) : undefined}
-        onMouseLeave={hasHover ? () => handleExpandChange(false) : undefined}
       >
         {/* Logo Section */}
         <div className="p-4 border-b border-gray-800">
           <div className="flex items-center justify-center">
-            {showExpanded ? (
-              <Link to="/" className="flex items-center gap-3">
+            <Link to="/" className="flex flex-col items-center gap-1">
+              <motion.div
+                className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-codeflow-purple to-codeflow-blue shadow-lg"
+                style={{
+                  background:
+                    'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)',
+                }}
+                whileHover={{
+                  boxShadow: '0 0 20px rgba(139, 92, 246, 0.5)',
+                  scale: 1.05,
+                }}
+                transition={{ duration: 0.2 }}
+              >
                 <motion.div
-                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-codeflow-purple to-codeflow-blue shadow-lg"
-                  style={{
-                    background:
-                      'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)',
+                  animate={{ rotate: [0, 5, -5, 0] }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
                   }}
-                  whileHover={{
-                    boxShadow: '0 0 20px rgba(139, 92, 246, 0.5)',
-                    scale: 1.05,
-                  }}
-                  transition={{ duration: 0.2 }}
                 >
-                  <motion.div
-                    animate={{ rotate: [0, 5, -5, 0] }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                    }}
-                  >
-                    <Zap className="h-5 w-5 text-white" />
-                  </motion.div>
+                  <Zap className="h-5 w-5 text-white" />
                 </motion.div>
-                <span className="text-white font-bold text-xl">CodeFlow</span>
-              </Link>
-            ) : (
-              <Link to="/" className="flex flex-col items-center gap-1">
-                <motion.div
-                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-codeflow-purple to-codeflow-blue shadow-lg"
-                  style={{
-                    background:
-                      'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)',
-                  }}
-                  whileHover={{
-                    boxShadow: '0 0 20px rgba(139, 92, 246, 0.5)',
-                    scale: 1.05,
-                  }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <motion.div
-                    animate={{ rotate: [0, 5, -5, 0] }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                    }}
-                  >
-                    <Zap className="h-5 w-5 text-white" />
-                  </motion.div>
-                </motion.div>
-              </Link>
-            )}
+              </motion.div>
+            </Link>
           </div>
         </div>
 
@@ -123,16 +71,6 @@ const Navbar = ({ variant = 'top', onExpandChange }) => {
                 alt="Profile"
                 className="w-10 h-10 rounded-full ring-2 ring-codeflow-purple/50"
               />
-              {showExpanded && (
-                <div className="text-center">
-                  <p className="text-white font-medium text-sm">
-                    {authUser?.fullname || 'User'}
-                  </p>
-                  <p className="text-gray-400 text-xs">
-                    {authUser?.email?.substring(0, 20) || 'user@example.com'}
-                  </p>
-                </div>
-              )}
             </Link>
           </div>
         </div>
@@ -145,17 +83,10 @@ const Navbar = ({ variant = 'top', onExpandChange }) => {
               to="/profile"
               className="flex items-center text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors duration-200"
             >
-              {showExpanded ? (
-                <div className="flex items-center gap-3 px-3 py-2.5 w-full">
-                  <User className="w-5 h-5" />
-                  <span className="font-medium">My Profile</span>
-                </div>
-              ) : (
-                <div className="flex flex-col items-center gap-1 px-2 py-2.5 w-full">
-                  <User className="w-5 h-5" />
-                  <span className="text-xs">Profile</span>
-                </div>
-              )}
+              <div className="flex flex-col items-center gap-1 px-2 py-2.5 w-full">
+                <User className="w-5 h-5" />
+                <span className="text-xs">Profile</span>
+              </div>
             </Link>
 
             {authUser?.role === 'ADMIN' && (
@@ -163,17 +94,10 @@ const Navbar = ({ variant = 'top', onExpandChange }) => {
                 to="/add-problem"
                 className="flex items-center text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors duration-200"
               >
-                {showExpanded ? (
-                  <div className="flex items-center gap-3 px-3 py-2.5 w-full">
-                    <Code className="w-5 h-5" />
-                    <span className="font-medium">Add Problem</span>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center gap-1 px-2 py-2.5 w-full">
-                    <Code className="w-5 h-5" />
-                    <span className="text-xs">Add</span>
-                  </div>
-                )}
+                <div className="flex flex-col items-center gap-1 px-2 py-2.5 w-full">
+                  <Code className="w-5 h-5" />
+                  <span className="text-xs">Add</span>
+                </div>
               </Link>
             )}
           </nav>
@@ -183,17 +107,10 @@ const Navbar = ({ variant = 'top', onExpandChange }) => {
         {authUser && (
           <div className="p-4 border-t border-gray-800">
             <LogoutButton className="flex items-center text-gray-300 hover:text-red-400 hover:bg-red-500/10 hover:cursor-pointer rounded-lg transition-all duration-200 w-full">
-              {showExpanded ? (
-                <div className="flex items-center gap-3 px-3 py-2.5 w-full">
-                  <LogOut className="w-5 h-5" />
-                  <span className="font-medium">Logout</span>
-                </div>
-              ) : (
-                <div className="flex flex-col items-center gap-1 px-2 py-2.5 w-full">
-                  <LogOut className="w-5 h-5" />
-                  <span className="text-xs">Logout</span>
-                </div>
-              )}
+              <div className="flex flex-col items-center gap-1 px-2 py-2.5 w-full">
+                <LogOut className="w-5 h-5" />
+                <span className="text-xs">Logout</span>
+              </div>
             </LogoutButton>
           </div>
         )}

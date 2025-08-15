@@ -9,12 +9,10 @@ import { Loader } from 'lucide-react';
 const Layout = () => {
   const { isCheckingAuth, checkAuth, authUser, justLoggedOut, hasAttemptedAuth } = useAuthStore();
   const location = useLocation();
-  const [sidebarExpanded, setSidebarExpanded] = useState(true);
 
   // Use landing page layout for homepage when not authenticated
   const isLandingPage = location.pathname === '/' && !authUser;
   const isProblemPage = location.pathname.startsWith('/problem/') && authUser;
-  const isProfilePage = location.pathname === '/profile' && authUser;
   
 
   useEffect(() => {
@@ -38,16 +36,7 @@ const Layout = () => {
       </main>
       <Footer />
     </div>
-  ) : isProfilePage ? (
-    <div className="min-h-screen bg-background flex w-full">
-      <Navbar variant="sidebar-profile" onExpandChange={setSidebarExpanded} />
-      <main
-        className={`flex-1 transition-all duration-300 min-h-screen ${sidebarExpanded ? 'ml-[240px]' : 'ml-[80px]'}`}
-      >
-        <Outlet />
-      </main>
-    </div>
-  ) : isProblemPage ? (
+  ) :  isProblemPage ? (
     <div className="min-h-screen bg-background flex w-full">
       <Navbar variant="sidebar-problem" />
       <main className="flex-1 ml-[80px] transition-all duration-300 min-h-screen">
