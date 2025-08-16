@@ -10,7 +10,7 @@ import {
   Zap,
   BookOpen,
 } from 'lucide-react';
-import PlaylistTable from '@/components/PlaylistTable';
+import PlaylistTable from '../components/PlaylistTable';
 import { useParams } from 'react-router-dom';
 import { useProblemStore } from '../store/useProblemStore';
 
@@ -29,8 +29,8 @@ const PlaylistPage = () => {
 
   console.log(currentPlaylist);
 
-  const problemsCount = (currentPlaylist.problems || []).length;
-  const problemIds = (currentPlaylist.problems || []).map((p) => p.problemId);
+  const problemsCount = (currentPlaylist?.problems || []).length;
+  const problemIds = (currentPlaylist?.problems || []).map((p) => p.problemId);
 
   const solvedProblemCount = problemIds.filter((id) =>
     solvedProblems.some((sp) => sp.id === id)
@@ -38,8 +38,8 @@ const PlaylistPage = () => {
 
   const tagsSet = new Set();
 
-  (currentPlaylist.problems || []).forEach((p) => {
-    p.problem.tags?.forEach((t) => tagsSet.add(t));
+  (currentPlaylist?.problems || []).forEach((p) => {
+    p.problem?.tags?.forEach((t) => tagsSet.add(t));
   });
 
   const tags =  Array.from(tagsSet);
@@ -71,102 +71,113 @@ const PlaylistPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-codeflow-dark via-base-300 to-base-200 px-4 py-8">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        {/* Background Elements */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-codeflow-purple/20 to-codeflow-blue/20 rounded-full blur-3xl opacity-60"></div>
-        <div className="absolute top-20 right-1/4 w-80 h-80 bg-gradient-to-bl from-codeflow-blue/15 to-codeflow-purple/15 rounded-full blur-3xl opacity-50"></div>
+      {/* Background Elements */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-codeflow-purple/20 to-codeflow-blue/20 rounded-full blur-3xl opacity-60"></div>
+      <div className="absolute top-20 right-1/4 w-80 h-80 bg-gradient-to-bl from-codeflow-blue/15 to-codeflow-purple/15 rounded-full blur-3xl opacity-50"></div>
 
-        <div className="relative z-10 max-w-7xl mx-auto">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <div className="flex items-center justify-center gap-3 mb-4">
-              {/* <div className="p-3 bg-gradient-to-r from-codeflow-purple to-codeflow-blue rounded-xl">
-                <Zap className="w-8 h-8 text-white" />
-              </div> */}
-              <h1 className="text-5xl font-bold">
-                Welcome to
-                <span
-                  className="bg-gradient-to-r from-codeflow-purple to-codeflow-blue bg-clip-text text-transparent mr-0.5 pl-3"
-                  style={{
-                    background:
-                      'linear-gradient(90deg, #8b5cf6 0%, #3b82f6 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                  }}
-                >
-                  CodeFlow
-                </span>
+      <div className="relative z-10 max-w-7xl mx-auto">
+        {/* Playlist Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-8"
+        >
+          <div className="card bg-base-100/40 backdrop-blur-sm shadow-2xl border border-white/10 p-6">
+            {/* Header with Icon and Title */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-gradient-to-r from-codeflow-purple to-codeflow-blue rounded-lg shrink-0">
+                <BookOpen className="w-5 h-5 text-white" />
+              </div>
+              <h1 className="text-2xl font-bold text-base-content">
+                {currentPlaylist?.name || 'Playlist Name'}
               </h1>
             </div>
 
-            <p className="text-xl text-base-content/70 max-w-3xl mx-auto leading-relaxed">
-              Master coding interviews with our comprehensive platform. Practice
-              problems, track your progress, and elevate your programming
-              skills.
+            {/* Description */}
+            <p className="text-base text-base-content/70 mb-4 leading-relaxed">
+              {currentPlaylist?.description || 'No description available for this playlist.'}
             </p>
 
-            {/* Small stats indicators */}
-            {/* <div className="flex items-center justify-center gap-8 mt-8">
-              <div className="flex items-center gap-2">
-                <div className="p-2 bg-purple-500/10 rounded-lg">
-                  <Code className="w-4 h-4 text-codeflow-purple" />
-                </div>
-                <div className="text-left">
-                  <p className="text-lg font-bold text-base-content">{problems?.length || 0}</p>
-                  <p className="text-xs text-base-content/60">Total Problems</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <div className="p-2 bg-yellow-500/10 rounded-lg">
-                  <Users className="w-4 h-4 text-yellow-400" />
-                </div>
-                <div className="text-left">
-                  <p className="text-lg font-bold text-base-content">1.2k</p>
-                  <p className="text-xs text-base-content/60">Active Users</p>
-                </div>
-              </div>
-            </div> */}
-          </motion.div>
-
-          {/* Playlist Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            {currentPlaylist &&
-            Array.isArray(currentPlaylist.problems) &&
-            currentPlaylist.problems.length > 0 ? (
-              <PlaylistTable currentPlaylist={currentPlaylist} />
-            ) : (
-              <div className="card bg-base-100/30 backdrop-blur-sm shadow-xl border border-white/10 p-12">
-                <div className="text-center">
-                  <div className="p-4 bg-base-200/50 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
-                    <Code className="w-10 h-10 text-base-content/40" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">
-                    No Problems Added
-                  </h3>
-                  <p className="text-base-content/60 mb-6">
-                    It looks like there are no problems added to this Playlist
-                    at the moment.
-                  </p>
-                  {/* <button className="btn bg-gradient-to-r from-codeflow-purple to-codeflow-blue hover:from-codeflow-purple/90 hover:to-codeflow-blue/90 text-white border-0">
-                    Refresh
-                  </button> */}
-                </div>
+            {/* Tags */}
+            {tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-6">
+                {tags.map((tag, index) => (
+                  <span
+                    key={index}
+                    className="px-2 py-1 bg-base-300/80 text-base-content/80 rounded-md text-xs font-medium border border-base-300"
+                  >
+                    {tag}
+                  </span>
+                ))}
               </div>
             )}
-          </motion.div>
-        </div>
+
+            {/* Progress Section */}
+            <div className="space-y-4">
+              {/* Progress Bar */}
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm text-base-content/60 font-medium">
+                    Progress: {getProgressPercentage(solvedProblemCount, problemsCount)}% ({solvedProblemCount}/{problemsCount})
+                  </span>
+                </div>
+                <div className="w-full bg-base-300/60 rounded-full h-2">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${getProgressPercentage(solvedProblemCount, problemsCount)}%` }}
+                    transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+                    className="h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300"
+                  />
+                </div>
+              </div>
+
+              {/* Difficulty and Completion Status */}
+              <div className="flex flex-wrap gap-2">
+                {/* Add difficulty badge if available */}
+                <span className="px-2 py-1 bg-green-400/20 text-green-400 rounded-md text-xs font-medium border border-green-400/30">
+                  EASY
+                </span>
+
+                {/* Completion status */}
+                {problemsCount !== 0 && solvedProblemCount === problemsCount && (
+                  <span className="px-2 py-1 bg-green-400/20 text-green-400 rounded-md text-xs font-medium border border-green-400/30 flex items-center gap-1">
+                    <TrendingUp className="w-3 h-3" />
+                    Completed
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Playlist Content Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          {currentPlaylist &&
+          Array.isArray(currentPlaylist?.problems) &&
+          currentPlaylist.problems.length > 0 ? (
+            <PlaylistTable currentPlaylist={currentPlaylist} />
+          ) : (
+            <div className="card bg-base-100/30 backdrop-blur-sm shadow-xl border border-white/10 p-12">
+              <div className="text-center">
+                <div className="p-4 bg-base-200/50 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                  <Code className="w-10 h-10 text-base-content/40" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">
+                  No Problems Added
+                </h3>
+                <p className="text-base-content/60 mb-6">
+                  It looks like there are no problems added to this playlist
+                  at the moment.
+                </p>
+              </div>
+            </div>
+          )}
+        </motion.div>
       </div>
     </div>
   );
