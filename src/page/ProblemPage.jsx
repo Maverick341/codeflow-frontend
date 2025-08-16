@@ -322,14 +322,14 @@ const ProblemPage = () => {
             className="prose max-w-none text-base-content"
           >
             <div className="mb-6">
-              <p className="text-lg leading-relaxed text-base-content/90">
+              <p className="text-base leading-relaxed text-base-content/90">
                 {problem.description}
               </p>
             </div>
 
             {problem.examples && (
               <div className="mb-8">
-                <h3 className="text-xl font-bold mb-4 text-codeflow-purple">
+                <h3 className="text-lg font-bold mb-4 text-codeflow-purple">
                   Examples:
                 </h3>
                 <div className="space-y-6">
@@ -343,7 +343,7 @@ const ProblemPage = () => {
                         className="bg-gradient-to-r from-base-200/50 to-base-300/30 p-6 rounded-xl border border-white/10 backdrop-blur-sm"
                       >
                         <div className="mb-4">
-                          <div className="text-codeflow-blue mb-2 text-base font-semibold flex items-center gap-2">
+                          <div className="text-codeflow-blue mb-2 text-sm font-semibold flex items-center gap-2">
                             <Terminal className="w-4 h-4" />
                             Input:
                           </div>
@@ -352,7 +352,7 @@ const ProblemPage = () => {
                           </code>
                         </div>
                         <div className="mb-4">
-                          <div className="text-codeflow-blue mb-2 text-base font-semibold flex items-center gap-2">
+                          <div className="text-codeflow-blue mb-2 text-sm font-semibold flex items-center gap-2">
                             <CheckCircle className="w-4 h-4" />
                             Output:
                           </div>
@@ -362,11 +362,11 @@ const ProblemPage = () => {
                         </div>
                         {example.explanation && (
                           <div>
-                            <div className="text-yellow-400 mb-2 text-base font-semibold flex items-center gap-2">
+                            <div className="text-yellow-400 mb-2 text-sm font-semibold flex items-center gap-2">
                               <Lightbulb className="w-4 h-4" />
                               Explanation:
                             </div>
-                            <p className="text-base-content/80 text-base leading-relaxed bg-black/30 p-3 rounded-lg">
+                            <p className="text-base-content/80 text-sm leading-relaxed bg-black/30 p-3 rounded-lg">
                               {example.explanation}
                             </p>
                           </div>
@@ -380,7 +380,7 @@ const ProblemPage = () => {
 
             {problem.constraints && (
               <div className="mb-6">
-                <h3 className="text-xl font-bold mb-4 text-codeflow-purple">
+                <h3 className="text-lg font-bold mb-4 text-codeflow-purple">
                   Constraints:
                 </h3>
                 <div className="bg-gradient-to-r from-base-200/50 to-base-300/30 p-6 rounded-xl border border-white/10">
@@ -393,7 +393,7 @@ const ProblemPage = () => {
 
             {problem.topics && (
               <div className="mb-6">
-                <h3 className="text-xl font-bold mb-4 text-codeflow-purple">
+                <h3 className="text-lg font-bold mb-4 text-codeflow-purple">
                   Topics:
                 </h3>
                 <div className="flex flex-wrap gap-2">
@@ -658,36 +658,6 @@ const ProblemPage = () => {
                   onMount={(editor, monaco) => {
                     // Store editor reference
                     editorRef.current = editor;
-
-                    // Disable copy/paste/cut/select all commands by overriding them
-                    editor.addCommand(
-                      monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyC,
-                      () => {
-                        // Copy disabled
-                        return null;
-                      }
-                    );
-                    editor.addCommand(
-                      monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyV,
-                      () => {
-                        // Paste disabled
-                        return null;
-                      }
-                    );
-                    editor.addCommand(
-                      monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyX,
-                      () => {
-                        // Cut disabled
-                        return null;
-                      }
-                    );
-                    editor.addCommand(
-                      monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyA,
-                      () => {
-                        // Select All disabled
-                        return null;
-                      }
-                    );
                   }}
                   options={{
                     minimap: { enabled: false },

@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  CheckCircle2,
-  XCircle,
-  Clock,
-  MemoryStick as Memory,
-  Calendar,
+  Eye,
 } from 'lucide-react';
 
+import CodeViewModal from './CodeViewModal';
+
 const SubmissionsList = ({ submissions, isLoading }) => {
+  const [isCodeModalOpen, setIsCodeModalOpen] = useState(false);
+  const [selectedSubmission, setSelectedSubmission] = useState(null);
+
+  const handleViewCode = (submission) => {
+    setSelectedSubmission(submission);
+    setIsCodeModalOpen(true);
+  };
   // Helper function to safely parse JSON strings
   const safeParse = (data) => {
     try {
@@ -58,6 +63,16 @@ const SubmissionsList = ({ submissions, isLoading }) => {
 
   return (
     <div className="space-y-4">
+      {/* Table Header */}
+      <div className="grid grid-cols-6 gap-4 px-4 py-3 bg-base-200/50 rounded-lg border border-white/10 text-sm font-medium text-base-content/80">
+        <div>Time (IST)</div>
+        <div>Status</div>
+        <div>Lang</div>
+        <div>Runtime</div>
+        <div>Memory</div>
+        <div>Code</div>
+      </div>
+
       {submissions.map((submission) => {
         const avgMemory = calculateAverageMemory(submission.memory);
         const avgTime = calculateAverageTime(submission.time);
@@ -65,50 +80,65 @@ const SubmissionsList = ({ submissions, isLoading }) => {
         return (
           <div
             key={submission.id}
-            className="card bg-base-200 shadow-lg hover:shadow-xl transition-shadow rounded-lg"
+            className="grid grid-cols-6 gap-4 px-4 py-3 bg-base-200/30 hover:bg-base-200/50 transition-colors rounded-lg border border-white/10 items-center text-sm"
           >
-            <div className="card-body p-3 sm:p-4">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-                {/* Left Section: Status and Language */}
-                <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
-                  {submission.status === 'ACCEPTED' ? (
-                    <div className="flex items-center gap-2 text-success">
-                      <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6" />
-                      <span className="font-semibold text-sm sm:text-base">Accepted</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2 text-error">
-                      <XCircle className="w-5 h-5 sm:w-6 sm:h-6" />
-                      <span className="font-semibold text-sm sm:text-base">Wrong Answer{/*submission.status*/}</span>
-                    </div>
-                  )}
-                  <div className="badge badge-neutral badge-sm sm:badge-md">
-                    {submission.language}
-                  </div>
-                </div>
+            {/* Time */}
+            <div className="text-base-content/70">
+              {new Date(submission.createdAt).toLocaleString('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+              })}
+            </div>
 
-                {/* Right Section: Runtime, Memory, and Date */}
-                <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-base-content/70">
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
-                    <span className="whitespace-nowrap">{avgTime.toFixed(3)} s</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Memory className="w-3 h-3 sm:w-4 sm:h-4" />
-                    <span className="whitespace-nowrap">{avgMemory.toFixed(0)} KB</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
-                    <span className="whitespace-nowrap">
-                      {new Date(submission.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
-              </div>
+            {/* Status */}
+            <div>
+              {submission.status === 'ACCEPTED' ? (
+                <span className="text-success font-medium">Correct</span>
+              ) : (
+                <span className="text-error font-medium">Wrong Answer</span>
+              )}
+            </div>
+
+            {/* Language */}
+            <div className="text-base-content">
+              {submission.language}
+            </div>
+
+            {/* Runtime */}
+            <div className="text-base-content/70">
+              {avgTime.toFixed(2)}ms
+            </div>
+
+            {/* Memory */}
+            <div className="text-base-content/70">
+              {(avgMemory / 1000).toFixed(2)}MB
+            </div>
+
+            {/* Code - View Button */}
+            <div>
+              <button
+                onClick={() => handleViewCode(submission)}
+                className="flex items-center gap-1 text-codeflow-purple hover:text-codeflow-blue transition-colors text-sm font-medium cursor-pointer"
+                title="View submitted code"
+              >
+                <Eye className="w-4 h-4" />
+                View
+              </button>
             </div>
           </div>
         );
       })}
+      {/* Code View Modal */}
+      <CodeViewModal
+        isOpen={isCodeModalOpen}
+        onClose={() => setIsCodeModalOpen(false)}
+        submission={selectedSubmission}
+      />
     </div>
   );
 };
