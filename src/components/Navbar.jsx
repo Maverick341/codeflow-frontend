@@ -24,12 +24,12 @@ const Navbar = ({ variant = 'top' }) => {
   if (variant === 'sidebar-problem') {
     return (
       <motion.aside
-        className="fixed left-0 top-0 h-full bg-gray-900 border-r border-gray-800 z-40 flex flex-col"
+        className="fixed left-0 top-0 h-full bg-gray-900 border-r border-gray-800 z-40 flex-col hidden md:flex w-16"
         animate={{}}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
       >
         {/* Logo Section */}
-        <div className="p-4 border-b border-gray-800">
+        <div className="p-2 border-b border-gray-800">
           <div className="flex items-center justify-center">
             <Link to="/" className="flex flex-col items-center gap-1">
               <motion.div
@@ -52,7 +52,7 @@ const Navbar = ({ variant = 'top' }) => {
                     ease: 'easeInOut',
                   }}
                 >
-                  <Zap className="h-5 w-5 text-white" />
+                  <Zap className="h-4 w-4 text-white" />
                 </motion.div>
               </motion.div>
             </Link>
@@ -60,31 +60,31 @@ const Navbar = ({ variant = 'top' }) => {
         </div>
 
         {/* User Avatar Section */}
-        <div className="p-4 border-b border-gray-800">
+        <div className="p-2 border-b border-gray-800">
           <div className="flex items-center justify-center">
-            <Link to="/profile" className="flex flex-col items-center gap-2">
+            <Link to="/profile" className="flex flex-col items-center gap-1">
               <img
                 src={
                   authUser?.avatarUrl ||
                   'https://avatar.iran.liara.run/public/boy'
                 }
                 alt="Profile"
-                className="w-10 h-10 rounded-full ring-2 ring-codeflow-purple/50"
+                className="w-8 h-8 rounded-full ring-2 ring-codeflow-purple/50"
               />
             </Link>
           </div>
         </div>
 
         {/* Navigation Links */}
-        <div className="flex-1 px-3 py-2">
+        <div className="flex-1 px-1 py-2">
           <nav className="space-y-1">
             {/* Profile */}
             <Link
               to="/profile"
               className="flex items-center text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors duration-200"
             >
-              <div className="flex flex-col items-center gap-1 px-2 py-2.5 w-full">
-                <User className="w-5 h-5" />
+              <div className="flex flex-col items-center gap-1 px-2 py-2 w-full">
+                <User className="w-4 h-4" />
                 <span className="text-xs">Profile</span>
               </div>
             </Link>
@@ -94,8 +94,8 @@ const Navbar = ({ variant = 'top' }) => {
                 to="/add-problem"
                 className="flex items-center text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors duration-200"
               >
-                <div className="flex flex-col items-center gap-1 px-2 py-2.5 w-full">
-                  <Code className="w-5 h-5" />
+                <div className="flex flex-col items-center gap-1 px-2 py-2 w-full">
+                  <Code className="w-4 h-4" />
                   <span className="text-xs">Add</span>
                 </div>
               </Link>
@@ -105,10 +105,10 @@ const Navbar = ({ variant = 'top' }) => {
 
         {/* Bottom Logout Button */}
         {authUser && (
-          <div className="p-4 border-t border-gray-800">
+          <div className="p-2 border-t border-gray-800">
             <LogoutButton className="flex items-center text-gray-300 hover:text-red-400 hover:bg-red-500/10 hover:cursor-pointer rounded-lg transition-all duration-200 w-full">
-              <div className="flex flex-col items-center gap-1 px-2 py-2.5 w-full">
-                <LogOut className="w-5 h-5" />
+              <div className="flex flex-col items-center gap-1 px-2 py-2 w-full">
+                <LogOut className="w-4 h-4" />
                 <span className="text-xs">Logout</span>
               </div>
             </LogoutButton>

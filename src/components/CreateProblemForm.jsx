@@ -89,23 +89,23 @@ console.log(result);
 rl.close();
 });`,
     PYTHON: `class Solution:
-  def climbStairs(self, n: int) -> int:
-      # Write your code here
-      pass
+    def climbStairs(self, n: int) -> int:
+        # Write your code here
+        pass
 
 # Input parsing
 if __name__ == "__main__":
-  import sys
-  
-  # Parse input
-  n = int(sys.stdin.readline().strip())
-  
-  # Solve
-  sol = Solution()
-  result = sol.climbStairs(n)
-  
-  # Print result
-  print(result)`,
+    import sys
+
+    # Parse input
+    n = int(sys.stdin.readline().strip())
+
+    # Solve
+    sol = Solution()
+    result = sol.climbStairs(n)
+
+    # Print result
+    print(result)`,
     JAVA: `import java.util.Scanner;
 
 class Main {
@@ -179,42 +179,42 @@ console.log(result);
 rl.close();
 });`,
     PYTHON: `class Solution:
-  def climbStairs(self, n: int) -> int:
-      # Base cases
-      if n <= 2:
-          return n
-      
-      # Dynamic programming approach
-      dp = [0] * (n + 1)
-      dp[1] = 1
-      dp[2] = 2
-      
-      for i in range(3, n + 1):
-          dp[i] = dp[i - 1] + dp[i - 2]
-      
-      return dp[n]
-      
-      # Alternative approach with O(1) space
-      # a, b = 1, 2
-      # 
-      # for i in range(3, n + 1):
-      #     a, b = b, a + b
-      # 
-      # return a if n == 1 else b
+    def climbStairs(self, n: int) -> int:
+        # Base cases
+        if n <= 2:
+            return n
+
+        # Dynamic programming approach
+        dp = [0] * (n + 1)
+        dp[1] = 1
+        dp[2] = 2
+
+        for i in range(3, n + 1):
+            dp[i] = dp[i - 1] + dp[i - 2]
+
+        return dp[n]
+
+        # Alternative approach with O(1) space
+        # a, b = 1, 2
+        #
+        # for i in range(3, n + 1):
+        #     a, b = b, a + b
+        #
+        # return a if n == 1 else b
 
 # Input parsing
 if __name__ == "__main__":
-  import sys
-  
-  # Parse input
-  n = int(sys.stdin.readline().strip())
-  
-  # Solve
-  sol = Solution()
-  result = sol.climbStairs(n)
-  
-  # Print result
-  print(result)`,
+    import sys
+
+    # Parse input
+    n = int(sys.stdin.readline().strip())
+
+    # Solve
+    sol = Solution()
+    result = sol.climbStairs(n)
+
+    # Print result
+    print(result)`,
     JAVA: `import java.util.Scanner;
 
 class Main {
@@ -335,22 +335,22 @@ const sampleStringProblem = {
     rl.close();
   });`,
     PYTHON: `class Solution:
-      def isPalindrome(self, s: str) -> bool:
-          # Write your code here
-          pass
-  
-  # Input parsing
-  if __name__ == "__main__":
-      import sys
-      # Read the input string
-      s = sys.stdin.readline().strip()
-      
-      # Call solution
-      sol = Solution()
-      result = sol.isPalindrome(s)
-      
-      # Output result
-      print(str(result).lower())  # Convert True/False to lowercase true/false`,
+    def isPalindrome(self, s: str) -> bool:
+        # Write your code here
+        pass
+
+# Input parsing
+if __name__ == "__main__":
+    import sys
+    # Read the input string
+    s = sys.stdin.readline().strip()
+
+    # Call solution
+    sol = Solution()
+    result = sol.isPalindrome(s)
+
+    # Output result
+    print(str(result).lower())  # Convert True/False to lowercase true/false`,
     JAVA: `import java.util.Scanner;
 
 public class Main {
@@ -414,25 +414,25 @@ public class Main {
     rl.close();
   });`,
     PYTHON: `class Solution:
-      def isPalindrome(self, s: str) -> bool:
-          # Convert to lowercase and keep only alphanumeric characters
-          filtered_chars = [c.lower() for c in s if c.isalnum()]
-          
-          # Check if it's a palindrome
-          return filtered_chars == filtered_chars[::-1]
-  
-  # Input parsing
-  if __name__ == "__main__":
-      import sys
-      # Read the input string
-      s = sys.stdin.readline().strip()
-      
-      # Call solution
-      sol = Solution()
-      result = sol.isPalindrome(s)
-      
-      # Output result
-      print(str(result).lower())  # Convert True/False to lowercase true/false`,
+    def isPalindrome(self, s: str) -> bool:
+        # Convert to lowercase and keep only alphanumeric characters
+        filtered_chars = [c.lower() for c in s if c.isalnum()]
+
+        # Check if it's a palindrome
+        return filtered_chars == filtered_chars[::-1]
+
+# Input parsing
+if __name__ == "__main__":
+    import sys
+    # Read the input string
+    s = sys.stdin.readline().strip()
+
+    # Call solution
+    sol = Solution()
+    result = sol.isPalindrome(s)
+
+    # Output result
+    print(str(result).lower())  # Convert True/False to lowercase true/false`,
     JAVA: `import java.util.Scanner;
 
 public class Main {
