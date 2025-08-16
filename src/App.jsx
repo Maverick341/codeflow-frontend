@@ -15,6 +15,7 @@ import AddProblem from './page/AddProblem.jsx';
 import Dashboard from './components/Dashboard.jsx';
 import ProblemPage from './page/ProblemPage.jsx';
 import ProfilePage from './page/ProfilePage.jsx';
+import PlaylistPage from './page/PlaylistPage.jsx';
 
 const App = () => {
   const { authUser } = useAuthStore();
@@ -39,6 +40,15 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/playlist/:id"
+            element={
+              <ProtectedRoute>
+                <PlaylistPage />
               </ProtectedRoute>
             }
           />
